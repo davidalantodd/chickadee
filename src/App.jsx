@@ -1,11 +1,10 @@
-import './App.css'
 import Observations from './components/Observations'
 
 function App() {
 
   return (
     <>
-      <Observations/>
+      <Observations className="observations-component"/>
     </>
   )
 }

@@ -1,7 +1,5 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -23,36 +21,65 @@ a:hover {
 }
 
 body {
-  margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
 }
+
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  text-align: center;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+h3 {
+  text-align: center;
 }
-button:hover {
-  border-color: #646cff;
+
+h5 {
+  margin-bottom: 0;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+
+.filter-bar {
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
+
+.region-dropdown {
+  text-align: center;
+  margin: 0 0 0 1rem
+}
+
+.region-dropdown-menu {
+  max-height: 280px;
+    overflow-y: auto;
+}
+
+.observation-component {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.observation-section {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.bird-card {
+  margin: .5rem;
+  font-size: .8rem;
+}
+
 
 @media (prefers-color-scheme: light) {
   :root {
@@ -65,12 +92,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
-
-
-.observation-section {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: center;
 }
