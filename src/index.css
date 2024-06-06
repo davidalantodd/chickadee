@@ -56,6 +56,11 @@ h5 {
   margin: 0 0 0 1rem
 }
 
+.sub-region-dropdown {
+  text-align: center;
+  margin: 0 0 0 1rem
+}
+
 .region-dropdown-menu {
   max-height: 280px;
     overflow-y: auto;

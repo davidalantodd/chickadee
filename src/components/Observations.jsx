@@ -24,13 +24,19 @@ function Observations() {
         code:'US',
         name:'United States'
     })
+    const [subRegions, setSubRegions] = useState([])
+    const [currentSubRegion, setCurrentSubRegion] = useState({
+        code:'',
+        name:''
+    })
 
     const fetchObservationsByRegion = () => {
-        fetch(eBirdBaseAPIURL + `data/obs/${currentRegion.code}/recent`, requestOptions)
+        const regionToSearch = (currentSubRegion.code) ? currentSubRegion : currentRegion
+        fetch(eBirdBaseAPIURL + `data/obs/${regionToSearch.code}/recent`, requestOptions)
         .then(response => response.json())
         .then(data => {
             setObservations({
-                region: currentRegion.code,
+                region: regionToSearch.code,
                 obs: data})
         })
     }
@@ -43,26 +49,37 @@ function Observations() {
         )
     }
 
+    const fetchSubRegions = () => {
+        fetch(eBirdBaseAPIURL + `ref/region/list/subnational2/${currentRegion.code}`, requestOptions)
+        .then(response => response.json())
+        .then(data => {setSubRegions(data)});
+    }
+
     const handleRegionSelect = (region) => {
-        setCurrentRegion(region)
+        setCurrentRegion(region) 
+        setCurrentSubRegion({code:'',name:''})
     } 
 
     useEffect(() => {
         fetchRegionsInUS()
+        fetchSubRegions();
         fetchObservationsByRegion()
     }, [])
 
     useEffect(() => {
         fetchObservationsByRegion()
+        fetchSubRegions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentRegion])
+    }, [currentRegion, currentSubRegion])
+
+    console.log(observations)
 
 
     return (
         <>
           <h1 className="title">eBird Recent Observations</h1>
           <section className="filter-bar">
-            <h5>Filter by State</h5>
+            <h5>Filter by Region</h5>
             <Dropdown className='region-dropdown'>
                 <Dropdown.Toggle variant="primary" id="dropdown-basic">
                     {currentRegion.name !== 'United States' ? currentRegion.name : 'Select State'}
@@ -74,10 +91,21 @@ function Observations() {
                     <Dropdown.Item key={'default'} onClick={()=>setCurrentRegion({code:'US',name:'United States'})}>Clear Selection</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
+            <Dropdown className='region-dropdown'>
+                <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                    {currentSubRegion.name ? currentSubRegion.name : 'Select Sub-Region'}
+                </Dropdown.Toggle>
+                <Dropdown.Menu className='region-dropdown-menu'>
+                    {subRegions.map((region) => (
+                        <Dropdown.Item key={region.code} onClick={()=>setCurrentSubRegion(region)}>{region.name}</Dropdown.Item>
+                    ))}
+                    <Dropdown.Item key={'default'} onClick={()=>setCurrentSubRegion({code:'',name:''})}>Clear Selection</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
           </section>
           {/* <h3>Bird observations in {(currentRegion.code === 'US' || currentRegion.code === "US-DC" ? 'the ' : '') + currentRegion.name}</h3> */}
           <Container className="observation-section">
-            {(currentRegion.code === observations.region) ? (
+            {(currentRegion.code === observations.region) || (currentSubRegion.code === observations.region) ? (
                 observations.obs.map((observation) => (
                     <Card className="bird-card" key={observation.subId + observation.comName} style={{ width: '14rem'}}>
                         <Card.Body>
