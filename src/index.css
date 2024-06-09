@@ -43,6 +43,10 @@ h5 {
   margin-bottom: 0;
 }
 
+main {
+  min-height: calc(100vh - 50px);
+}
+
 
 .filter-bar {
   display:flex;
@@ -66,7 +70,7 @@ h5 {
     overflow-y: auto;
 }
 
-.observation-component {
+.observations-component {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -85,6 +89,28 @@ h5 {
   font-size: .8rem;
 }
 
+footer {
+  display:flex;
+  justify-content:center;
+  align-items: center;
+  padding-top: 2rem;
+}
+
+footer p {
+  padding: 1rem;
+  margin-bottom: 0;
+}
+
+footer img {
+  height: 1.5rem;
+  margin: .5rem;
+  margin-right:1rem;
+  transition: .2s;
+}
+
+footer img:hover{
+  transform: scale(1.2);
+}
 
 @media (prefers-color-scheme: light) {
   :root {
