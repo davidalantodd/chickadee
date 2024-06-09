@@ -1,10 +1,10 @@
-import Observations from './components/Observations'
+import ObservationView from './components/ObservationView'
 
 function App() {
 
   return (
     <>
-      <Observations className="observations-component"/>
+      <ObservationView/>
     </>
   )
 }

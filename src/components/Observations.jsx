@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useContext } from 'react'
 import { Card, ListGroup, Container, Dropdown } from 'react-bootstrap'
+import { ObservationsContext } from '../contexts/ObservationsContext';
 
 const eBirdBaseAPIURL = 'https://api.ebird.org/v2/'
 
@@ -14,21 +15,12 @@ const requestOptions = {
 };
 
 function Observations() {
-
-    const [observations, setObservations] = useState({
-        region: '',
-        obs: []
-    });
-    const [regionsInUS, setRegionsInUS] = useState([])
-    const [currentRegion, setCurrentRegion] = useState({
-        code:'US',
-        name:'United States'
-    })
-    const [subRegions, setSubRegions] = useState([])
-    const [currentSubRegion, setCurrentSubRegion] = useState({
-        code:'',
-        name:''
-    })
+    const {observations, setObservations,
+        regionsInUS, setRegionsInUS,
+        currentRegion, setCurrentRegion,
+        subRegions, setSubRegions,
+        currentSubRegion, setCurrentSubRegion } = useContext(ObservationsContext)
+    
 
     const fetchObservationsByRegion = () => {
         const regionToSearch = (currentSubRegion.code) ? currentSubRegion : currentRegion
