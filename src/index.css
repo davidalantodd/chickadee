@@ -45,6 +45,10 @@ h5 {
 
 main {
   min-height: calc(100vh - 50px);
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
 }
 
 
@@ -77,16 +81,9 @@ main {
   align-items: center;
 }
 
-.observation-section {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.bird-card {
-  margin: .5rem;
-  font-size: .8rem;
+.observation-table {
+  margin: 1rem;
+  width: 95%;
 }
 
 footer {

@@ -1,5 +1,5 @@
 import { useEffect, useContext } from 'react'
-import { Card, ListGroup, Container } from 'react-bootstrap'
+import { Table } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext';
 
 const eBirdBaseAPIURL = 'https://api.ebird.org/v2/'
@@ -60,26 +60,31 @@ function Observations() {
 
     return (
         <>
-          {/* <h3>Bird observations in {(currentRegion.code === 'US' || currentRegion.code === "US-DC" ? 'the ' : '') + currentRegion.name}</h3> */}
-          <Container className="observation-section">
             {(currentRegion.code === observations.region) || (currentSubRegion.code === observations.region) ? (
-                observations.obs.map((observation) => (
-                    <Card className="bird-card" key={observation.subId + observation.comName} style={{ width: '14rem'}}>
-                        <Card.Body>
-                        <Card.Title>
-                            {observation.comName}
-                        </Card.Title>
-                        <ListGroup variant="flush">
-                            <ListGroup.Item>Date: {observation.obsDt}</ListGroup.Item>
-                            <ListGroup.Item>Location: {observation.locName}</ListGroup.Item>
-                        </ListGroup>
-                        </Card.Body>
-                    </Card>
-                ))
+                <Table striped bordered hover className="observation-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Common Name</th>
+                            <th>Date</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {(observations.obs.map((observation, index) => (
+                            <tr key={observation.subId + observation.comName}>
+                                <td>{index + 1}</td>
+                                <td>{observation.comName}</td>
+                                <td>{observation.obsDt}</td>
+                                <td>{observation.locName}</td>
+                            </tr>
+                        )))}
+                    </tbody>
+                </Table>
             ) : (
                 <h4>loading...</h4>
             )}
-          </Container>
+          
         </>
       )
 }

@@ -43,7 +43,6 @@ function ObservationView() {
         fetchSubRegions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentRegion])
-    
 
     return (
         <>
