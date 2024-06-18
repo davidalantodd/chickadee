@@ -43,6 +43,21 @@ function Observations() {
         .then(data => {setSubRegions(data)});
     }
 
+    const formatDate = (originalDateString) => {
+        const date = new Date(originalDateString)
+
+        const formatter = new Intl.DateTimeFormat('en-US', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit'
+        })
+
+        return formatter.format(date);
+    }
+
 
     useEffect(() => {
         fetchObservationsByRegion()
@@ -75,7 +90,7 @@ function Observations() {
                             <tr key={observation.subId + observation.comName}>
                                 <td>{index + 1}</td>
                                 <td>{observation.comName}</td>
-                                <td>{observation.obsDt}</td>
+                                <td>{formatDate(observation.obsDt)}</td>
                                 <td>{observation.locName}</td>
                             </tr>
                         )))}
