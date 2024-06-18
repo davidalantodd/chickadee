@@ -81,7 +81,7 @@ function Observations() {
                         <tr>
                             <th>#</th>
                             <th>Common Name</th>
-                            <th>Date</th>
+                            <th style={{ minWidth: '225px'}}>Date</th>
                             <th>Location</th>
                         </tr>
                     </thead>
