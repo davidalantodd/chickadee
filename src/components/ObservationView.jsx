@@ -1,6 +1,6 @@
 import Observations from './Observations'
 import { useEffect, useContext } from 'react'
-import { Dropdown } from 'react-bootstrap'
+import { Dropdown, Form } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext'
 
 const eBirdBaseAPIURL = 'https://api.ebird.org/v2/'
@@ -16,7 +16,8 @@ function ObservationView() {
     const {regionsInUS, setRegionsInUS,
         currentRegion, setCurrentRegion,
         subRegions, setSubRegions,
-        currentSubRegion, setCurrentSubRegion } = useContext(ObservationsContext)
+        currentSubRegion, setCurrentSubRegion,
+        notable, setNotable } = useContext(ObservationsContext)
 
 
     const fetchRegionsInUS = () => {
@@ -70,6 +71,15 @@ function ObservationView() {
                         <Dropdown.Item key={'default'} onClick={()=>setCurrentSubRegion({code:'',name:''})}>Clear Selection</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
+                <Form className='notable-switch'>
+                    <Form.Check
+                        type="switch"
+                        id="custom-switch"
+                        label="Notable Observations"
+                        checked={notable}
+                        onChange={() => setNotable(!notable)}
+                    />
+                </Form>
             </section>
             <Observations className="observations-component"/>
         </>

@@ -20,6 +20,7 @@ function App() {
       code:'',
       name:''
   })
+  const [notable, setNotable] = useState(false)
   
   return (
     <>
@@ -27,7 +28,8 @@ function App() {
                                                   regionsInUS, setRegionsInUS,
                                                   currentRegion, setCurrentRegion,
                                                   subRegions, setSubRegions,
-                                                  currentSubRegion, setCurrentSubRegion}}>
+                                                  currentSubRegion, setCurrentSubRegion,
+                                                  notable, setNotable}}>
         <Header/>
         <main>
           <ObservationView className="observation-view"/>

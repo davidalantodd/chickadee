@@ -15,12 +15,13 @@ const requestOptions = {
 function Observations() {
     const {observations, setObservations,
         setSubRegions, setRegionsInUS,
-        currentRegion, currentSubRegion } = useContext(ObservationsContext)
+        currentRegion, currentSubRegion,
+        notable } = useContext(ObservationsContext)
     
 
     const fetchObservationsByRegion = () => {
         const regionToSearch = (currentSubRegion.code) ? currentSubRegion : currentRegion
-        fetch(eBirdBaseAPIURL + `data/obs/${regionToSearch.code}/recent`, requestOptions)
+        fetch(eBirdBaseAPIURL + `data/obs/${regionToSearch.code}/recent` + (notable ? '/notable' : ''), requestOptions)
         .then(response => response.json())
         .then(data => {
             setObservations({
@@ -68,7 +69,7 @@ function Observations() {
     useEffect(() => {
         fetchObservationsByRegion()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentRegion, currentSubRegion])
+    }, [currentRegion, currentSubRegion, notable])
 
     console.log(currentRegion)
 
