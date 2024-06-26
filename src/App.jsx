@@ -21,6 +21,8 @@ function App() {
       name:''
   })
   const [notable, setNotable] = useState(false)
+  const [taxonomy, setTaxonomy] = useState([])
+  const [currentSpecies, setCurrentSpecies] = useState('')
   
   return (
     <>
@@ -29,7 +31,9 @@ function App() {
                                                   currentRegion, setCurrentRegion,
                                                   subRegions, setSubRegions,
                                                   currentSubRegion, setCurrentSubRegion,
-                                                  notable, setNotable}}>
+                                                  notable, setNotable,
+                                                  taxonomy, setTaxonomy,
+                                                  currentSpecies, setCurrentSpecies}}>
         <Header/>
         <main>
           <ObservationView className="observation-view"/>

@@ -64,6 +64,11 @@ main {
   margin: 0 0 0 1rem
 }
 
+.species-dropdown {
+  margin: 0 0 0 1rem
+ 
+}
+
 .sub-region-dropdown {
   text-align: center;
   margin: 0 0 0 1rem
@@ -75,7 +80,12 @@ main {
 
 .region-dropdown-menu {
   max-height: 280px;
-    overflow-y: auto;
+  overflow-y: auto;
+}
+
+.species-dropdown-menu {
+  max-height: 280px;
+  overflow-y: auto;
 }
 
 .observations-component {

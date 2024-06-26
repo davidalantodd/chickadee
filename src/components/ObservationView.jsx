@@ -17,8 +17,9 @@ function ObservationView() {
         currentRegion, setCurrentRegion,
         subRegions, setSubRegions,
         currentSubRegion, setCurrentSubRegion,
-        notable, setNotable } = useContext(ObservationsContext)
-
+        notable, setNotable,
+        taxonomy, setTaxonomy,
+        currentSpecies, setCurrentSpecies} = useContext(ObservationsContext);
 
     const fetchRegionsInUS = () => {
         fetch(eBirdBaseAPIURL + 'ref/region/list/subnational1/US', requestOptions)
@@ -34,16 +35,25 @@ function ObservationView() {
         .then(data => {setSubRegions(data)});
     }
 
+    const fetchTaxonomy = () => {
+        fetch(eBirdBaseAPIURL + `ref/taxonomy/ebird?fmt=json`, requestOptions)
+        .then(response => response.json())
+        .then(data => {
+            setTaxonomy(data)
+        });
+    }
+
     const handleRegionSelect = (region) => {
         setCurrentRegion(region) 
         setCurrentSubRegion({code:'',name:''})
     } 
 
     useEffect(() => {
-        fetchRegionsInUS()
+        fetchRegionsInUS();
         fetchSubRegions();
+        fetchTaxonomy();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentRegion])
+    }, [currentRegion]);
 
     return (
         <>
@@ -69,6 +79,17 @@ function ObservationView() {
                             <Dropdown.Item key={region.code} onClick={()=>setCurrentSubRegion(region)}>{region.name}</Dropdown.Item>
                         ))}
                         <Dropdown.Item key={'default'} onClick={()=>setCurrentSubRegion({code:'',name:''})}>Clear Selection</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+                <Dropdown className='species-dropdown'>
+                    <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                        {!currentSpecies ? 'Select Species' : currentSpecies.comName}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className='species-dropdown-menu'>
+                        {taxonomy.map((species) => (
+                            <Dropdown.Item key={species.speciesCode} onClick={()=>setCurrentSpecies(species)}>{species.comName}</Dropdown.Item>
+                        ))}
+                        <Dropdown.Item key={'default'} onClick={()=>setCurrentSpecies('')}>Clear Selection</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
                 <Form className='notable-switch'>
