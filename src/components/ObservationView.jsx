@@ -39,6 +39,7 @@ function ObservationView() {
         fetch(eBirdBaseAPIURL + `ref/taxonomy/ebird?fmt=json`, requestOptions)
         .then(response => response.json())
         .then(data => {
+            data.sort((a,b) => a.comName.localeCompare(b.comName))
             setTaxonomy(data)
         });
     }
@@ -64,10 +65,10 @@ function ObservationView() {
                         {currentRegion.name !== 'United States' ? currentRegion.name : 'Select State'}
                     </Dropdown.Toggle>
                     <Dropdown.Menu className='region-dropdown-menu'>
+                        <Dropdown.Item key={'default'} onClick={()=>setCurrentRegion({code:'US',name:'United States'})}>Clear Selection</Dropdown.Item>
                         {regionsInUS.map((region) => (
                             <Dropdown.Item key={region.code} onClick={()=>handleRegionSelect(region)}>{region.name}</Dropdown.Item>
                         ))}
-                        <Dropdown.Item key={'default'} onClick={()=>setCurrentRegion({code:'US',name:'United States'})}>Clear Selection</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
                 <Dropdown className='region-dropdown'>
@@ -75,10 +76,10 @@ function ObservationView() {
                         {currentSubRegion.name ? currentSubRegion.name : 'Select Sub-Region'}
                     </Dropdown.Toggle>
                     <Dropdown.Menu className='region-dropdown-menu'>
+                        <Dropdown.Item key={'default'} onClick={()=>setCurrentSubRegion({code:'',name:''})}>Clear Selection</Dropdown.Item>
                         {subRegions.map((region) => (
                             <Dropdown.Item key={region.code} onClick={()=>setCurrentSubRegion(region)}>{region.name}</Dropdown.Item>
                         ))}
-                        <Dropdown.Item key={'default'} onClick={()=>setCurrentSubRegion({code:'',name:''})}>Clear Selection</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
                 <Dropdown className='species-dropdown'>
@@ -86,10 +87,10 @@ function ObservationView() {
                         {!currentSpecies ? 'Select Species' : currentSpecies.comName}
                     </Dropdown.Toggle>
                     <Dropdown.Menu className='species-dropdown-menu'>
+                        <Dropdown.Item key={'default'} onClick={()=>setCurrentSpecies('')}>Clear Selection</Dropdown.Item>
                         {taxonomy.map((species) => (
                             <Dropdown.Item key={species.speciesCode} onClick={()=>setCurrentSpecies(species)}>{species.comName}</Dropdown.Item>
                         ))}
-                        <Dropdown.Item key={'default'} onClick={()=>setCurrentSpecies('')}>Clear Selection</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
                 <Form className='notable-switch'>
