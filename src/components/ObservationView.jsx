@@ -36,7 +36,7 @@ function ObservationView() {
     }
 
     const fetchTaxonomy = () => {
-        fetch(eBirdBaseAPIURL + `ref/taxonomy/ebird?fmt=json`, requestOptions)
+        fetch(eBirdBaseAPIURL + `ref/taxonomy/ebird?fmt=json&cat=species`, requestOptions)
         .then(response => response.json())
         .then(data => {
             data.sort((a,b) => a.comName.localeCompare(b.comName))
