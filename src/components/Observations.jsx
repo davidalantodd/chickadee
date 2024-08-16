@@ -10,7 +10,6 @@ function Observations() {
     
 
     // fetch eBird API data using Netlify Functions to protect API key
-
     const fetchObservationsByRegion = () => {
         const regionToSearch = (currentSubRegion.code) ? currentSubRegion : currentRegion
         fetch(`/.netlify/functions/fetchObservationsByRegion?regionToSearch=${regionToSearch.code}&notable=${notable}&currentSpecies=${currentSpecies.comName}`)
