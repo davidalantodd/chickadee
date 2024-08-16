@@ -2,16 +2,6 @@ import { useEffect, useContext } from 'react'
 import { Table } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext';
 
-const eBirdBaseAPIURL = 'https://api.ebird.org/v2/'
-const myHeaders = new Headers();
-myHeaders.append("X-eBirdApiToken", import.meta.env.VITE_EBIRD_API_KEY);
-
-const requestOptions = {
-    method: 'GET',
-    headers: myHeaders,
-    redirect: 'follow'
-};
-
 function Observations() {
     const {observations, setObservations,
         setSubRegions, setRegionsInUS,
@@ -19,32 +9,35 @@ function Observations() {
         notable, currentSpecies } = useContext(ObservationsContext)
     
 
+    // fetch eBird API data using Netlify Functions to protect API key
+
     const fetchObservationsByRegion = () => {
         const regionToSearch = (currentSubRegion.code) ? currentSubRegion : currentRegion
-        fetch(eBirdBaseAPIURL + `data/obs/${regionToSearch.code}/recent`
-            + (notable ? '/notable' : (
-                currentSpecies.comName ? `/${currentSpecies.speciesCode}` : '')
-            ), requestOptions)
-        .then(response => response.json())
-        .then(data => {
-            setObservations({
-                region: regionToSearch.code,
-                obs: data})
-        })
+        fetch(`/.netlify/functions/fetchObservationsByRegion?regionToSearch=${regionToSearch.code}&notable=${notable}&currentSpecies=${currentSpecies.comName}`)
+            .then(response => response.json())
+            .then(data => {
+                setObservations({
+                    region: regionToSearch.code,
+                    obs: data})
+            })
+            .catch(error => {
+                console.error('Error fetching observations:', error, regionToSearch.code, notable,currentSpecies.comName );
+              });
     }
 
-    const fetchRegionsInUS = () => {
-        fetch(eBirdBaseAPIURL + 'ref/region/list/subnational1/US', requestOptions)
-        .then(response => response.json())
-        .then(data =>
-            setRegionsInUS(data)
-        )
+    const fetchRegionsInUS = async () => {
+        await fetch('/.netlify/functions/fetchRegionsInUS')
+            .then(response => response.json())
+            .then(data => setRegionsInUS(data))
     }
 
-    const fetchSubRegions = () => {
-        fetch(eBirdBaseAPIURL + `ref/region/list/subnational2/${currentRegion.code}`, requestOptions)
+    const fetchSubRegions = async () => {
+        await fetch(`/.netlify/functions/fetchSubRegions?currentRegion=${currentRegion.code}`)
         .then(response => response.json())
-        .then(data => {setSubRegions(data)});
+        .then(data => {setSubRegions(data)})
+        .catch(error => {
+            console.error('Error fetching observations:', error);
+          });
     }
 
     const formatDate = (originalDateString) => {
@@ -73,8 +66,6 @@ function Observations() {
         fetchObservationsByRegion()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentRegion, currentSubRegion, notable, currentSpecies])
-
-    console.log(currentRegion)
 
 
     return (
