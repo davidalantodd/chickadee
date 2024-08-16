@@ -17,7 +17,7 @@ exports.handler = async (event) => {
         const data = await fetch(eBirdBaseAPIURL +
             `data/obs/${regionToSearch}/recent`
             + (notable === 'true' ? '/notable' : (
-                 currentSpecies !== 'undefined'  ? `/${currentSpecies.speciesCode}` : '')
+                 currentSpecies !== 'undefined'  ? `/${currentSpecies}` : '')
              )
             , requestOptions)
             .then(response => response.json())
