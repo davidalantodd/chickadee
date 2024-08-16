@@ -5,13 +5,13 @@ exports.handler = async () => {
         const myHeaders = new Headers();
         
         // eslint-disable-next-line no-undef
-        myHeaders.append("X-eBirdApiToken", process.env.VITE_EBIRD_API_KEY);
+        const eBirdApiToken = process.env.VITE_EBIRD_API_KEY
         const requestOptions = {
             method: 'GET',
             headers: myHeaders,
             redirect: 'follow'
         };
-        const data = await fetch(eBirdBaseAPIURL + 'ref/region/list/subnational1/US', requestOptions)
+        const data = await fetch(eBirdBaseAPIURL + 'ref/region/list/subnational1/US' + `&key=${eBirdApiToken}`, requestOptions)
             .then(response => response.json())
 
         return {
