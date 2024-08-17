@@ -6,6 +6,7 @@ exports.handler = async (event) => {
         
         // eslint-disable-next-line no-undef
         const eBirdApiToken = process.env.VITE_EBIRD_API_KEY
+        myHeaders.append("X-eBirdApiToken", eBirdApiToken);
         const requestOptions = {
             method: 'GET',
             headers: myHeaders,
@@ -14,7 +15,7 @@ exports.handler = async (event) => {
 
         const { currentRegion } = event.queryStringParameters
 
-        const data = await fetch(eBirdBaseAPIURL + `ref/region/list/subnational2/${currentRegion}&key=${eBirdApiToken}`, requestOptions)
+        const data = await fetch(eBirdBaseAPIURL + `ref/region/list/subnational2/${currentRegion}`, requestOptions)
             .then(response => response.json())
 
         return {

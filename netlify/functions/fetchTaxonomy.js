@@ -12,7 +12,8 @@ exports.handler = async () => {
             headers: myHeaders,
             redirect: 'follow'
         };
-        const data = await fetch(eBirdBaseAPIURL + 'ref/region/list/subnational1/US', requestOptions)
+
+        const data = await fetch(eBirdBaseAPIURL + `ref/taxonomy/ebird?fmt=json&cat=species`, requestOptions)
             .then(response => response.json())
 
         return {

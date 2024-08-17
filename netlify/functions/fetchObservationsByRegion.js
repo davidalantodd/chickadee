@@ -6,6 +6,7 @@ exports.handler = async (event) => {
         
         // eslint-disable-next-line no-undef
         const eBirdApiToken = process.env.VITE_EBIRD_API_KEY
+        myHeaders.append("X-eBirdApiToken", eBirdApiToken);
         const requestOptions = {
             method: 'GET',
             headers: myHeaders,
@@ -19,7 +20,7 @@ exports.handler = async (event) => {
             + (notable === 'true' ? '/notable' : (
                  currentSpecies !== 'undefined'  ? `/${currentSpecies}` : '')
              // eslint-disable-next-line no-undef
-             ) + `&key=${eBirdApiToken}`
+             )
             , requestOptions)
             .then(response => response.json())
         

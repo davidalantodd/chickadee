@@ -28,6 +28,9 @@ function Observations() {
         await fetch('/.netlify/functions/fetchRegionsInUS')
             .then(response => response.json())
             .then(data => setRegionsInUS(data))
+            .catch(error => {
+                console.error('Error fetching regions:', error);
+              });
     }
 
     const fetchSubRegions = async () => {
@@ -35,7 +38,7 @@ function Observations() {
         .then(response => response.json())
         .then(data => {setSubRegions(data)})
         .catch(error => {
-            console.error('Error fetching observations:', error);
+            console.error('Error fetching subregions:', error);
           });
     }
 

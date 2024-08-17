@@ -3,15 +3,6 @@ import { useEffect, useContext } from 'react'
 import { Dropdown, Form } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext'
 
-const eBirdBaseAPIURL = 'https://api.ebird.org/v2/'
-const myHeaders = new Headers();
-myHeaders.append("X-eBirdApiToken", import.meta.env.VITE_EBIRD_API_KEY);
-const requestOptions = {
-    method: 'GET',
-    headers: myHeaders,
-    redirect: 'follow'
-};
-
 function ObservationView() {
     const {regionsInUS, setRegionsInUS,
         currentRegion, setCurrentRegion,
@@ -21,22 +12,26 @@ function ObservationView() {
         taxonomy, setTaxonomy,
         currentSpecies, setCurrentSpecies} = useContext(ObservationsContext);
 
-    const fetchRegionsInUS = () => {
-        fetch(eBirdBaseAPIURL + 'ref/region/list/subnational1/US', requestOptions)
-        .then(response => response.json())
-        .then(data =>
-            setRegionsInUS(data)
-        )
+    const fetchRegionsInUS = async () => {
+        await fetch('/.netlify/functions/fetchRegionsInUS')
+            .then(response => response.json())
+            .then(data => setRegionsInUS(data))
+            .catch(error => {
+                console.error('Error fetching regions:', error);
+            });
     }
 
-    const fetchSubRegions = () => {
-        fetch(eBirdBaseAPIURL + `ref/region/list/subnational2/${currentRegion.code}`, requestOptions)
-        .then(response => response.json())
-        .then(data => {setSubRegions(data)});
+    const fetchSubRegions = async () => {
+        await fetch(`/.netlify/functions/fetchSubRegions?currentRegion=${currentRegion.code}`)
+            .then(response => response.json())
+            .then(data => {setSubRegions(data)})
+            .catch(error => {
+                console.error('Error fetching subregions:', error);
+            });
     }
 
-    const fetchTaxonomy = () => {
-        fetch(eBirdBaseAPIURL + `ref/taxonomy/ebird?fmt=json&cat=species`, requestOptions)
+    const fetchTaxonomy = async () => {
+        await fetch('/.netlify/functions/fetchTaxonomy')
         .then(response => response.json())
         .then(data => {
             data.sort((a,b) => a.comName.localeCompare(b.comName))
