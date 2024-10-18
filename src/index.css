@@ -24,13 +24,27 @@ body {
   display: flex;
   place-items: center;
   justify-content: center;
+  width: 100vw;
   margin: 0;
   padding: 0;
 }
 
+header {
+  margin: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+}
+
+.chickadee-icon {
+  height: 3.2em;
+  margin-right: 2rem;
+}
 
 h1 {
   font-size: 3.2em;
+  font-weight: 200;
   line-height: 1.1;
   text-align: center;
 }

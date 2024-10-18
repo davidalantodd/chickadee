@@ -1,6 +1,11 @@
+import chickadee from '../assets/chickadee.png'
+
 function Header() {
     return (
-        <h1 className="title">eBird Recent Observations</h1>
+        <header>
+            <img className="chickadee-icon" src={chickadee}/>
+            <h1 className="title">chickadee</h1>
+        </header>
     )
 }
 
