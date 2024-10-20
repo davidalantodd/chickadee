@@ -52,11 +52,15 @@ nav {
 }
 
 .menu-icon {
-  height: 2.5em;
+  height: 2em;
 }
 
 .menu-icon:hover {
   color: var(--light-brown);
+}
+
+.dropdown-toggle:after{
+  display: none;
 }
 
 .chickadee-icon {
