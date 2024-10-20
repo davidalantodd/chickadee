@@ -23,6 +23,7 @@ function App() {
   const [notable, setNotable] = useState(false)
   const [taxonomy, setTaxonomy] = useState([])
   const [currentSpecies, setCurrentSpecies] = useState('')
+  const [loading, setLoading] = useState(true)
   
   return (
     <>
@@ -33,7 +34,8 @@ function App() {
                                                   currentSubRegion, setCurrentSubRegion,
                                                   notable, setNotable,
                                                   taxonomy, setTaxonomy,
-                                                  currentSpecies, setCurrentSpecies}}>
+                                                  currentSpecies, setCurrentSpecies,
+                                                  loading, setLoading}}>
         <Header/>
         <main>
           <ObservationView className="observation-view"/>

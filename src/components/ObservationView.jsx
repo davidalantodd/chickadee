@@ -44,6 +44,16 @@ function ObservationView() {
         setCurrentSubRegion({code:'',name:''})
     } 
 
+    const handleSpeciesSelect = (species) => {
+        setCurrentSpecies(species)
+        setNotable(false)
+    }
+
+    const handleNotableSwitch = () => {
+        setNotable(!notable)
+        setCurrentSpecies('')
+    }
+
     useEffect(() => {
         fetchRegionsInUS();
         fetchSubRegions();
@@ -84,7 +94,7 @@ function ObservationView() {
                     <Dropdown.Menu className='species-dropdown-menu'>
                         <Dropdown.Item key={'default'} onClick={()=>setCurrentSpecies('')}>Clear Selection</Dropdown.Item>
                         {taxonomy.map((species) => (
-                            <Dropdown.Item key={species.speciesCode} onClick={()=>setCurrentSpecies(species)}>{species.comName}</Dropdown.Item>
+                            <Dropdown.Item key={species.speciesCode} onClick={()=>handleSpeciesSelect(species)}>{species.comName}</Dropdown.Item>
                         ))}
                     </Dropdown.Menu>
                 </Dropdown>
@@ -94,7 +104,7 @@ function ObservationView() {
                         id="custom-switch"
                         label="Notable Observations"
                         checked={notable}
-                        onChange={() => setNotable(!notable)}
+                        onChange={() => handleNotableSwitch(!notable)}
                     />
                 </Form>
             </section>
