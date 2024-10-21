@@ -1,5 +1,8 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/display-name */
 import Observations from './Observations'
 import { useEffect, useContext } from 'react'
+import React from 'react'
 import { Dropdown, Form } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext'
 
@@ -10,7 +13,11 @@ function ObservationView() {
         currentSubRegion, setCurrentSubRegion,
         notable, setNotable,
         taxonomy, setTaxonomy,
-        currentSpecies, setCurrentSpecies} = useContext(ObservationsContext);
+        currentSpecies, setCurrentSpecies,
+        filteredTaxonomy, setFilteredTaxonomy,
+        speciesFilter, setSpeciesFilter} = useContext(ObservationsContext);
+
+        
 
     const fetchRegionsInUS = async () => {
         await fetch('/.netlify/functions/fetchRegionsInUS')
@@ -36,6 +43,9 @@ function ObservationView() {
         .then(data => {
             data.sort((a,b) => a.comName.localeCompare(b.comName))
             setTaxonomy(data)
+            if (!filteredTaxonomy){
+                setFilteredTaxonomy(data)
+            }
         });
     }
 
@@ -54,6 +64,52 @@ function ObservationView() {
         setCurrentSpecies('')
     }
 
+    const CustomSpeciesToggle = React.forwardRef(({ children, onClick }, ref) => (
+        <a
+          href=""
+          ref={ref}
+          onClick={(e) => {
+            e.preventDefault();
+            onClick(e);
+          }}
+          className="btn btn-primary dropdown-toggle"
+        >
+          {children}
+        </a>
+      ));
+      
+      const handleFilter = (e) => {
+        setSpeciesFilter(e.target.value)
+        const regex = RegExp(e.target.value, "gi")
+        const filteredTaxTemp = taxonomy.filter((tax) => tax.comName.match(regex))
+        setFilteredTaxonomy(filteredTaxTemp)
+      }
+
+      const CustomSpeciesMenu = React.forwardRef(
+        ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
+          
+          return (
+            <div
+              ref={ref}
+              style={style}
+              className={className}
+              aria-labelledby={labeledBy}
+            >
+              <Form.Control
+                autoFocus
+                className="mx-3 my-2 w-auto"
+                placeholder="Type to filter..."
+                onChange={handleFilter}
+                value={speciesFilter}
+              />
+              <ul className="list-unstyled">
+                {children}
+              </ul>
+            </div>
+          );
+        },
+      );
+      
     useEffect(() => {
         fetchRegionsInUS();
         fetchSubRegions();
@@ -88,14 +144,16 @@ function ObservationView() {
                     </Dropdown.Menu>
                 </Dropdown>
                 <Dropdown className='species-dropdown'>
-                    <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                    <Dropdown.Toggle variant="primary" id="dropdown-basic" as={CustomSpeciesToggle}>
                         {!currentSpecies ? 'Select Species' : currentSpecies.comName}
                     </Dropdown.Toggle>
-                    <Dropdown.Menu className='species-dropdown-menu'>
+                    <Dropdown.Menu className='species-dropdown-menu' as={CustomSpeciesMenu}>
                         <Dropdown.Item key={'default'} onClick={()=>setCurrentSpecies('')}>Clear Selection</Dropdown.Item>
-                        {taxonomy.map((species) => (
-                            <Dropdown.Item key={species.speciesCode} onClick={()=>handleSpeciesSelect(species)}>{species.comName}</Dropdown.Item>
-                        ))}
+                        {(filteredTaxonomy) ? (filteredTaxonomy.map((species, idx) => (
+                            (idx < 100) ? (
+                                <Dropdown.Item key={species.speciesCode} onClick={()=>handleSpeciesSelect(species)}>{species.comName}</Dropdown.Item>
+                            ) : null)))
+                        : null}
                     </Dropdown.Menu>
                 </Dropdown>
                 <Form className='notable-switch'>

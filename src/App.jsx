@@ -12,22 +12,25 @@ function App() {
   });
   const [regionsInUS, setRegionsInUS] = useState([])
   const [currentRegion, setCurrentRegion] = useState({
-      code:'US',
-      name:'United States'
+    code:'US',
+    name:'United States'
   })
   const [subRegions, setSubRegions] = useState([])
   const [currentSubRegion, setCurrentSubRegion] = useState({
-      code:'',
-      name:''
+    code:'',
+    name:''
   })
   const [notable, setNotable] = useState(false)
   const [taxonomy, setTaxonomy] = useState([])
+  const [filteredTaxonomy, setFilteredTaxonomy] = useState(null)
   const [currentSpecies, setCurrentSpecies] = useState('')
   const [loading, setLoading] = useState(true)
+  const [speciesFilter, setSpeciesFilter] = useState('');
   
   return (
     <>
       <ObservationsContext.Provider value = {{observations, setObservations,
+                                                  filteredTaxonomy, setFilteredTaxonomy,
                                                   regionsInUS, setRegionsInUS,
                                                   currentRegion, setCurrentRegion,
                                                   subRegions, setSubRegions,
@@ -35,7 +38,8 @@ function App() {
                                                   notable, setNotable,
                                                   taxonomy, setTaxonomy,
                                                   currentSpecies, setCurrentSpecies,
-                                                  loading, setLoading}}>
+                                                  loading, setLoading,
+                                                  speciesFilter, setSpeciesFilter}}>
         <Header/>
         <main>
           <ObservationView className="observation-view"/>

@@ -59,7 +59,7 @@ nav {
   color: var(--light-brown);
 }
 
-.dropdown-toggle:after{
+.menu-dropdown:after{
   display: none;
 }
 
@@ -140,8 +140,9 @@ main {
 
 .species-dropdown {
   margin: 0 0 0 1rem
- 
+  
 }
+
 
 .sub-region-dropdown {
   text-align: center;
