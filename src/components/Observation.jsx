@@ -2,8 +2,6 @@
 import { Card } from 'react-bootstrap'
 
 export default function Observation({observation}) {
-    
-
     const formatDate = (originalDateString) => {
         const date = new Date(originalDateString)
 
@@ -18,8 +16,7 @@ export default function Observation({observation}) {
 
         return formatter.format(date);
     }
-
-
+    
     return (
         <>
             <Card className="observation-card" >

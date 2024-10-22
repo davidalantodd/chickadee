@@ -132,6 +132,7 @@ function ObservationView() {
                         ))}
                     </Dropdown.Menu>
                 </Dropdown>
+                {(currentRegion.code !== 'US') ?  (
                 <Dropdown className='region-dropdown'>
                     <Dropdown.Toggle variant="primary" id="dropdown-basic">
                         {currentSubRegion.name ? currentSubRegion.name : 'Select Sub-Region'}
@@ -142,7 +143,7 @@ function ObservationView() {
                             <Dropdown.Item key={region.code} onClick={()=>setCurrentSubRegion(region)}>{region.name}</Dropdown.Item>
                         ))}
                     </Dropdown.Menu>
-                </Dropdown>
+                </Dropdown>) : null}
                 <Dropdown className='species-dropdown'>
                     <Dropdown.Toggle variant="primary" id="dropdown-basic" as={CustomSpeciesToggle}>
                         {!currentSpecies ? 'Select Species' : currentSpecies.comName}

@@ -37,7 +37,7 @@ function Observations() {
         {
             (!loading && observations.obs.length > 0) ? (
                 <>
-                    <h4>{observations.obs.length} recent bird observations</h4>
+                    <h5>{observations.obs.length} recent bird observations</h5>
                     <Container className="observation-container">
                         {(observations.obs.map((observation, index) => (
                             <Observation observation={observation} index={index} key={observation.subId + observation.comName}/>

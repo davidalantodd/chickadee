@@ -112,11 +112,14 @@ h3 {
 
 h4 {
   font-weight: 300;
-  font-size: 2em;
 }
 
 h5 {
-  margin-bottom: 0;
+  font-weight: 300;
+}
+
+h6 {
+  font-weight: 300;
 }
 
 main {
@@ -130,6 +133,7 @@ main {
 .filter-bar {
   display:flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   margin-bottom: 1rem;
@@ -176,6 +180,8 @@ main {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   margin: 1rem;
 }
 
