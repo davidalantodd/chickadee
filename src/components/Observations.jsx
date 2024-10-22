@@ -1,10 +1,9 @@
 import { useEffect, useContext } from 'react'
-import { Table } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext';
-
+import Observation from './Observation'
 function Observations() {
     const {observations, setObservations,
-        setSubRegions, setRegionsInUS,
         currentRegion, currentSubRegion,
         notable, currentSpecies,
         loading, setLoading } = useContext(ObservationsContext)
@@ -27,46 +26,6 @@ function Observations() {
               });
     }
 
-    const fetchRegionsInUS = async () => {
-        await fetch('/.netlify/functions/fetchRegionsInUS')
-            .then(response => response.json())
-            .then(data => setRegionsInUS(data))
-            .catch(error => {
-                console.error('Error fetching regions:', error);
-              });
-    }
-
-    const fetchSubRegions = async () => {
-        await fetch(`/.netlify/functions/fetchSubRegions?currentRegion=${currentRegion.code}`)
-        .then(response => response.json())
-        .then(data => {setSubRegions(data)})
-        .catch(error => {
-            console.error('Error fetching subregions:', error);
-          });
-    }
-
-    const formatDate = (originalDateString) => {
-        const date = new Date(originalDateString)
-
-        const formatter = new Intl.DateTimeFormat('en-US', {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit'
-        })
-
-        return formatter.format(date);
-    }
-
-
-    useEffect(() => {
-        fetchObservationsByRegion()
-        fetchRegionsInUS()
-        fetchSubRegions();
-    }, [])
-
     useEffect(() => {
         fetchObservationsByRegion()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,28 +33,17 @@ function Observations() {
 
 
     return (
-        <>{
+        <>
+        {
             (!loading && observations.obs.length > 0) ? (
-                <Table striped bordered hover className="observation-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Common Name</th>
-                            <th style={{ minWidth: '225px'}}>Date</th>
-                            <th>Location</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <>
+                    <h4>{observations.obs.length} recent bird observations</h4>
+                    <Container className="observation-container">
                         {(observations.obs.map((observation, index) => (
-                            <tr key={observation.subId + observation.comName}>
-                                <td>{index + 1}</td>
-                                <td>{observation.comName}</td>
-                                <td>{formatDate(observation.obsDt)}</td>
-                                <td>{observation.locName}</td>
-                            </tr>
+                            <Observation observation={observation} index={index} key={observation.subId + observation.comName}/>
                         )))}
-                    </tbody>
-                </Table>
+                    </Container>
+                </>
             ) : (
                 (loading) ? (
                     <section className="loading">

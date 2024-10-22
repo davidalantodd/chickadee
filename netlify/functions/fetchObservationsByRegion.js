@@ -20,7 +20,7 @@ exports.handler = async (event) => {
             + (notable === 'true' ? '/notable' : (
                  currentSpecies !== 'undefined'  ? `/${currentSpecies}` : '')
              // eslint-disable-next-line no-undef
-             )
+             ) + '?back=30'
             , requestOptions)
             .then(response => response.json())
         

@@ -4,6 +4,7 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   --light-brown: #B4905D; /*rgb(180,144,93)*/
+  --very-light-brown:rgb(221, 199, 167); /*rgb(180,144,93)*/
   background-color: #242424;
 
   font-synthesis: none;
@@ -131,6 +132,7 @@ main {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  margin-bottom: 1rem;
 }
 
 .region-dropdown {
@@ -170,9 +172,24 @@ main {
   align-items: center;
 }
 
-.observation-table {
+.observation-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   margin: 1rem;
-  width: 95%;
+}
+
+.observation-card{
+  margin: 1rem;
+  width: 18rem;
+  transition-property: transform;
+  transition-duration: .4s;
+}
+
+.observation-card:hover{
+  box-shadow: var(--very-light-brown) 0 0 10px;
+  transform: scale(1.1);
+
 }
 
 footer {
