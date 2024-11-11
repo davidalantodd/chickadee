@@ -39,7 +39,6 @@ function Observations() {
         {
             (!loading && observations.obs.length > 0) ? (
                 <>
-                    {(singleObsView === -1) ? (<h5>{observations.obs.length} recent bird observations</h5>) : null}
                     <Container fluid className="observation-container">
                         {(observations.obs.map((observation, index) => (
                             (singleObsView === -1 ? (

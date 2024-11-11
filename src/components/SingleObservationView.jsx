@@ -38,13 +38,14 @@ export default function SingleObservationView({observation, index}) {
                         {observation.comName}
                     </Card.Title>
                     <Card.Text className="single-page-card-date">
-                        {formatDate(observation.obsDt)}
+                        Observation date: {formatDate(observation.obsDt)}
                     </Card.Text>
                     <Card.Text className="single-page-card-location">
-                        {formatLocation(observation.locName)}
+                        Location: {formatLocation(observation.locName, singleObsView)}
                     </Card.Text>
                     <Card.Img src={wikipediaImgURL} className='single-page-card-image'/>
-                    <Button variant="outline-primary" onClick={handleSingleObsView}>Back to Observations</Button>
+                    <Card.Link href={`https://en.wikipedia.org/wiki/${observation.comName}`} className="wiki-link">Learn more about the {observation.comName} on Wikipedia</Card.Link>
+                    <Button variant="outline-primary" onClick={handleSingleObsView}>Back to observations</Button>
                 </Card.Body>
             </Card>
         </>

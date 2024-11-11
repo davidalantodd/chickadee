@@ -16,7 +16,7 @@ export default function Observation({observation, index}) {
     return (
         <>
             {singleObsView === -1 ?  (
-                <Card className='observation-card' onClick={handleSingleObsView}>
+                <Card className={'observation-card' + ((index % 2 === 0) ? " observation-card-shaded" : "")} onClick={handleSingleObsView}>
                     <Card.Body className="observation-card-body">
                         <Card.Title className="observation-card-title">
                             {observation.comName}
@@ -25,7 +25,7 @@ export default function Observation({observation, index}) {
                             {formatDate(observation.obsDt)}
                         </Card.Text>
                         <Card.Text className="observation-card-location">
-                            {formatLocation(observation.locName)}
+                            {formatLocation(observation.locName, singleObsView)}
                         </Card.Text>
                     </Card.Body>
                 </Card>

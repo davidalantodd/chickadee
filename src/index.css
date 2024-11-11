@@ -5,6 +5,7 @@
   color: rgba(255, 255, 255, 0.87);
   --light-brown: #B4905D; /*rgb(180,144,93)*/
   --very-light-brown:rgb(221, 199, 167); /*rgb(180,144,93)*/
+  --extremely-light-brown:rgb(248, 244, 237);
   background-color: #242424;
 
   font-synthesis: none;
@@ -98,8 +99,6 @@ nav {
 }
 
 
-
-
 h1 {
   font-size: 3em;
   font-weight: 200;
@@ -138,12 +137,35 @@ main {
 }
 
 .filter-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 94vw;
+  margin-bottom: 1rem;
+}
+
+.filter-dropdowns {
   display:flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  
+}
+
+.filter-spacer{
+  width: 5em;
+}
+
+
+.filter-dropdowns h5{
+  margin:0;
+}
+
+.filter-bar > :last-child{
+  color: var(--light-brown);
+  margin:0;
+  align-self: center;
 }
 
 .region-dropdown {
@@ -199,6 +221,10 @@ main {
   transition-duration: .4s;
 }
 
+.observation-card-shaded {
+  background-color: var(--extremely-light-brown);
+}
+
 .observation-card-body{
   display: flex;
   flex-direction: row;
@@ -241,6 +267,11 @@ main {
   transition: box-shadow 0.1s ease-in-out;
 }
 
+.single-page-card-title {
+  font-size: 3em;
+  font-weight: 200;
+}
+
 .single-page-card-body{
   display: flex;
   flex-direction: column;
@@ -249,7 +280,13 @@ main {
 }
 
 .single-page-card-image{
-  width: 50vw;
+  width: auto;
+  max-height: 60vh;
+  max-width: 80vw;
+  margin-bottom: 1em;
+}
+
+.wiki-link {
   margin-bottom: 1em;
 }
 
@@ -287,4 +324,39 @@ footer img:hover{
   button {
     background-color: #f9f9f9;
   }
+}
+
+@media (max-width: 1000px) {
+  .filter-bar{
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 700px) {
+  .filter-dropdowns{
+    flex-direction: column;
+  }
+
+  .region-dropdown button{
+    margin: .5em;
+  }
+
+  .species-dropdown button{
+    margin: .5em;
+  }
+
+  .notable-switch{
+    margin: .5em;
+  }
+
+  #header {
+    margin: 0em;
+    padding: 1em 2em 0em;
+  }
+
+  .observation-card{
+    height: auto;
+    min-height: 5em;
+  }
+
 }

@@ -13,9 +13,10 @@ export const formatDate = (originalDateString) => {
     return formatter.format(date);
 }
 
-export const formatLocation = (origLocationString) => {
+export const formatLocation = (origLocationString, singleObsView) => {
     const formattedLocation = origLocationString;
-    if (formattedLocation.length > 70){
+
+    if (singleObsView === -1 && formattedLocation.length > 70){
         return origLocationString.slice(0,70).concat("...")
     }
     return formattedLocation
