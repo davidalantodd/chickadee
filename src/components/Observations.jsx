@@ -6,7 +6,9 @@ function Observations() {
     const {observations, setObservations,
         currentRegion, currentSubRegion,
         notable, currentSpecies,
-        loading, setLoading } = useContext(ObservationsContext)
+        loading, setLoading,
+        singleObsView
+        } = useContext(ObservationsContext)
     
 
     // fetch eBird API data using Netlify Functions to protect API key
@@ -37,17 +39,24 @@ function Observations() {
         {
             (!loading && observations.obs.length > 0) ? (
                 <>
-                    <h5>{observations.obs.length} recent bird observations</h5>
-                    <Container className="observation-container">
+                    {(singleObsView === -1) ? (<h5>{observations.obs.length} recent bird observations</h5>) : null}
+                    <Container fluid className="observation-container">
                         {(observations.obs.map((observation, index) => (
+                            (singleObsView === -1 ? (
                             <Observation observation={observation} index={index} key={observation.subId + observation.comName}/>
+                            ) : (
+                                (index === singleObsView) ? (
+                                    <Observation observation={observation} index={index} key={observation.subId + observation.comName}/>
+                                ) : null
+                            ))
                         )))}
                     </Container>
                 </>
             ) : (
                 (loading) ? (
                     <section className="loading">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-arrow-clockwise loading-arrow" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                className="bi bi-arrow-clockwise loading-arrow" viewBox="0 0 16 16">
                             <path fillRule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
                             <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
                         </svg>

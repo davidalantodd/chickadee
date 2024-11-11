@@ -15,7 +15,8 @@ function ObservationView() {
         taxonomy, setTaxonomy,
         currentSpecies, setCurrentSpecies,
         filteredTaxonomy, setFilteredTaxonomy,
-        speciesFilter, setSpeciesFilter} = useContext(ObservationsContext);
+        speciesFilter, setSpeciesFilter,
+        singleObsView} = useContext(ObservationsContext);
 
         
 
@@ -119,54 +120,56 @@ function ObservationView() {
 
     return (
         <>
-            <section className="filter-bar">
-                <h5>Filter by Region</h5>
-                <Dropdown className='region-dropdown'>
-                    <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                        {currentRegion.name !== 'United States' ? currentRegion.name : 'Select State'}
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu className='region-dropdown-menu'>
-                        <Dropdown.Item key={'default'} onClick={()=>setCurrentRegion({code:'US',name:'United States'})}>Clear Selection</Dropdown.Item>
-                        {regionsInUS.map((region) => (
-                            <Dropdown.Item key={region.code} onClick={()=>handleRegionSelect(region)}>{region.name}</Dropdown.Item>
-                        ))}
-                    </Dropdown.Menu>
-                </Dropdown>
-                {(currentRegion.code !== 'US') ?  (
-                <Dropdown className='region-dropdown'>
-                    <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                        {currentSubRegion.name ? currentSubRegion.name : 'Select Sub-Region'}
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu className='region-dropdown-menu'>
-                        <Dropdown.Item key={'default'} onClick={()=>setCurrentSubRegion({code:'',name:''})}>Clear Selection</Dropdown.Item>
-                        {subRegions.map((region) => (
-                            <Dropdown.Item key={region.code} onClick={()=>setCurrentSubRegion(region)}>{region.name}</Dropdown.Item>
-                        ))}
-                    </Dropdown.Menu>
-                </Dropdown>) : null}
-                <Dropdown className='species-dropdown'>
-                    <Dropdown.Toggle variant="primary" id="dropdown-basic" as={CustomSpeciesToggle}>
-                        {!currentSpecies ? 'Select Species' : currentSpecies.comName}
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu className='species-dropdown-menu' as={CustomSpeciesMenu}>
-                        <Dropdown.Item key={'default'} onClick={()=>setCurrentSpecies('')}>Clear Selection</Dropdown.Item>
-                        {(filteredTaxonomy) ? (filteredTaxonomy.map((species, idx) => (
-                            (idx < 100) ? (
-                                <Dropdown.Item key={species.speciesCode} onClick={()=>handleSpeciesSelect(species)}>{species.comName}</Dropdown.Item>
-                            ) : null)))
-                        : null}
-                    </Dropdown.Menu>
-                </Dropdown>
-                <Form className='notable-switch'>
-                    <Form.Check
-                        type="switch"
-                        id="custom-switch"
-                        label="Notable Observations"
-                        checked={notable}
-                        onChange={() => handleNotableSwitch(!notable)}
-                    />
-                </Form>
-            </section>
+            {(singleObsView === -1) ? (
+                <section className="filter-bar">
+                    <h5>Filter by Region</h5>
+                    <Dropdown className='region-dropdown'>
+                        <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                            {currentRegion.name !== 'United States' ? currentRegion.name : 'Select State'}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu className='region-dropdown-menu'>
+                            <Dropdown.Item key={'default'} onClick={()=>setCurrentRegion({code:'US',name:'United States'})}>Clear Selection</Dropdown.Item>
+                            {regionsInUS.map((region) => (
+                                <Dropdown.Item key={region.code} onClick={()=>handleRegionSelect(region)}>{region.name}</Dropdown.Item>
+                            ))}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    {(currentRegion.code !== 'US') ?  (
+                    <Dropdown className='region-dropdown'>
+                        <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                            {currentSubRegion.name ? currentSubRegion.name : 'Select Sub-Region'}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu className='region-dropdown-menu'>
+                            <Dropdown.Item key={'default'} onClick={()=>setCurrentSubRegion({code:'',name:''})}>Clear Selection</Dropdown.Item>
+                            {subRegions.map((region) => (
+                                <Dropdown.Item key={region.code} onClick={()=>setCurrentSubRegion(region)}>{region.name}</Dropdown.Item>
+                            ))}
+                        </Dropdown.Menu>
+                    </Dropdown>) : null}
+                    <Dropdown className='species-dropdown'>
+                        <Dropdown.Toggle variant="primary" id="dropdown-basic" as={CustomSpeciesToggle}>
+                            {!currentSpecies ? 'Select Species' : currentSpecies.comName}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu className='species-dropdown-menu' as={CustomSpeciesMenu}>
+                            <Dropdown.Item key={'default'} onClick={()=>setCurrentSpecies('')}>Clear Selection</Dropdown.Item>
+                            {(filteredTaxonomy) ? (filteredTaxonomy.map((species, idx) => (
+                                (idx < 100) ? (
+                                    <Dropdown.Item key={species.speciesCode} onClick={()=>handleSpeciesSelect(species)}>{species.comName}</Dropdown.Item>
+                                ) : null)))
+                            : null}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <Form className='notable-switch'>
+                        <Form.Check
+                            type="switch"
+                            id="custom-switch"
+                            label="Notable Observations"
+                            checked={notable}
+                            onChange={() => handleNotableSwitch(!notable)}
+                        />
+                    </Form>
+                </section>
+            ) : null}
             <Observations className="observations-component"/>
         </>
     )

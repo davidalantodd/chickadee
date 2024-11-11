@@ -1,35 +1,37 @@
 /* eslint-disable react/prop-types */
 import { Card } from 'react-bootstrap'
+import { useContext } from 'react'
+import { ObservationsContext } from '../contexts/ObservationsContext'
+import SingleObservationView from './SingleObservationView'
+import { formatDate, formatLocation } from '../utils/formatHelperFunctions'
 
-export default function Observation({observation}) {
-    const formatDate = (originalDateString) => {
-        const date = new Date(originalDateString)
+export default function Observation({observation, index}) {
+    const { singleObsView, setSingleObsView } = useContext(ObservationsContext)
 
-        const formatter = new Intl.DateTimeFormat('en-US', {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit'
-        })
 
-        return formatter.format(date);
+    const handleSingleObsView = () => {
+        setSingleObsView(singleObsView === -1 ? index : -1)
     }
     
     return (
         <>
-            <Card className="observation-card" >
-                <Card.Body>
-                <Card.Title>
-                    {observation.comName}
-                </Card.Title>
-                <Card.Text>
-                    <p>{formatDate(observation.obsDt)}</p>
-                    <p>{observation.locName}</p>
-                </Card.Text>
-                </Card.Body>
-            </Card>
+            {singleObsView === -1 ?  (
+                <Card className='observation-card' onClick={handleSingleObsView}>
+                    <Card.Body className="observation-card-body">
+                        <Card.Title className="observation-card-title">
+                            {observation.comName}
+                        </Card.Title>
+                        <Card.Text className="observation-card-date">
+                            {formatDate(observation.obsDt)}
+                        </Card.Text>
+                        <Card.Text className="observation-card-location">
+                            {formatLocation(observation.locName)}
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
+            ) : (
+                <SingleObservationView observation={observation} index={index}/>
+            )}
         </>
     )
 }

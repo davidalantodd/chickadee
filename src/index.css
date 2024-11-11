@@ -41,6 +41,12 @@ nav {
   align-items: center;
 }
 
+#header {
+  width: 100vw;
+  padding: 2em 2em 1em;
+  margin: 0 0 0 0;
+}
+
 .header-logo{
   display: flex;
   flex-direction: row;
@@ -123,11 +129,12 @@ h6 {
 }
 
 main {
-  min-height: calc(100vh - 50px);
+  min-height: calc(100vh - 198px);
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
+  width: 100%;
 }
 
 .filter-bar {
@@ -182,27 +189,75 @@ main {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  margin: 1rem;
 }
 
 .observation-card{
-  margin: 1rem;
-  width: 18rem;
+  margin: .25rem;
+  width: 95vw;
+  height: 3.5em;
   transition-property: transform;
   transition-duration: .4s;
 }
 
+.observation-card-body{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: .5rem;
+}
+
 .observation-card:hover{
   box-shadow: var(--very-light-brown) 0 0 10px;
-  transform: scale(1.1);
+  transform: scale(1.01);
+  cursor: pointer;
+}
 
+.observation-card-title{
+  width: 18rem;
+  margin: 0;
+}
+
+.observation-card-date{
+  width: 18rem;
+  text-align: center;
+  font-size: .9em;
+  margin: 0;
+}
+
+.observation-card-location{
+  width: 18rem;
+  text-align: end;
+  font-size: .9em;
+}
+
+.observation-single-page-view {
+  min-height: calc(100vh - 108.8px - 2em);
+  width: 85vw;
+}
+
+.observation-single-page-view:hover{
+  box-shadow: var(--very-light-brown) 0 0 10px;
+  transition: box-shadow 0.1s ease-in-out;
+}
+
+.single-page-card-body{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.single-page-card-image{
+  width: 50vw;
+  margin-bottom: 1em;
 }
 
 footer {
   display:flex;
   justify-content:center;
   align-items: center;
-  padding-top: 2rem;
+  padding-top: 1em;
 }
 
 footer p {

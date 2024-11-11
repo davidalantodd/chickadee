@@ -26,6 +26,7 @@ function App() {
   const [currentSpecies, setCurrentSpecies] = useState('')
   const [loading, setLoading] = useState(true)
   const [speciesFilter, setSpeciesFilter] = useState('');
+  const [singleObsView, setSingleObsView] = useState(-1)
   
   return (
     <>
@@ -39,7 +40,8 @@ function App() {
                                                   taxonomy, setTaxonomy,
                                                   currentSpecies, setCurrentSpecies,
                                                   loading, setLoading,
-                                                  speciesFilter, setSpeciesFilter}}>
+                                                  speciesFilter, setSpeciesFilter,
+                                                  singleObsView, setSingleObsView}}>
         <Header/>
         <main>
           <ObservationView className="observation-view"/>

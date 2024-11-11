@@ -3,7 +3,7 @@ import { Dropdown } from 'react-bootstrap'
 
 function Header() {
     return (
-        <nav>
+        <nav id="header">
             <a href="/" className="header-logo">
                 <img className="chickadee-icon" src={chickadee}/>
                 <h1 className="title">chickadee</h1>
