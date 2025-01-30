@@ -5,6 +5,7 @@ import { useEffect, useContext } from 'react'
 import React from 'react'
 import { Dropdown, Form } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext'
+import { fetchRegionsInUS, fetchSubRegions, fetchTaxonomy } from '../utils/api'
 
 function ObservationView() {
     const {regionsInUS, setRegionsInUS,
@@ -21,35 +22,7 @@ function ObservationView() {
 
         
 
-    const fetchRegionsInUS = async () => {
-        await fetch('/.netlify/functions/fetchRegionsInUS')
-            .then(response => response.json())
-            .then(data => setRegionsInUS(data))
-            .catch(error => {
-                console.error('Error fetching regions:', error);
-            });
-    }
-
-    const fetchSubRegions = async () => {
-        await fetch(`/.netlify/functions/fetchSubRegions?currentRegion=${currentRegion.code}`)
-            .then(response => response.json())
-            .then(data => {setSubRegions(data)})
-            .catch(error => {
-                console.error('Error fetching subregions:', error);
-            });
-    }
-
-    const fetchTaxonomy = async () => {
-        await fetch('/.netlify/functions/fetchTaxonomy')
-        .then(response => response.json())
-        .then(data => {
-            data.sort((a,b) => a.comName.localeCompare(b.comName))
-            setTaxonomy(data)
-            if (!filteredTaxonomy){
-                setFilteredTaxonomy(data)
-            }
-        });
-    }
+   
 
     const handleRegionSelect = (region) => {
         setCurrentRegion(region) 
@@ -113,9 +86,18 @@ function ObservationView() {
       );
       
     useEffect(() => {
-        fetchRegionsInUS();
-        fetchSubRegions();
-        fetchTaxonomy();
+        fetchRegionsInUS()
+            .then(data => setRegionsInUS(data));
+        fetchSubRegions(currentRegion)
+            .then(data => {setSubRegions(data)});
+        fetchTaxonomy()
+            .then(data => {
+                data.sort((a,b) => a.comName.localeCompare(b.comName))
+                setTaxonomy(data)
+                if (!filteredTaxonomy){
+                    setFilteredTaxonomy(data)
+                }
+            });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentRegion]);
 
