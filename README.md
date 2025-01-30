@@ -8,8 +8,10 @@ A web app to view recent bird observations using [eBird](https://ebird.org/home)
 ## ⚙️ setup instructions
 
 - download [node.js](https://nodejs.org/)
+- download [neltify-cli](https://docs.netlify.com/cli/get-started/)
+- create an [eBird account](https://ebird.org/home) and access your eBird API Key, create a `.env` file and assign your key to `VITE_EBIRD_API_KEY`
 - `npm i`
-- `npm run dev`
+- `netlify dev` to run app using netlify functions
 
 ## 🧑‍💻 functionality
 - filter bird observations by region in the US
