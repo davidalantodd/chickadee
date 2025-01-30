@@ -1,86 +1,27 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
 import Observations from './Observations'
 import { useEffect, useContext } from 'react'
 import React from 'react'
-import { Dropdown, Form } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext'
 import { fetchRegionsInUS, fetchSubRegions, fetchTaxonomy } from '../utils/api'
+import RegionDropdown from './RegionDropdown'
+import SpeciesDropdown from './SpeciesDropdown'
+import SubRegionDropdown from './SubRegionDropdown'
 
 function ObservationView() {
-    const {regionsInUS, setRegionsInUS,
-        currentRegion, setCurrentRegion,
-        subRegions, setSubRegions,
-        observations,
-        currentSubRegion, setCurrentSubRegion,
-        notable, setNotable,
-        taxonomy, setTaxonomy,
-        currentSpecies, setCurrentSpecies,
-        filteredTaxonomy, setFilteredTaxonomy,
-        speciesFilter, setSpeciesFilter,
+    const {setRegionsInUS, currentRegion,setSubRegions,
+        observations, notable, setNotable, setTaxonomy,
+        setCurrentSpecies, filteredTaxonomy, setFilteredTaxonomy,
         singleObsView} = useContext(ObservationsContext);
 
-
-    const handleRegionSelect = (region) => {
-        setCurrentRegion(region) 
-        setCurrentSubRegion({code:'',name:''})
-    } 
-
-    const handleSpeciesSelect = (species) => {
-        setCurrentSpecies(species)
-        setNotable(false)
-    }
 
     const handleNotableSwitch = () => {
         setNotable(!notable)
         setCurrentSpecies('')
     }
-
-    const CustomSpeciesToggle = React.forwardRef(({ children, onClick }, ref) => (
-        <a
-          href=""
-          ref={ref}
-          onClick={(e) => {
-            e.preventDefault();
-            onClick(e);
-          }}
-          className="btn btn-primary dropdown-toggle"
-        >
-          {children}
-        </a>
-      ));
-      
-      const handleFilter = (e) => {
-        setSpeciesFilter(e.target.value)
-        const regex = RegExp(e.target.value, "gi")
-        const filteredTaxTemp = taxonomy.filter((tax) => tax.comName.match(regex))
-        setFilteredTaxonomy(filteredTaxTemp)
-      }
-
-      const CustomSpeciesMenu = React.forwardRef(
-        ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
-          
-          return (
-            <div
-              ref={ref}
-              style={style}
-              className={className}
-              aria-labelledby={labeledBy}
-            >
-              <Form.Control
-                autoFocus
-                className="mx-3 my-2 w-auto"
-                placeholder="Type to filter..."
-                onChange={handleFilter}
-                value={speciesFilter}
-              />
-              <ul className="list-unstyled">
-                {children}
-              </ul>
-            </div>
-          );
-        },
-      );
       
     useEffect(() => {
         fetchRegionsInUS()
@@ -110,42 +51,11 @@ function ObservationView() {
                 <section className="filter-bar">
                     <span className="filter-dropdowns">
                         <h5>Filter observations</h5>
-                        <Dropdown className='region-dropdown'>
-                            <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                                {currentRegion.name !== 'United States' ? currentRegion.name : 'Select State'}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu className='region-dropdown-menu'>
-                                <Dropdown.Item key={'default'} onClick={()=>setCurrentRegion({code:'US',name:'United States'})}>Clear Selection</Dropdown.Item>
-                                {regionsInUS.map((region) => (
-                                    <Dropdown.Item key={region.code} onClick={()=>handleRegionSelect(region)}>{region.name}</Dropdown.Item>
-                                ))}
-                            </Dropdown.Menu>
-                        </Dropdown>
-                        {(currentRegion.code !== 'US') ?  (
-                        <Dropdown className='region-dropdown'>
-                            <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                                {currentSubRegion.name ? currentSubRegion.name : 'Select Sub-Region'}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu className='region-dropdown-menu'>
-                                <Dropdown.Item key={'default'} onClick={()=>setCurrentSubRegion({code:'',name:''})}>Clear Selection</Dropdown.Item>
-                                {subRegions.map((region) => (
-                                    <Dropdown.Item key={region.code} onClick={()=>setCurrentSubRegion(region)}>{region.name}</Dropdown.Item>
-                                ))}
-                            </Dropdown.Menu>
-                        </Dropdown>) : null}
-                        <Dropdown className='species-dropdown'>
-                            <Dropdown.Toggle variant="primary" id="dropdown-basic" as={CustomSpeciesToggle}>
-                                {!currentSpecies ? 'Select Species' : currentSpecies.comName}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu className='species-dropdown-menu' as={CustomSpeciesMenu}>
-                                <Dropdown.Item key={'default'} onClick={()=>setCurrentSpecies('')}>Clear Selection</Dropdown.Item>
-                                {(filteredTaxonomy) ? (filteredTaxonomy.map((species, idx) => (
-                                    (idx < 100) ? (
-                                        <Dropdown.Item key={species.speciesCode} onClick={()=>handleSpeciesSelect(species)}>{species.comName}</Dropdown.Item>
-                                    ) : null)))
-                                : null}
-                            </Dropdown.Menu>
-                        </Dropdown>
+                        <RegionDropdown/>
+                        {(currentRegion.code !== 'US') ? (
+                            <SubRegionDropdown/>
+                        ) : null}
+                        <SpeciesDropdown />
                         <Form className='notable-switch'>
                             <Form.Check
                                 type="switch"
