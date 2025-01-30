@@ -20,9 +20,6 @@ function ObservationView() {
         speciesFilter, setSpeciesFilter,
         singleObsView} = useContext(ObservationsContext);
 
-        
-
-   
 
     const handleRegionSelect = (region) => {
         setCurrentRegion(region) 
@@ -88,8 +85,6 @@ function ObservationView() {
     useEffect(() => {
         fetchRegionsInUS()
             .then(data => setRegionsInUS(data));
-        fetchSubRegions(currentRegion)
-            .then(data => {setSubRegions(data)});
         fetchTaxonomy()
             .then(data => {
                 data.sort((a,b) => a.comName.localeCompare(b.comName))
@@ -99,7 +94,15 @@ function ObservationView() {
                 }
             });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentRegion]);
+    }, []);
+
+    useEffect(() => {
+        if (currentRegion.code) {
+            fetchSubRegions(currentRegion)
+                .then(data => {setSubRegions(data)});
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentRegion])
 
     return (
         <>
