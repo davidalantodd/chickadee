@@ -1,4 +1,6 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ObservationView from './components/ObservationView'
+import LandingPage from './components/LandingPage';
 import Header from './components/Header';
 import Footer from './components/Footer'
 import { ObservationsContext } from './contexts/ObservationsContext';
@@ -42,11 +44,22 @@ function App() {
                                                   loading, setLoading,
                                                   speciesFilter, setSpeciesFilter,
                                                   singleObsView, setSingleObsView}}>
-        <Header/>
-        <main>
-          <ObservationView className="observation-view"/>
-        </main>
-        <Footer/>
+        <Router>
+          
+          <Routes>
+            <Route path="/" element = {<LandingPage/>} />
+            <Route path = "/observations" element= {
+              <>
+                <Header/>
+                  <main>
+                    <ObservationView className="observation-view"/>
+                  </main>
+                <Footer/>
+              </>
+            }/>
+          </Routes>
+          
+        </Router>
       </ObservationsContext.Provider>
     </>
   )
