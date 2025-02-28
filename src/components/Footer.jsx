@@ -11,7 +11,7 @@ function Footer() {
             <a href="https://github.com/davidalantodd/" target="_blank" rel="noreferrer opener">
                 <img src={github} alt="Github Logo"/>
             </a>
-            <p>&copy;2024 David Todd</p>
+            <p>&copy;2025 David Todd</p>
             </footer>
         </>
     )

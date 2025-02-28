@@ -17,7 +17,8 @@
     "esbuild": "^0.24.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^7.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

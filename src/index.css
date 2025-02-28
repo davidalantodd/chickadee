@@ -42,6 +42,36 @@ nav {
   align-items: center;
 }
 
+.landing-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.landing-page-image {
+  max-height: 100%;
+  width: 100vw;
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.landing-page-button { 
+  position: absolute;
+  padding: 1em 2em;
+  font-size: 1.5em;
+  background-color: transparent;
+  border: 3px solid white;
+  color: white;
+}
+
+.landing-page-button:hover {
+  background-color: var(--light-brown);
+  border: 3px solid white;
+}
+
 #header {
   width: 100vw;
   padding: 2em 2em 1em;
@@ -128,7 +158,6 @@ h6 {
 }
 
 main {
-  min-height: calc(100vh - 198px);
   display: flex;
   flex-direction: column;
   justify-content: start;
