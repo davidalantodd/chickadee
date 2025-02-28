@@ -34,6 +34,10 @@ View chickadee on [Netlify](https://chickadeeapp.netlify.app/)!
 
 ### 📸 app screenshots
 
+#### landing page
+
+![Image](/src/assets/chickadee-screenshot-landing-page.png)
+
 #### view recent bird observations
 
 ![Image](/src/assets/chickadee-screenshot-1.png)

@@ -63,13 +63,13 @@ nav {
   padding: 1em 2em;
   font-size: 1.5em;
   background-color: transparent;
-  border: 2px solid white;
+  border: 3px solid white;
   color: white;
 }
 
 .landing-page-button:hover {
   background-color: var(--light-brown);
-  border: 2px solid white;
+  border: 3px solid white;
 }
 
 #header {
