@@ -45,20 +45,16 @@ function App() {
                                                   speciesFilter, setSpeciesFilter,
                                                   singleObsView, setSingleObsView}}>
         <Router>
-          
+        <Header/>
           <Routes>
             <Route path="/" element = {<LandingPage/>} />
             <Route path = "/observations" element= {
-              <>
-                <Header/>
-                  <main>
-                    <ObservationView className="observation-view"/>
-                  </main>
-                <Footer/>
-              </>
+                <main>
+                  <ObservationView />
+                </main>
             }/>
           </Routes>
-          
+          <Footer/>
         </Router>
       </ObservationsContext.Provider>
     </>
