@@ -17,7 +17,7 @@ function Header() {
                 </Dropdown.Toggle>
                 <></>
                 <Dropdown.Menu variant="nooutline">
-                    <Dropdown.Item href="/">Observations by Region</Dropdown.Item>
+                    <Dropdown.Item href="/observations">Observations by Region</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
         </nav>
