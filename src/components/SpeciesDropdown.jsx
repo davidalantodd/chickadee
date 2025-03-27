@@ -1,10 +1,11 @@
 /* eslint-disable react/display-name */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useMemo } from 'react'
 import { Dropdown, Form } from 'react-bootstrap'
 import { FixedSizeList as List } from 'react-window'
 import { ObservationsContext } from '../contexts/ObservationsContext'
+import debounce from 'lodash/debounce'
 
 function SpeciesDropdown() {
     const { currentSpecies, setCurrentSpecies, setNotable, taxonomy, filteredTaxonomy, setFilteredTaxonomy, setSpeciesFilter, speciesFilter } = useContext(ObservationsContext)
@@ -32,13 +33,20 @@ function SpeciesDropdown() {
           {children}
         </a>
       ));
+
+      const debouncedFilter = useMemo(() => 
+        debounce((value) => {
+            const regex = RegExp(value, "gi")
+            const filteredTaxTemp = taxonomy.filter((tax) => tax.comName.match(regex))
+            setFilteredTaxonomy(filteredTaxTemp)
+            setDisplayedSpecies(filteredTaxTemp)
+        }, 300), [taxonomy, setFilteredTaxonomy]
+    )
       
       const handleFilter = (e) => {
-        setSpeciesFilter(e.target.value)
-        const regex = RegExp(e.target.value, "gi")
-        const filteredTaxTemp = taxonomy.filter((tax) => tax.comName.match(regex))
-        setFilteredTaxonomy(filteredTaxTemp)
-        setDisplayedSpecies(filteredTaxTemp)
+        const value = e.target.value
+        setSpeciesFilter(value)
+        debouncedFilter(value)
       }
 
       const Row = ({ index, style }) => (
