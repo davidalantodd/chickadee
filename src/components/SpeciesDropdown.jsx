@@ -1,14 +1,19 @@
 /* eslint-disable react/display-name */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Dropdown, Form } from 'react-bootstrap'
+import { FixedSizeList as List } from 'react-window'
 import { ObservationsContext } from '../contexts/ObservationsContext'
 
 function SpeciesDropdown() {
     const { currentSpecies, setCurrentSpecies, setNotable, taxonomy, filteredTaxonomy, setFilteredTaxonomy, setSpeciesFilter, speciesFilter } = useContext(ObservationsContext)
+    const [displayedSpecies, setDisplayedSpecies] = useState(filteredTaxonomy ? filteredTaxonomy.slice(0, 100) : [])
     
-    
+    useEffect(() => {
+      setDisplayedSpecies(filteredTaxonomy ? filteredTaxonomy : [])
+  }, [filteredTaxonomy])
+
     const handleSpeciesSelect = (species) => {
         setCurrentSpecies(species)
         setNotable(false)
@@ -33,7 +38,16 @@ function SpeciesDropdown() {
         const regex = RegExp(e.target.value, "gi")
         const filteredTaxTemp = taxonomy.filter((tax) => tax.comName.match(regex))
         setFilteredTaxonomy(filteredTaxTemp)
+        setDisplayedSpecies(filteredTaxTemp)
       }
+
+      const Row = ({ index, style }) => (
+        <div style={style}>
+            <Dropdown.Item key={displayedSpecies[index].speciesCode} onClick={() => handleSpeciesSelect(displayedSpecies[index])}>
+                {displayedSpecies[index].comName}
+            </Dropdown.Item>
+        </div>
+    );
 
       const CustomSpeciesMenu = React.forwardRef(
         ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
@@ -52,9 +66,16 @@ function SpeciesDropdown() {
                 onChange={handleFilter}
                 value={speciesFilter}
               />
-              <ul className="list-unstyled">
-                {children}
-              </ul>
+              <Dropdown.Item key={'default'} onClick={() => setCurrentSpecies('')}>Clear Selection</Dropdown.Item>
+
+              <List
+                height={280}
+                itemCount={displayedSpecies.length}
+                itemSize={35}
+                width={'100%'}
+              >
+                {Row}
+              </List>
             </div>
           );
         },
@@ -65,14 +86,7 @@ function SpeciesDropdown() {
             <Dropdown.Toggle variant="primary" id="dropdown-basic" as={CustomSpeciesToggle}>
                 {!currentSpecies ? 'Select Species' : currentSpecies.comName}
             </Dropdown.Toggle>
-            <Dropdown.Menu className='species-dropdown-menu' as={CustomSpeciesMenu}>
-                <Dropdown.Item key={'default'} onClick={()=>setCurrentSpecies('')}>Clear Selection</Dropdown.Item>
-                {(filteredTaxonomy) ? (filteredTaxonomy.map((species, idx) => (
-                    (idx < 100) ? (
-                        <Dropdown.Item key={species.speciesCode} onClick={()=>handleSpeciesSelect(species)}>{species.comName}</Dropdown.Item>
-                    ) : null)))
-                : null}
-            </Dropdown.Menu>
+            <Dropdown.Menu className='species-dropdown-menu' as={CustomSpeciesMenu}></Dropdown.Menu>
         </Dropdown>
     )
 
