@@ -244,7 +244,7 @@ main {
 }
 
 .observation-card{
-  margin: .25rem;
+  margin: .25rem auto;
   width: 95vw;
   height: 3.5em;
   transition-property: transform;
@@ -290,6 +290,7 @@ main {
 .observation-single-page-view {
   min-height: calc(100vh - 108.8px - 2em);
   width: 85vw;
+  margin: auto;
 }
 
 .observation-single-page-view:hover{
