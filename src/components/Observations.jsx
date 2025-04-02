@@ -59,7 +59,7 @@ function Observations() {
                     key={observation.subId + observation.comName}
                     observation={observation}
                     index={index}
-                    lassName="observation-card"
+                    className="observation-card"
                 />
             </div>
 		);
@@ -68,11 +68,11 @@ function Observations() {
 	return (
 		<>
 			{!loading && observations.obs.length > 0 ? (
-				<Container fluid className=".observation-container">
+				<Container fluid className="observation-container">
 					{singleObsView !== -1 ? (
 						<div style={{ height: "100%", width: "100%" }}>
 							<Observation
-                                className='.observation-single-page-view'
+                                className='observation-single-page-view'
 								observation={observations.obs[singleObsView]}
 								index={singleObsView}
 							/>
