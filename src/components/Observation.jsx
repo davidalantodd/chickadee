@@ -11,6 +11,7 @@ export default function Observation({observation, index}) {
     const navigate = useNavigate();
 
     const handleSingleObsView = () => {
+        localStorage.setItem('scrollPosition', window.scrollY);
         navigate(`/observations/${observation.subId}`);
     }
     

@@ -15,9 +15,9 @@ export default function SingleObservationView() {
 
     const navigate = useNavigate();
 
-    const handleSingleObsView = () => {
-        setSingleObsView(-1)
-        navigate(`/observations`)
+    const handleBackToObservations = () => {
+        setSingleObsView(-1);
+        navigate(`/observations`);
     }
 
     const fetchWikiImgURL = () => {
@@ -37,6 +37,7 @@ export default function SingleObservationView() {
         if (observation) {
             fetchWikiImgURL();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [observation])
 
     return observation ? (
@@ -53,7 +54,7 @@ export default function SingleObservationView() {
                 </Card.Text>
                 <Card.Img src={wikipediaImgURL} className='single-page-card-image'/>
                 <Card.Link href={`https://en.wikipedia.org/wiki/${observation.comName}`} className="wiki-link">Learn more about the {observation.comName} on Wikipedia</Card.Link>
-                <Button variant="outline-primary" onClick={handleSingleObsView}>Back to observations</Button>
+                <Button variant="outline-primary" onClick={handleBackToObservations}>Back to observations</Button>
             </Card.Body>
         </Card>
     ) : (

@@ -33,6 +33,15 @@ function Observations() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentRegion, currentSubRegion, notable, currentSpecies])
 
+    useEffect(() => {
+        if (!loading && observations.obs.length > 0) {
+            const scrollPosition = localStorage.getItem('scrollPosition');
+            if (scrollPosition) {
+                window.scrollTo(0, parseInt(scrollPosition, 10));
+                localStorage.removeItem('scrollPosition');
+            }
+        }
+    }, [loading, observations]);
 
     return (
         <>
