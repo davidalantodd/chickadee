@@ -4,13 +4,14 @@ import { useContext } from 'react'
 import { ObservationsContext } from '../contexts/ObservationsContext'
 import SingleObservationView from './SingleObservationView'
 import { formatDate, formatLocation } from '../utils/formatHelperFunctions'
+import { useNavigate } from 'react-router-dom';
 
 export default function Observation({observation, index}) {
-    const { singleObsView, setSingleObsView } = useContext(ObservationsContext)
-
+    const { singleObsView } = useContext(ObservationsContext)
+    const navigate = useNavigate();
 
     const handleSingleObsView = () => {
-        setSingleObsView(singleObsView === -1 ? index : -1)
+        navigate(`/observations/${observation.subId}`);
     }
     
     return (

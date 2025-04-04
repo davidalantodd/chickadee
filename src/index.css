@@ -14,7 +14,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-
 a {
   font-weight: 300;
   color: black;
@@ -288,6 +287,7 @@ main {
 }
 
 .observation-single-page-view {
+  margin: auto;
   min-height: calc(100vh - 108.8px - 2em);
   width: 85vw;
 }

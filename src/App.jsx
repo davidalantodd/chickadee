@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Footer from './components/Footer'
 import { ObservationsContext } from './contexts/ObservationsContext';
 import { useState } from 'react'
+import SingleObservationView from './components/SingleObservationView';
 
 function App() {
 
@@ -53,6 +54,7 @@ function App() {
                   <ObservationView />
                 </main>
             }/>
+            <Route path="/observations/:id" element={<SingleObservationView />} />
           </Routes>
           <Footer/>
         </Router>
