@@ -13,7 +13,7 @@ export default function Observation({observation, index}) {
     // Function to to navigate to the SingleObservationView and store the scroll position
     const handleSingleObsView = () => {
         localStorage.setItem('scrollPosition', window.scrollY);
-        navigate(`/observations/${observation.subId}`);
+        navigate(`/observations/${observation.subId}?code=${observation.speciesCode}&commonName=${observation.comName}&location=${observation.locName}&date=${observation.obsDt}`);
     }
     
     return (
