@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
 import Observations from './Observations'
-import { useEffect, useContext, useState } from 'react'
+import { useEffect, useContext, useState, useMemo } from 'react'
 import React from 'react'
 import { Form } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext'
@@ -10,6 +10,7 @@ import { fetchRegionsInUS, fetchSubRegions, fetchTaxonomy } from '../utils/api'
 import RegionDropdown from './RegionDropdown'
 import SpeciesDropdown from './SpeciesDropdown'
 import SubRegionDropdown from './SubRegionDropdown'
+import debounce from 'lodash/debounce';
 
 function ObservationView() {
     const {setRegionsInUS, currentRegion,setSubRegions,
@@ -17,7 +18,7 @@ function ObservationView() {
         setCurrentSpecies, filteredTaxonomy, setFilteredTaxonomy,
         singleObsView, filteredObservations, setFilteredObservations} = useContext(ObservationsContext);
 
-    const [filterText, setFilterText] = useState('');
+    const [filterText, setFilterText] = useState("");
 
     const handleNotableSwitch = () => {
         setNotable(!notable)
@@ -46,6 +47,28 @@ function ObservationView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentRegion])
 
+    // Debounced filter function
+    const debouncedFilter = useMemo(
+        () =>
+            debounce((value) => {
+                let filteredObs = observations.obs.filter((observation) =>
+                    observation.comName.toLowerCase().includes(value.toLowerCase())
+                );
+                setFilteredObservations({
+                    ...filteredObservations,
+                    obs: filteredObs,
+                });
+            }, 300), // 300ms debounce delay
+        [observations.obs, setFilteredObservations, filteredObservations]
+    );
+
+    // Handle filter input changes
+    const handleFilterChange = (e) => {
+        const value = e.target.value;
+        setFilterText(value);
+        debouncedFilter(value); 
+    };
+
     useEffect(() => {
         // Filter observations based on the filter text
         const filteredObs = observations.obs.filter((observation) =>
@@ -55,9 +78,7 @@ function ObservationView() {
             ...filteredObservations,
             obs: filteredObs,
         });
-    }, [filterText, observations.obs]);
-
-    console.log(filteredObservations)
+    }, [observations.obs]);
 
     return (
         <>
@@ -86,15 +107,15 @@ function ObservationView() {
                                 type="text"
                                 placeholder="Search observations..."
                                 value={filterText}
-                                onChange={(e) => setFilterText(e.target.value)}
+                                onChange={handleFilterChange}
                             />
                         </Form>
                     </span>
-                    {(singleObsView === -1) ? (<h5>{observations.obs.length} recent bird observations</h5>) : null}
+                    {(singleObsView === -1) ? (<h5>{filteredObservations.obs.length} recent bird observations</h5>) : null}
                 </section>
             ) : null}
             {/* Render the observations */}
-            <Observations className="observations-component"/>
+            <Observations className="observations-component" filterText={filterText}/>
         </>
     )
 }

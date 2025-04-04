@@ -3,7 +3,8 @@ import { Container } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext';
 import Observation from './Observation'
 
-function Observations() {
+// eslint-disable-next-line react/prop-types
+function Observations({filterText}) {
     const {observations, setObservations,
         currentRegion, currentSubRegion,
         notable, currentSpecies,
@@ -52,7 +53,7 @@ function Observations() {
         <>
         {
             // Render observations if data is available, otherwise show loading or no data message
-            (!loading && observationsToDisplay.length > 0) ? (
+            (!loading && (observationsToDisplay.length > 0 || filterText === "")) ? (
                 <>
                     <Container fluid className="observation-container">
                         {(observationsToDisplay.map((observation, index) => (
