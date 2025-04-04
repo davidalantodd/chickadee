@@ -31,6 +31,10 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [speciesFilter, setSpeciesFilter] = useState('');
   const [singleObsView, setSingleObsView] = useState(-1)
+  const [filteredObservations, setFilteredObservations] = useState({
+    region: '',
+    obs: []
+  })
   
   return (
     <>
@@ -45,7 +49,8 @@ function App() {
                                                   currentSpecies, setCurrentSpecies,
                                                   loading, setLoading,
                                                   speciesFilter, setSpeciesFilter,
-                                                  singleObsView, setSingleObsView}}>
+                                                  singleObsView, setSingleObsView,
+                                                  filteredObservations, setFilteredObservations}}>
         <Router>
         <Header/>
           <Routes>

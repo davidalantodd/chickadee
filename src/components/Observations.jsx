@@ -8,7 +8,7 @@ function Observations() {
         currentRegion, currentSubRegion,
         notable, currentSpecies,
         loading, setLoading,
-        singleObsView
+        singleObsView, filteredObservations
         } = useContext(ObservationsContext)
     
     // Function to fetch eBird API data using Netlify Functions to protect API key
@@ -45,14 +45,17 @@ function Observations() {
         }
     }, [loading, observations]);
 
+    const observationsToDisplay = filteredObservations.obs;
+
+
     return (
         <>
         {
             // Render observations if data is available, otherwise show loading or no data message
-            (!loading && observations.obs.length > 0) ? (
+            (!loading && observationsToDisplay.length > 0) ? (
                 <>
                     <Container fluid className="observation-container">
-                        {(observations.obs.map((observation, index) => (
+                        {(observationsToDisplay.map((observation, index) => (
                             (singleObsView === -1 ? (
                             <Observation observation={observation} index={index} key={observation.subId + observation.comName}/>
                             ) : (

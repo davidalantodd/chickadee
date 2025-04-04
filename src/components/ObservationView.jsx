@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
 import Observations from './Observations'
-import { useEffect, useContext } from 'react'
+import { useEffect, useContext, useState } from 'react'
 import React from 'react'
 import { Form } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext'
@@ -15,8 +15,9 @@ function ObservationView() {
     const {setRegionsInUS, currentRegion,setSubRegions,
         observations, notable, setNotable, setTaxonomy,
         setCurrentSpecies, filteredTaxonomy, setFilteredTaxonomy,
-        singleObsView} = useContext(ObservationsContext);
+        singleObsView, filteredObservations, setFilteredObservations} = useContext(ObservationsContext);
 
+    const [filterText, setFilterText] = useState('');
 
     const handleNotableSwitch = () => {
         setNotable(!notable)
@@ -45,6 +46,19 @@ function ObservationView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentRegion])
 
+    useEffect(() => {
+        // Filter observations based on the filter text
+        const filteredObs = observations.obs.filter((observation) =>
+            observation.comName.toLowerCase().includes(filterText.toLowerCase())
+        );
+        setFilteredObservations({
+            ...filteredObservations,
+            obs: filteredObs,
+        });
+    }, [filterText, observations.obs]);
+
+    console.log(filteredObservations)
+
     return (
         <>
             {/* Render the filter bar only if there are observations */}
@@ -64,6 +78,15 @@ function ObservationView() {
                                 label="Notable Observations"
                                 checked={notable}
                                 onChange={() => handleNotableSwitch(!notable)}
+                            />
+                        </Form>
+                        {/* Input box for filtering */}
+                        <Form className="filter-input">
+                            <Form.Control
+                                type="text"
+                                placeholder="Search observations..."
+                                value={filterText}
+                                onChange={(e) => setFilterText(e.target.value)}
                             />
                         </Form>
                     </span>

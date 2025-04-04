@@ -204,9 +204,11 @@ main {
 
 .species-dropdown {
   margin: 0 0 0 1rem
-  
 }
 
+.filter-bar {
+  margin: 0 0 0 1rem;
+}
 
 .sub-region-dropdown {
   text-align: center;
@@ -214,7 +216,7 @@ main {
 }
 
 .notable-switch {
-  margin: 0 0 0 1rem
+  margin: 0 1rem 0 1rem
 }
 
 .region-dropdown-menu {
@@ -368,6 +370,18 @@ footer img:hover{
 .visible-button {
   opacity: 1;
   transform: translateY(0); /* Move back to original position */
+}
+
+.filter-input {
+  margin: 1rem auto;
+  max-width: 400px;
+}
+
+.filter-input input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 @media (prefers-color-scheme: light) {
