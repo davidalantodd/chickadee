@@ -343,6 +343,33 @@ footer img:hover{
   transform: scale(1.2);
 }
 
+.back-to-top-arrow {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: .5rem;
+  font-weight: 500;
+  color: white;
+  border: 1px solid white;
+  background-color: #0d6efd;
+  border-radius: 20%;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: translateY(20px); /* Move the button slightly down */
+  transition: opacity 0.5s ease, transform 0.5s ease; /* Smooth transition */
+}
+
+.back-to-top-arrow:hover {
+  transform: scale(1.2);
+  box-shadow: #0d6efd 0 0 10px;
+}
+
+.visible-button {
+  opacity: 1;
+  transform: translateY(0); /* Move back to original position */
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

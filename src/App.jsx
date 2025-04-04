@@ -6,6 +6,7 @@ import Footer from './components/Footer'
 import { ObservationsContext } from './contexts/ObservationsContext';
 import { useState } from 'react'
 import SingleObservationView from './components/SingleObservationView';
+import ScrollToTopButton from './components/ScrollToTopButton';
 
 function App() {
 
@@ -57,6 +58,7 @@ function App() {
             <Route path="/observations/:id" element={<SingleObservationView />} />
           </Routes>
           <Footer/>
+          <ScrollToTopButton />
         </Router>
       </ObservationsContext.Provider>
     </>
