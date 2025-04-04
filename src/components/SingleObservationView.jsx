@@ -20,6 +20,7 @@ export default function SingleObservationView() {
         navigate(`/observations`);
     }
 
+    // Function to fetch the Wikipedia image URL using the species name from the observation
     const fetchWikiImgURL = () => {
         fetch(`/.netlify/functions/fetchWikipediaImage?speciesName=${observation.comName}`)
             .then(response => response.json())

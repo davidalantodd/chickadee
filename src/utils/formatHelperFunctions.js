@@ -1,3 +1,4 @@
+// Helper functions to format data for display in the UI
 export const formatDate = (originalDateString) => {
     const date = new Date(originalDateString)
 
@@ -13,6 +14,7 @@ export const formatDate = (originalDateString) => {
     return formatter.format(date);
 }
 
+// Function to format the location string for display
 export const formatLocation = (origLocationString, singleObsView) => {
     const formattedLocation = origLocationString;
 

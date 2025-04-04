@@ -47,6 +47,7 @@ function ObservationView() {
 
     return (
         <>
+            {/* Render the filter bar only if there are observations */}
             {(singleObsView === -1) ? (
                 <section className="filter-bar">
                     <span className="filter-dropdowns">
@@ -69,6 +70,7 @@ function ObservationView() {
                     {(singleObsView === -1) ? (<h5>{observations.obs.length} recent bird observations</h5>) : null}
                 </section>
             ) : null}
+            {/* Render the observations */}
             <Observations className="observations-component"/>
         </>
     )

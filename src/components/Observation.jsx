@@ -10,6 +10,7 @@ export default function Observation({observation, index}) {
     const { singleObsView } = useContext(ObservationsContext)
     const navigate = useNavigate();
 
+    // Function to to navigate to the SingleObservationView and store the scroll position
     const handleSingleObsView = () => {
         localStorage.setItem('scrollPosition', window.scrollY);
         navigate(`/observations/${observation.subId}`);
@@ -17,6 +18,7 @@ export default function Observation({observation, index}) {
     
     return (
         <>
+            {/* If singleObsView is -1, show the observation card. Otherwise, show the SingleObservationView */}
             {singleObsView === -1 ?  (
                 <Card className={'observation-card' + ((index % 2 === 0) ? " observation-card-shaded" : "")} onClick={handleSingleObsView}>
                     <Card.Body className="observation-card-body">

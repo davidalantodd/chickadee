@@ -34,6 +34,7 @@ function SpeciesDropdown() {
         </a>
       ));
 
+    // Debounce the filter function to avoid excessive re-renders
       const debouncedFilter = useMemo(() => 
         debounce((value) => {
             const regex = RegExp(value, "gi")
@@ -49,6 +50,7 @@ function SpeciesDropdown() {
         debouncedFilter(value)
       }
 
+    // Row component for react-window, rendered for each item in the list
       const Row = ({ index, style }) => (
         <div style={style}>
             <Dropdown.Item key={displayedSpecies[index].speciesCode} onClick={() => handleSpeciesSelect(displayedSpecies[index])}>
@@ -57,37 +59,38 @@ function SpeciesDropdown() {
         </div>
     );
 
-      const CustomSpeciesMenu = React.forwardRef(
-        ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
-          
-          return (
-            <div
-              ref={ref}
-              style={style}
-              className={className}
-              aria-labelledby={labeledBy}
+    // Custom menu component for react-bootstrap dropdown
+    const CustomSpeciesMenu = React.forwardRef(
+      ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
+        
+        return (
+          <div
+            ref={ref}
+            style={style}
+            className={className}
+            aria-labelledby={labeledBy}
+          >
+            <Form.Control
+              autoFocus
+              className="mx-3 my-2 w-auto"
+              placeholder="Type to filter..."
+              onChange={handleFilter}
+              value={speciesFilter}
+            />
+            <Dropdown.Item key={'default'} onClick={() => setCurrentSpecies('')}>Clear Selection</Dropdown.Item>
+            {/* Render the list of species using react-window */}
+            <List
+              height={280}
+              itemCount={displayedSpecies.length}
+              itemSize={35}
+              width={'100%'}
             >
-              <Form.Control
-                autoFocus
-                className="mx-3 my-2 w-auto"
-                placeholder="Type to filter..."
-                onChange={handleFilter}
-                value={speciesFilter}
-              />
-              <Dropdown.Item key={'default'} onClick={() => setCurrentSpecies('')}>Clear Selection</Dropdown.Item>
-
-              <List
-                height={280}
-                itemCount={displayedSpecies.length}
-                itemSize={35}
-                width={'100%'}
-              >
-                {Row}
-              </List>
-            </div>
-          );
-        },
-      );
+              {Row}
+            </List>
+          </div>
+        );
+      },
+    );
 
     return (
         <Dropdown className='species-dropdown'>

@@ -2,6 +2,7 @@ import { useEffect, useContext } from 'react'
 import { Container } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext';
 import Observation from './Observation'
+
 function Observations() {
     const {observations, setObservations,
         currentRegion, currentSubRegion,
@@ -10,8 +11,7 @@ function Observations() {
         singleObsView
         } = useContext(ObservationsContext)
     
-
-    // fetch eBird API data using Netlify Functions to protect API key
+    // Function to fetch eBird API data using Netlify Functions to protect API key
     const fetchObservationsByRegion = () => {
         setLoading(true)
         const regionToSearch = (currentSubRegion.code) ? currentSubRegion : currentRegion
@@ -28,11 +28,13 @@ function Observations() {
               });
     }
 
+    // Fetch observations whenever relevant filters or regions change
     useEffect(() => {
         fetchObservationsByRegion()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentRegion, currentSubRegion, notable, currentSpecies])
 
+    // Restore scroll position after loading observations
     useEffect(() => {
         if (!loading && observations.obs.length > 0) {
             const scrollPosition = localStorage.getItem('scrollPosition');
@@ -46,6 +48,7 @@ function Observations() {
     return (
         <>
         {
+            // Render observations if data is available, otherwise show loading or no data message
             (!loading && observations.obs.length > 0) ? (
                 <>
                     <Container fluid className="observation-container">
@@ -62,6 +65,7 @@ function Observations() {
                 </>
             ) : (
                 (loading) ? (
+                    // Show loading spinner while data is being fetched
                     <section className="loading">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                 className="bi bi-arrow-clockwise loading-arrow" viewBox="0 0 16 16">
@@ -71,6 +75,7 @@ function Observations() {
                         <h4>loading birds...</h4>
                     </section>
                     ) : (
+                        // Show message if no observations are found
                         <section className="loading">
                             <h4>no birds found 😔 try adjusting your filters</h4>
                         </section>
