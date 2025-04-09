@@ -111,7 +111,7 @@ function ObservationView() {
                             />
                         </Form>
                     </span>
-                    {(singleObsView === -1) ? (<h5>{filteredObservations.obs.length} recent bird observations</h5>) : null}
+                    {(singleObsView === -1) ? (<h5 id='observation-count'>{filteredObservations.obs.length} recent bird observations</h5>) : null}
                 </section>
             ) : null}
             {/* Render the observations */}
