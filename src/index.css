@@ -179,7 +179,10 @@ main {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  
+}
+
+#filter-observations-label {
+  margin-bottom: 0;
 }
 
 .filter-spacer{
@@ -378,10 +381,11 @@ footer img:hover{
 
 .filter-input input {
   width: 100%;
-  padding: 0.5rem;
+  /* padding: 0.5rem; */
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
 
 @media (prefers-color-scheme: light) {
   :root {
@@ -396,18 +400,19 @@ footer img:hover{
   }
 }
 
-@media (max-width: 700px) {
-  .filter-bar {
-    flex-direction: column;
-    width: 94vw;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-  }
+@media (max-width: 1000px) {
 
   .filter-dropdowns {
     flex-direction: column;
     width: 100%;
   }
+  
+    .filter-bar {
+      flex-direction: column;
+      width: 94vw;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+    }
 
   .region-dropdown,
   .species-dropdown,
@@ -569,8 +574,4 @@ footer img:hover{
   .menu-icon {
     image-rendering: -webkit-optimize-contrast;
   }
-}
-
-@media (max-width: 500px) {
-
 }

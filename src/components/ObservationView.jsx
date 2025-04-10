@@ -86,17 +86,18 @@ function ObservationView() {
             {(singleObsView === -1) ? (
                 <section className="filter-bar">
                     <span className="filter-dropdowns">
-                        <h5>Filter observations</h5>
+                        <h5 id='filter-observations-label'>Filter observations</h5>
                         <RegionDropdown/>
                         {(currentRegion.code !== 'US') ? (
                             <SubRegionDropdown/>
                         ) : null}
                         <SpeciesDropdown />
-                        <Form className='notable-switch'>
+                        <Form className='notable-switch' title="Show only notable observations">
                             <Form.Check
                                 type="switch"
                                 id="custom-switch"
-                                label="Notable Observations"
+                                label="Notable"
+                                title="Show only notable observations"
                                 checked={notable}
                                 onChange={() => handleNotableSwitch(!notable)}
                             />
