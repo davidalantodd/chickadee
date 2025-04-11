@@ -12,6 +12,16 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --dark-brown: #4b3621;
+  --light-brown-transparent: rgba(172, 125, 87, 0.15);
+  --light-brown-hover: rgba(172, 125, 87, 0.3);
+  --beige: #f5f5dc;
+  --off-white: #F8F8F8;
+  --observation-width: 100vw;
+  font-weight: 400;
+  color: var(--dark-brown);
+  background-color: var(--off-white);
 }
 
 a {
@@ -599,4 +609,52 @@ footer img:hover{
   .menu-icon {
     image-rendering: -webkit-optimize-contrast;
   }
+}
+
+/* View toggle styles */
+.view-toggle-container {
+  display: flex;
+  align-items: center;
+  background-color: var(--light-brown-transparent);
+  border-radius: 20px;
+  padding: 0.3rem 0.7rem;
+  margin-right: 1rem;
+}
+
+.view-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 50%;
+}
+
+.view-toggle-btn svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  color: var(--dark-brown);
+  transition: all 0.2s ease;
+}
+
+.view-toggle-btn.active {
+  background-color: var(--light-brown);
+}
+
+.view-toggle-btn.active svg {
+  color: white;
+}
+
+.view-toggle-btn:hover:not(.active) {
+  background-color: var(--light-brown-hover);
+}
+
+.view-toggle-divider {
+  color: var(--dark-brown);
+  opacity: 0.3;
+  margin: 0 0.3rem;
+  font-weight: 200;
 }
