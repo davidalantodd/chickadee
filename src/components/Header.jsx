@@ -1,7 +1,11 @@
 import chickadee from '../assets/chickadee.png'
 import { Dropdown } from 'react-bootstrap'
+import { useContext } from 'react'
+import { ObservationsContext } from '../contexts/ObservationsContext'
 
 function Header() {
+    const { setViewType } = useContext(ObservationsContext)
+
     return (
         <nav id="header">
             <a href="/" className="header-logo">
@@ -17,7 +21,8 @@ function Header() {
                 </Dropdown.Toggle>
                 <></>
                 <Dropdown.Menu variant="nooutline">
-                    <Dropdown.Item href="/observations">Observations by Region</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setViewType('list')}>List View</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setViewType('map')}>Map View</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
         </nav>

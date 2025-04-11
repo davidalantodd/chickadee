@@ -246,7 +246,7 @@ main {
   font-size: .9rem;
 }
 
-.observations-component {
+.observations-list-component {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -303,6 +303,12 @@ main {
   width: 18rem;
   text-align: end;
   font-size: .9em;
+}
+
+#map {
+  height: 80vh;
+  width: 90vw;
+  border-radius: 1rem;
 }
 
 .observation-single-page-view {

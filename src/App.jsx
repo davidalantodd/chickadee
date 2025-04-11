@@ -35,6 +35,7 @@ function App() {
     region: '',
     obs: []
   })
+  const [viewType, setViewType] = useState('list')  // 'list' or 'map'
   
   return (
     <>
@@ -50,7 +51,8 @@ function App() {
                                                   loading, setLoading,
                                                   speciesFilter, setSpeciesFilter,
                                                   singleObsView, setSingleObsView,
-                                                  filteredObservations, setFilteredObservations}}>
+                                                  filteredObservations, setFilteredObservations,
+                                                  viewType, setViewType}}>
         <Router>
         <Header/>
           <Routes>
