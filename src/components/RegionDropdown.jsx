@@ -14,11 +14,11 @@ function RegionDropdown() {
 
     return (
         <Dropdown className='region-dropdown'>
-            <Dropdown.Toggle variant="primary" id="dropdown-basic">
+            <Dropdown.Toggle variant="primary" id="dropdown-basic" className='dropdown-toggle' >
                 {currentRegion.name !== 'United States' ? currentRegion.name : 'Select State'}
             </Dropdown.Toggle>
             <Dropdown.Menu className='region-dropdown-menu'>
-                <Dropdown.Item key={'default'} onClick={()=>setCurrentRegion({code:'US',name:'United States'})}>Clear Selection</Dropdown.Item>
+                <Dropdown.Item key={'default'} onClick={()=>setCurrentRegion({code:'US',name:'United States'})} className='clear-region-selection'>Clear Selection</Dropdown.Item>
                 {regionsInUS.map((region) => (
                     <Dropdown.Item key={region.code} onClick={()=>handleRegionSelect(region)}>{region.name}</Dropdown.Item>
                 ))}

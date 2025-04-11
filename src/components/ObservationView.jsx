@@ -103,8 +103,9 @@ function ObservationView() {
                             />
                         </Form>
                         {/* Input box for filtering */}
-                        <Form className="filter-input">
+                        <Form>
                             <Form.Control
+                                id="observation-filter-input"
                                 type="text"
                                 placeholder="Search observations..."
                                 value={filterText}

@@ -72,12 +72,12 @@ function SpeciesDropdown() {
           >
             <Form.Control
               autoFocus
-              className="mx-3 my-2 w-auto"
-              placeholder="Type to filter..."
+              className="mx-3 my-2 w-auto species-filter-input"
+              placeholder="Filter species..."
               onChange={handleFilter}
               value={speciesFilter}
             />
-            <Dropdown.Item key={'default'} onClick={() => setCurrentSpecies('')}>Clear Selection</Dropdown.Item>
+            <Dropdown.Item key={'default'} onClick={() => setCurrentSpecies('')} className='clear-species-selection'>Clear Selection</Dropdown.Item>
             {/* Render the list of species using react-window */}
             <List
               height={280}
@@ -94,7 +94,7 @@ function SpeciesDropdown() {
 
     return (
         <Dropdown className='species-dropdown'>
-            <Dropdown.Toggle variant="primary" id="dropdown-basic" as={CustomSpeciesToggle}>
+            <Dropdown.Toggle variant="primary" id="dropdown-basic" as={CustomSpeciesToggle} className='dropdown-toggle'>
                 {!currentSpecies ? 'Select Species' : currentSpecies.comName}
             </Dropdown.Toggle>
             <Dropdown.Menu className='species-dropdown-menu' as={CustomSpeciesMenu}></Dropdown.Menu>
