@@ -14,10 +14,11 @@ import ObservationMap from './ObservationMap'
 import debounce from 'lodash/debounce';
 
 function ObservationView() {
-    const {setRegionsInUS, currentRegion,setSubRegions,
-        observations, notable, setNotable, setTaxonomy,
+    const {setRegionsInUS, currentRegion, setSubRegions,
+        observations, notable, setNotable, setTaxonomy, 
         setCurrentSpecies, filteredTaxonomy, setFilteredTaxonomy,
-        singleObsView, filteredObservations, setFilteredObservations, viewType} = useContext(ObservationsContext);
+        singleObsView, filteredObservations, setFilteredObservations, viewType,
+        setLoading, currentSubRegion, currentSpecies, setObservations} = useContext(ObservationsContext);
 
     const [filterText, setFilterText] = useState("");
 
