@@ -2,6 +2,7 @@ import { useEffect, useContext, useState } from 'react'
 import { Container } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext';
 import Observation from './Observation'
+import { fetchObservationsByRegion } from '../utils/api'
 
 // eslint-disable-next-line react/prop-types
 function Observations({filterText}) {
@@ -14,24 +15,6 @@ function Observations({filterText}) {
     
     const [visibleCount, setVisibleCount] = useState(100);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
-
-    // Function to fetch eBird API data using Netlify Functions to protect API key
-    const fetchObservationsByRegion = () => {
-        setLoading(true)
-        const regionToSearch = (currentSubRegion.code) ? currentSubRegion : currentRegion
-        fetch(`/.netlify/functions/fetchObservationsByRegion?regionToSearch=${regionToSearch.code}&notable=${notable}&currentSpecies=${currentSpecies.speciesCode}`)
-            .then(response => response.json())
-            .then(data => {
-                setObservations({
-                    region: regionToSearch.code,
-                    obs: data})
-                setLoading(false)
-                setVisibleCount(100); // Reset visible count when new data is loaded
-            })
-            .catch(error => {
-                console.error('Error fetching observations:', error, regionToSearch.code, notable,currentSpecies.comName );
-              });
-    }
 
     // Handle scroll event to load more observations
     const handleScroll = () => {
@@ -52,7 +35,7 @@ function Observations({filterText}) {
 
     // Fetch observations whenever relevant filters or regions change
     useEffect(() => {
-        fetchObservationsByRegion()
+        fetchObservationsByRegion(currentRegion, currentSubRegion, notable, currentSpecies, setObservations, setLoading, setVisibleCount)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentRegion, currentSubRegion, notable, currentSpecies])
 

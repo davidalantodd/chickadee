@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
-import Observations from './Observations'
+import ObservationList from './ObservationList'
 import { useEffect, useContext, useState, useMemo } from 'react'
 import React from 'react'
 import { Form } from 'react-bootstrap'
@@ -10,13 +10,15 @@ import { fetchRegionsInUS, fetchSubRegions, fetchTaxonomy } from '../utils/api'
 import RegionDropdown from './RegionDropdown'
 import SpeciesDropdown from './SpeciesDropdown'
 import SubRegionDropdown from './SubRegionDropdown'
+import ObservationMap from './ObservationMap'
 import debounce from 'lodash/debounce';
 
 function ObservationView() {
-    const {setRegionsInUS, currentRegion,setSubRegions,
-        observations, notable, setNotable, setTaxonomy,
+    const {setRegionsInUS, currentRegion, setSubRegions,
+        observations, notable, setNotable, setTaxonomy, 
         setCurrentSpecies, filteredTaxonomy, setFilteredTaxonomy,
-        singleObsView, filteredObservations, setFilteredObservations} = useContext(ObservationsContext);
+        singleObsView, filteredObservations, setFilteredObservations, viewType,
+        setLoading, currentSubRegion, currentSpecies, setObservations} = useContext(ObservationsContext);
 
     const [filterText, setFilterText] = useState("");
 
@@ -117,7 +119,8 @@ function ObservationView() {
                 </section>
             ) : null}
             {/* Render the observations */}
-            <Observations className="observations-component" filterText={filterText}/>
+            {viewType === 'list' ? (<ObservationList className="observations-list-component" filterText={filterText}/>) : null}
+            {viewType === 'map' ?  (<ObservationMap className="observations-map-component" filterText={filterText}/>) : null}
         </>
     )
 }
