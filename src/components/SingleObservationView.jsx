@@ -91,12 +91,12 @@ export default function SingleObservationView() {
                 <Card.Text className="single-page-card-location">
                     Location: {formatLocation(observationLocation, singleObsView)}
                 </Card.Text>
-                <MapContainer center={[observationLat, observationLng]} zoom={10} scrollWheelZoom={false} id="map-small">
+                <MapContainer center={[parseFloat(observationLat), parseFloat(observationLng)]} zoom={10} scrollWheelZoom={false} id="map-small">
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
-                    <Marker position={[observationLat, observationLng]}>
+                    <Marker position={[parseFloat(observationLat), parseFloat(observationLng)]}>
                         <Popup>
                             {observationLocation}
                         </Popup>
