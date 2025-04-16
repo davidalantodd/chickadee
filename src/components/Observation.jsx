@@ -3,17 +3,16 @@ import { Card } from 'react-bootstrap'
 import { useContext } from 'react'
 import { ObservationsContext } from '../contexts/ObservationsContext'
 import SingleObservationView from './SingleObservationView'
-import { formatDate, formatLocation } from '../utils/formatHelperFunctions'
+import { formatDate, formatLocation } from '../utils/format'
 import { useNavigate } from 'react-router-dom';
 
 export default function Observation({observation, index}) {
     const { singleObsView } = useContext(ObservationsContext)
     const navigate = useNavigate();
 
-    // Function to navigate to the SingleObservationView and store the scroll position
+    // Function to navigate to the SingleObservationView
     const handleSingleObsView = () => {
-        localStorage.setItem('scrollPosition', window.scrollY);
-        navigate(`/observations/${observation.subId}?code=${observation.speciesCode}&commonName=${observation.comName}&location=${observation.locName}&date=${observation.obsDt}`);
+        navigate(`/observations/${observation.subId}?code=${observation.speciesCode}&commonName=${observation.comName}&location=${observation.locName}&date=${observation.obsDt}&lat=${observation.lat}&lng=${observation.lng}`);
     }
     
     return (

@@ -321,10 +321,19 @@ main {
   border-radius: 1rem;
 }
 
+#map-small {
+  width: auto;
+  height: 60vh;
+  width: 70%;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+}
+
 .observation-single-page-view {
   margin: auto;
   min-height: calc(100vh - 108.8px - 2em);
   width: 85vw;
+  border-radius: 1rem;
 }
 
 .observation-single-page-view:hover{
@@ -348,7 +357,11 @@ main {
   width: auto;
   max-height: 60vh;
   max-width: 80vw;
-  margin-bottom: 1em;
+  border-radius: 1rem;
+}
+
+.back-to-observations-button {
+  align-self: flex-start;
 }
 
 .wiki-link {
@@ -519,6 +532,10 @@ footer img:hover{
     text-align: left;
   }
 
+  #map-small {
+    width: 100%;
+  }
+
   h1 {
     font-size: 2em;
   }
@@ -657,4 +674,32 @@ footer img:hover{
   opacity: 0.3;
   margin: 0 0.3rem;
   font-weight: 200;
+}
+
+.image-container {
+    position: relative;
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+}
+
+.image-placeholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.single-page-card-image {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.single-page-card-image.d-none {
+    opacity: 0;
 }

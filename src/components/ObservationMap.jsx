@@ -3,7 +3,7 @@ import { useContext, useEffect, useMemo, useState, useRef } from "react";
 import { ObservationsContext } from "../contexts/ObservationsContext";
 import { fetchObservationsByRegion } from "../utils/api";
 import { useNavigate } from "react-router-dom";
-import { formatDate } from "../utils/formatHelperFunctions";
+import { formatDate } from "../utils/format";
 
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
@@ -115,7 +115,7 @@ function ObservationMap() {
 	
 	// Function to navigate to the SingleObservationView
 	const handleSingleObsView = (observation) => {
-		navigate(`/observations/${observation.subId}?code=${observation.speciesCode}&commonName=${observation.comName}&location=${observation.locName}&date=${observation.obsDt}`);
+		navigate(`/observations/${observation.subId}?code=${observation.speciesCode}&commonName=${observation.comName}&location=${observation.locName}&date=${observation.obsDt}&lat=${observation.lat}&lng=${observation.lng}`);
 	};
 
 	// Fetch observations whenever relevant filters or regions change
