@@ -119,8 +119,8 @@ function ObservationView() {
                 </section>
             ) : null}
             {/* Render the observations */}
-            {viewType === 'list' ? (<ObservationList className="observations-list-component" filterText={filterText}/>) : null}
-            {viewType === 'map' ?  (<ObservationMap className="observations-map-component" filterText={filterText}/>) : null}
+            {viewType === 'list' ? (<ObservationList className="observations-list-component"/>) : null}
+            {viewType === 'map' ?  (<ObservationMap className="observations-map-component"/>) : null}
         </>
     )
 }

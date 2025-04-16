@@ -5,7 +5,7 @@ import Observation from './Observation'
 import { fetchObservationsByRegion } from '../utils/api'
 
 // eslint-disable-next-line react/prop-types
-function Observations({filterText}) {
+function Observations() {
     const {observations, setObservations,
         currentRegion, currentSubRegion,
         notable, currentSpecies,
@@ -56,7 +56,7 @@ function Observations({filterText}) {
         <>
         {
             // Render observations if data is available, otherwise show loading or no data message
-            (!loading && (observationsToDisplay.length > 0 || filterText === "")) ? (
+            (!loading && (observationsToDisplay.length > 0)) ? (
                 <>
                     <Container fluid className="observation-container">
                         {(observationsToDisplay.map((observation, index) => (
