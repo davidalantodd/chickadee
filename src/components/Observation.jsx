@@ -12,6 +12,8 @@ export default function Observation({observation, index}) {
 
     // Function to navigate to the SingleObservationView
     const handleSingleObsView = () => {
+        // Save current scroll position before navigating
+        localStorage.setItem('scrollPosition', window.scrollY.toString());
         navigate(`/observations/${observation.subId}?code=${observation.speciesCode}&commonName=${observation.comName}&location=${observation.locName}&date=${observation.obsDt}&lat=${observation.lat}&lng=${observation.lng}`);
     }
     
