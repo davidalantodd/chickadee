@@ -44,8 +44,14 @@ function Observations() {
         if (!loading && observations.obs.length > 0) {
             const scrollPosition = localStorage.getItem('scrollPosition');
             if (scrollPosition) {
-                window.scrollTo(0, parseInt(scrollPosition, 10));
-                localStorage.removeItem('scrollPosition');
+                // Use setTimeout to ensure the scroll happens after the component is mounted
+                setTimeout(() => {
+                    window.scrollTo(0, parseInt(scrollPosition, 10));
+                    localStorage.removeItem('scrollPosition');
+                }, 500);
+            } else {
+                // Ensure we're at the top when first loading the page
+                window.scrollTo(0, 0);
             }
         }
     }, [loading, observations]);

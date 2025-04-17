@@ -18,8 +18,8 @@ export default function SingleObservationView() {
     const observationLng = searchParams.get('lng');
 
     const handleBackToObservations = () => {
-        setSingleObsView(-1);
         navigate(`/observations`);
+        setSingleObsView(-1);
     }
 
     // Function to fetch the Wikipedia image URL using the species name from the observation
