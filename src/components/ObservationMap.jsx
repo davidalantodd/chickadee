@@ -12,6 +12,19 @@ import "leaflet.markercluster/dist/leaflet.markercluster.js";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
+// Import marker icons
+import markerIcon from '../assets/markers/marker-icon.png';
+import markerIconRetina from '../assets/markers/marker-icon-2x.png';
+import markerShadow from '../assets/markers/marker-shadow.png';
+
+// Fix for default marker icons
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+	iconRetinaUrl: markerIconRetina,
+	iconUrl: markerIcon,
+	shadowUrl: markerShadow,
+});
+
 // Add marker clustering support
 // eslint-disable-next-line react/prop-types
 const MarkerClusterGroup = (props) => {
