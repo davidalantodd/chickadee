@@ -5,6 +5,7 @@ exports.handler = async (event) => {
         const wikipediaImgURL = 'http://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&pithumbsize=300&redirects&titles='
 
         const myHeaders = new Headers();
+        myHeaders.append("User-Agent", "chickadee-app/1.0 (david@email.com)");
         const { speciesName } = event.queryStringParameters
         
         const requestOptions = {
