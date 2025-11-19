@@ -25,14 +25,20 @@ export default function SingleObservationView() {
     // Function to fetch the Wikipedia image URL using the species name from the observation
     const fetchWikiImgURL = () => {
         fetch(`/.netlify/functions/fetchWikipediaImage?speciesName=${observationComName}`)
-            .then(response => response.json())
-            .then(data => {
-                const url = data.query.pages[Object.keys(data.query.pages)].original
-                if (url) {
-                    setWikipediaImgURL(url.source)
-                } else {
+            .then(response => {
+                if (!response.ok) {
                     setWikipediaImgURL(chickadee)
+                    return;
                 }
+                response.json()
+                    .then(data => {
+                        const url = data.query.pages[Object.keys(data.query.pages)].original
+                        if (url) {
+                            setWikipediaImgURL(url.source)
+                        } else {
+                            setWikipediaImgURL(chickadee)
+                        }
+                    })
             })
     }
     
