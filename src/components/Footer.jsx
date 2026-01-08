@@ -2,6 +2,7 @@ import linkedin from '../assets/linkedin.png'
 import github from '../assets/github.png'
 
 function Footer() {
+    const currentYear = new Date().getFullYear();
     return (
         <>
             <footer>
@@ -11,7 +12,7 @@ function Footer() {
             <a href="https://github.com/davidalantodd/" target="_blank" rel="noreferrer opener">
                 <img src={github} alt="Github Logo"/>
             </a>
-            <p>&copy;2025 David Todd</p>
+            <p>&copy;{currentYear} David Todd</p>
             </footer>
         </>
     )
