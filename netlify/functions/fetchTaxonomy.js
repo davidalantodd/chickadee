@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-undef
-exports.handler = async () => {
+export const handler = async () => {
     try {
         const eBirdBaseAPIURL = 'https://api.ebird.org/v2/'
         const myHeaders = new Headers();

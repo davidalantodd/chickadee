@@ -32,7 +32,7 @@ const wikipediaQuery = async (params) => {
 // Wikimedia's artist field is HTML (often a link to the photographer's profile), so reduce it to plain text
 const stripHtml = (html) => html?.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
     try {
         const speciesName = event.queryStringParameters?.speciesName?.trim()
 

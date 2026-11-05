@@ -2,8 +2,7 @@
 const REGION_TYPES = ['country', 'subnational1', 'subnational2']
 const PARENT_CODE = /^(world|[A-Z]{2}(-[A-Z0-9]+){0,2})$/
 
-// eslint-disable-next-line no-undef
-exports.handler = async (event) => {
+export const handler = async (event) => {
     try {
         const { type, parent } = event.queryStringParameters
 
