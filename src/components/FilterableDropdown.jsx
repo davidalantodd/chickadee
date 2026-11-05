@@ -22,16 +22,18 @@ function FilterableDropdown({ label, filterPlaceholder, items, selected, onSelec
                 {selected.name || label}
             </Dropdown.Toggle>
             <Dropdown.Menu className='region-dropdown-menu'>
-                <div className='region-filter'>
-                    <Form.Control
-                        ref={inputRef}
-                        className="species-filter-input"
-                        placeholder={filterPlaceholder}
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                    />
+                <div className='dropdown-sticky-header'>
+                    <div className='region-filter'>
+                        <Form.Control
+                            ref={inputRef}
+                            className="species-filter-input"
+                            placeholder={filterPlaceholder}
+                            value={filter}
+                            onChange={(e) => setFilter(e.target.value)}
+                        />
+                    </div>
+                    <Dropdown.Item onClick={() => onSelect({code:'', name:''})} className='clear-region-selection'>Clear Selection</Dropdown.Item>
                 </div>
-                <Dropdown.Item onClick={() => onSelect({code:'', name:''})} className='clear-region-selection'>Clear Selection</Dropdown.Item>
                 {shownItems.map((item) => (
                     <Dropdown.Item key={item.code} onClick={() => onSelect(item)}>{item.name}</Dropdown.Item>
                 ))}

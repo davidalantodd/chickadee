@@ -37,6 +37,11 @@ export const fetchTaxonomy = () => {
     return fetchList('/.netlify/functions/fetchTaxonomy', 'taxonomy');
 }
 
-export const fetchObservationsByRegion = (regionCode, notable, speciesCode) => {
+// Codes of every species ever recorded in the region
+export const fetchSpeciesList = (regionCode) => {
+    return fetchList(`/.netlify/functions/fetchSpeciesList?regionCode=${encodeURIComponent(regionCode)}`, 'species list');
+}
+
+export const fetchObservationsByRegion =(regionCode, notable, speciesCode) => {
     return fetchList(`/.netlify/functions/fetchObservationsByRegion?regionToSearch=${encodeURIComponent(regionCode)}&notable=${notable}&currentSpecies=${speciesCode}`, 'observations');
 }

@@ -2,6 +2,9 @@ import { useContext, useEffect } from 'react'
 import { ObservationsContext } from '../contexts/ObservationsContext'
 import { fetchObservationsByRegion } from '../utils/api'
 
+// The most specific region selected: subregion > region > country, or undefined if none is selected
+export const mostSpecificRegion = (country, region, subRegion) => [subRegion, region, country].find(r => r.code)
+
 // Fetch observations for the most specific selected region whenever the filters change.
 // onLoaded runs after each successful load (e.g. to reset pagination).
 export function useObservations(onLoaded) {
@@ -10,8 +13,7 @@ export function useObservations(onLoaded) {
         setObservations, setLoading } = useContext(ObservationsContext)
 
     useEffect(() => {
-        // Search the most specific region selected: subregion > region > country
-        const regionToSearch = [currentSubRegion, currentRegion, currentCountry].find(region => region.code)
+        const regionToSearch = mostSpecificRegion(currentCountry, currentRegion, currentSubRegion)
         if (!regionToSearch) {
             setObservations({ region: '', obs: [] })
             setLoading(false)
