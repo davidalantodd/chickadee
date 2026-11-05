@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useContext, useEffect, useMemo, useState, useRef } from "react";
 import { ObservationsContext } from "../contexts/ObservationsContext";
-import { fetchObservationsByRegion } from "../utils/api";
+import { useObservations } from "../hooks/useObservations";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../utils/format";
 
@@ -119,9 +119,8 @@ function MapBoundsUpdater({ observations }) {
 
 // eslint-disable-next-line react/prop-types
 function ObservationMap() {
-	const { currentRegion, currentSubRegion, 
-		notable, currentSpecies, setObservations, 
-		setLoading, filteredObservations } = useContext(ObservationsContext);
+	const { currentCountry, currentRegion, currentSubRegion, 
+		notable, currentSpecies, filteredObservations } = useContext(ObservationsContext);
 	const navigate = useNavigate();
 	const [isMapReady, setIsMapReady] = useState(false);
 	const [visibleObservations, setVisibleObservations] = useState([]);
@@ -132,10 +131,7 @@ function ObservationMap() {
 	};
 
 	// Fetch observations whenever relevant filters or regions change
-	useEffect(() => {
-		fetchObservationsByRegion(currentRegion, currentSubRegion, notable, currentSpecies, setObservations, setLoading);
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentRegion, currentSubRegion, notable, currentSpecies]);
+	useObservations();
 
 	// Progressive loading of observations
 	useEffect(() => {
@@ -200,7 +196,7 @@ function ObservationMap() {
 				</div>
 			)}
 			<MapContainer
-				key={`map-${currentRegion.code}-${currentSubRegion.code}-${notable}-${currentSpecies.speciesCode}`}
+				key={`map-${currentCountry.code}-${currentRegion.code}-${currentSubRegion.code}-${notable}-${currentSpecies.speciesCode}`}
 				center={[39.8283, -98.5795]} // Default center (US)
 				zoom={4}
 				scrollWheelZoom={true}

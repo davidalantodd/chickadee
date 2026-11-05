@@ -6,7 +6,8 @@ import { useEffect, useContext, useState, useMemo } from 'react'
 import React from 'react'
 import { Form } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext'
-import { fetchRegionsInUS, fetchSubRegions, fetchTaxonomy } from '../utils/api'
+import { fetchCountries, fetchRegionsByCountry, fetchSubRegions, fetchTaxonomy } from '../utils/api'
+import CountryDropdown from './CountryDropdown'
 import RegionDropdown from './RegionDropdown'
 import SpeciesDropdown from './SpeciesDropdown'
 import SubRegionDropdown from './SubRegionDropdown'
@@ -14,7 +15,8 @@ import ObservationMap from './ObservationMap'
 import debounce from 'lodash/debounce';
 
 function ObservationView() {
-    const {setRegionsInUS, currentRegion, setSubRegions,
+    const {setCountries, currentCountry, regions, setRegions,
+        currentRegion, subRegions, setSubRegions,
         observations, notable, setNotable, setTaxonomy, 
         setCurrentSpecies, filteredTaxonomy, setFilteredTaxonomy,
         singleObsView, filteredObservations, setFilteredObservations, viewType,
@@ -28,8 +30,8 @@ function ObservationView() {
     }
       
     useEffect(() => {
-        fetchRegionsInUS()
-            .then(data => setRegionsInUS(data));
+        fetchCountries()
+            .then(data => setCountries(data));
         fetchTaxonomy()
             .then(data => {
                 data.sort((a,b) => a.comName.localeCompare(b.comName))
@@ -41,11 +43,25 @@ function ObservationView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // Reset and refetch regions when the country changes, ignoring responses for a stale country
     useEffect(() => {
-        if (currentRegion.code) {
-            fetchSubRegions(currentRegion)
-                .then(data => {setSubRegions(data)});
-        }
+        setRegions([])
+        if (!currentCountry.code) return
+        let cancelled = false
+        fetchRegionsByCountry(currentCountry.code)
+            .then(data => { if (!cancelled) setRegions(data) });
+        return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentCountry])
+
+    // Reset and refetch subregions when the region changes, ignoring responses for a stale region
+    useEffect(() => {
+        setSubRegions([])
+        if (!currentRegion.code) return
+        let cancelled = false
+        fetchSubRegions(currentRegion)
+            .then(data => { if (!cancelled) setSubRegions(data) });
+        return () => { cancelled = true }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentRegion])
 
@@ -89,8 +105,11 @@ function ObservationView() {
                 <section className="filter-bar">
                     <span className="filter-dropdowns">
                         <h5 id='filter-observations-label'>Filter observations</h5>
-                        <RegionDropdown/>
-                        {(currentRegion.code !== 'US') ? (
+                        <CountryDropdown/>
+                        {(regions.length > 0) ? (
+                            <RegionDropdown/>
+                        ) : null}
+                        {(subRegions.length > 0) ? (
                             <SubRegionDropdown/>
                         ) : null}
                         <SpeciesDropdown />

@@ -14,10 +14,15 @@ function App() {
     region: '',
     obs: []
   });
-  const [regionsInUS, setRegionsInUS] = useState([])
-  const [currentRegion, setCurrentRegion] = useState({
+  const [countries, setCountries] = useState([])
+  const [currentCountry, setCurrentCountry] = useState({
     code:'US',
     name:'United States'
+  })
+  const [regions, setRegions] = useState([])
+  const [currentRegion, setCurrentRegion] = useState({
+    code:'',
+    name:''
   })
   const [subRegions, setSubRegions] = useState([])
   const [currentSubRegion, setCurrentSubRegion] = useState({
@@ -41,7 +46,9 @@ function App() {
     <>
       <ObservationsContext.Provider value = {{observations, setObservations,
                                                   filteredTaxonomy, setFilteredTaxonomy,
-                                                  regionsInUS, setRegionsInUS,
+                                                  countries, setCountries,
+                                                  currentCountry, setCurrentCountry,
+                                                  regions, setRegions,
                                                   currentRegion, setCurrentRegion,
                                                   subRegions, setSubRegions,
                                                   currentSubRegion, setCurrentSubRegion,

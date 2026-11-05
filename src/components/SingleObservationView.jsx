@@ -8,7 +8,9 @@ import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 export default function SingleObservationView() {
     const { singleObsView, setSingleObsView } = useContext(ObservationsContext);
-    const [wikipediaImgURL, setWikipediaImgURL] = useState({})
+    // null while loading or when Wikipedia has no image; otherwise { src, artist, license, licenseUrl, filePageUrl }
+    const [wikipediaImage, setWikipediaImage] = useState(null)
+    const [imageLoaded, setImageLoaded] = useState(false)
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(window.location.search);
     const observationComName = searchParams.get('commonName');
@@ -22,29 +24,18 @@ export default function SingleObservationView() {
         setSingleObsView(-1);
     }
 
-    // Function to fetch the Wikipedia image URL using the species name from the observation
-    const fetchWikiImgURL = () => {
-        fetch(`/.netlify/functions/fetchWikipediaImage?speciesName=${observationComName}`)
-            .then(response => {
-                if (!response.ok) {
-                    setWikipediaImgURL(chickadee)
-                    return;
-                }
-                response.json()
-                    .then(data => {
-                        const url = data.query.pages[Object.keys(data.query.pages)].original
-                        if (url) {
-                            setWikipediaImgURL(url.source)
-                        } else {
-                            setWikipediaImgURL(chickadee)
-                        }
-                    })
-            })
+    // Fetch the species' Wikipedia image and its credit; fall back to the bundled chickadee on any failure
+    const fetchWikiImage = () => {
+        fetch(`/.netlify/functions/fetchWikipediaImage?speciesName=${encodeURIComponent(observationComName)}`)
+            .then(response => response.ok ? response.json() : { image: null })
+            .then(data => setWikipediaImage(data.image))
+            .catch(() => setWikipediaImage(null))
+            .finally(() => setImageLoaded(true))
     }
     
     useEffect(()=> {
         window.scrollTo(0, 0);
-        fetchWikiImgURL();
+        fetchWikiImage();
     }, [])
 
     return (
@@ -54,7 +45,20 @@ export default function SingleObservationView() {
                 <Card.Title className="single-page-card-title">
                     {observationComName}
                 </Card.Title>
-                <Card.Img src={wikipediaImgURL} className='single-page-card-image' title={`picture of ${observationComName} sourced from Wikipedia`}/>
+                {imageLoaded && (
+                    <figure className="single-page-card-figure">
+                        <Card.Img src={wikipediaImage?.src ?? chickadee} className='single-page-card-image' alt={observationComName}/>
+                        {wikipediaImage && (
+                            <figcaption className="image-credit">
+                                Photo: {wikipediaImage.artist ?? 'Unknown author'}
+                                {wikipediaImage.license && <>{' / '}{wikipediaImage.licenseUrl
+                                    ? <a href={wikipediaImage.licenseUrl} target="_blank" rel="noreferrer">{wikipediaImage.license}</a>
+                                    : wikipediaImage.license}</>}
+                                {wikipediaImage.filePageUrl && <>{' / '}<a href={wikipediaImage.filePageUrl} target="_blank" rel="noreferrer">image source</a></>}
+                            </figcaption>
+                        )}
+                    </figure>
+                )}
                 <Card.Text className="single-page-card-date">
                     Observation date: {formatDate(observationDate)}
                 </Card.Text>
@@ -72,7 +76,7 @@ export default function SingleObservationView() {
                         </Popup>
                     </Marker>
                 </MapContainer>
-                <Card.Link href={`https://en.wikipedia.org/wiki/${observationComName}`} className="wiki-link">Learn more about the {observationComName} on Wikipedia</Card.Link>
+                <Card.Link href={`https://en.wikipedia.org/wiki/${encodeURIComponent(observationComName)}`} className="wiki-link">Learn more about the {observationComName} on Wikipedia</Card.Link>
             </Card.Body>
         </Card>
     )

@@ -2,14 +2,12 @@ import { useEffect, useContext, useState } from 'react'
 import { Container } from 'react-bootstrap'
 import { ObservationsContext } from '../contexts/ObservationsContext';
 import Observation from './Observation'
-import { fetchObservationsByRegion } from '../utils/api'
+import { useObservations } from '../hooks/useObservations'
 
 // eslint-disable-next-line react/prop-types
 function Observations() {
-    const {observations, setObservations,
-        currentRegion, currentSubRegion,
-        notable, currentSpecies,
-        loading, setLoading,
+    const {observations, currentCountry,
+        loading,
         singleObsView, filteredObservations
         } = useContext(ObservationsContext)
     
@@ -33,11 +31,8 @@ function Observations() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [filteredObservations.obs.length, visibleCount, isLoadingMore]);
 
-    // Fetch observations whenever relevant filters or regions change
-    useEffect(() => {
-        fetchObservationsByRegion(currentRegion, currentSubRegion, notable, currentSpecies, setObservations, setLoading, setVisibleCount)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentRegion, currentSubRegion, notable, currentSpecies])
+    // Fetch observations whenever relevant filters or regions change, resetting pagination on each load
+    useObservations(() => setVisibleCount(100))
 
     // Restore scroll position after loading observations
     useEffect(() => {
@@ -98,9 +93,13 @@ function Observations() {
                         <h4>loading birds...</h4>
                     </section>
                     ) : (
-                        // Show message if no observations are found
+                        // Show message based on whether a country is selected
                         <section className="loading">
-                            <h4>no birds found 😔 try adjusting your filters</h4>
+                            {!currentCountry.code ? (
+                                <h4>🐦 select a country to view birds</h4>
+                            ) : (
+                                <h4>no birds found 😔 try adjusting your filters</h4>
+                            )}
                         </section>
                     )
                
