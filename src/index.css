@@ -250,9 +250,23 @@ main {
   font-size: .9rem;
 }
 
+/* Keep the filter box visible while the region list scrolls beneath it */
+.region-dropdown-menu {
+  padding-top: 0;
+}
+
+.region-filter {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: .5rem 1rem;
+  background-color: var(--bs-dropdown-bg);
+}
+
+/* The virtualized species list scrolls itself, so the menu doesn't need to */
 .species-dropdown-menu {
-  max-height: 280px;
-  overflow-y: auto;
+  width: 300px;
+  padding-top: 0;
   font-size: .9rem;
 }
 

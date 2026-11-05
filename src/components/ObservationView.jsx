@@ -18,7 +18,7 @@ function ObservationView() {
     const {setCountries, currentCountry, regions, setRegions,
         currentRegion, subRegions, setSubRegions,
         observations, notable, setNotable, setTaxonomy, 
-        setCurrentSpecies, filteredTaxonomy, setFilteredTaxonomy,
+        setCurrentSpecies,
         singleObsView, filteredObservations, setFilteredObservations, viewType,
         setLoading, currentSubRegion, currentSpecies, setObservations} = useContext(ObservationsContext);
 
@@ -36,9 +36,6 @@ function ObservationView() {
             .then(data => {
                 data.sort((a,b) => a.comName.localeCompare(b.comName))
                 setTaxonomy(data)
-                if (!filteredTaxonomy){
-                    setFilteredTaxonomy(data)
-                }
             });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

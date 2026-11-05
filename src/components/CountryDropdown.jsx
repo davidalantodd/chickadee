@@ -1,8 +1,6 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
-import React, { useContext } from 'react'
-import { Dropdown } from 'react-bootstrap'
+import { useContext } from 'react'
 import { ObservationsContext } from '../contexts/ObservationsContext'
+import FilterableDropdown from './FilterableDropdown'
 
 function CountryDropdown() {
     const { countries, currentCountry, setCurrentCountry, setCurrentRegion, setCurrentSubRegion } = useContext(ObservationsContext)
@@ -14,19 +12,14 @@ function CountryDropdown() {
     }
 
     return (
-        <Dropdown className='region-dropdown'>
-            <Dropdown.Toggle variant="primary" id="dropdown-basic" className='dropdown-toggle'>
-                {currentCountry.name ? currentCountry.name : 'Select Country'}
-            </Dropdown.Toggle>
-            <Dropdown.Menu className='region-dropdown-menu'>
-                <Dropdown.Item key={'default'} onClick={()=>handleCountrySelect({code:'', name:''})} className='clear-region-selection'>Clear Selection</Dropdown.Item>
-                {countries.map((country) => (
-                    <Dropdown.Item key={country.code} onClick={()=>handleCountrySelect(country)}>{country.name}</Dropdown.Item>
-                ))}
-            </Dropdown.Menu>
-        </Dropdown>
+        <FilterableDropdown
+            label='Select Country'
+            filterPlaceholder='Filter countries...'
+            items={countries}
+            selected={currentCountry}
+            onSelect={handleCountrySelect}
+        />
     )
-
 }
 
 export default CountryDropdown

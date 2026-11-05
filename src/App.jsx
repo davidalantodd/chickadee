@@ -31,10 +31,8 @@ function App() {
   })
   const [notable, setNotable] = useState(false)
   const [taxonomy, setTaxonomy] = useState([])
-  const [filteredTaxonomy, setFilteredTaxonomy] = useState(null)
   const [currentSpecies, setCurrentSpecies] = useState('')
   const [loading, setLoading] = useState(true)
-  const [speciesFilter, setSpeciesFilter] = useState('');
   const [singleObsView, setSingleObsView] = useState(-1)
   const [filteredObservations, setFilteredObservations] = useState({
     region: '',
@@ -45,7 +43,6 @@ function App() {
   return (
     <>
       <ObservationsContext.Provider value = {{observations, setObservations,
-                                                  filteredTaxonomy, setFilteredTaxonomy,
                                                   countries, setCountries,
                                                   currentCountry, setCurrentCountry,
                                                   regions, setRegions,
@@ -56,7 +53,6 @@ function App() {
                                                   taxonomy, setTaxonomy,
                                                   currentSpecies, setCurrentSpecies,
                                                   loading, setLoading,
-                                                  speciesFilter, setSpeciesFilter,
                                                   singleObsView, setSingleObsView,
                                                   filteredObservations, setFilteredObservations,
                                                   viewType, setViewType}}>

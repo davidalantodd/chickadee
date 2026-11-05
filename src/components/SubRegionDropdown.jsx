@@ -1,26 +1,19 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
-import React, { useContext } from 'react'
-import { Dropdown } from 'react-bootstrap'
+import { useContext } from 'react'
 import { ObservationsContext } from '../contexts/ObservationsContext'
+import FilterableDropdown from './FilterableDropdown'
 
 function SubRegionDropdown() {
-    const { setCurrentSubRegion, currentSubRegion, subRegions } = useContext(ObservationsContext)
+    const { subRegions, currentSubRegion, setCurrentSubRegion } = useContext(ObservationsContext)
 
     return (
-        <Dropdown className='region-dropdown'>
-            <Dropdown.Toggle variant="primary" id="dropdown-basic" className='dropdown-toggle'>
-                {currentSubRegion.name ? currentSubRegion.name : 'Select Sub-Region'}
-            </Dropdown.Toggle>
-            <Dropdown.Menu className='region-dropdown-menu'>
-                <Dropdown.Item key={'default'} onClick={()=>setCurrentSubRegion({code:'',name:''})} className='clear-sub-region-selection'>Clear Selection</Dropdown.Item>
-                {subRegions.map((region) => (
-                    <Dropdown.Item key={region.code} onClick={()=>setCurrentSubRegion(region)}>{region.name}</Dropdown.Item>
-                ))}
-            </Dropdown.Menu>
-        </Dropdown>
-        )
-    
-    }
-    
-    export default SubRegionDropdown
+        <FilterableDropdown
+            label='Select Sub-Region'
+            filterPlaceholder='Filter sub-regions...'
+            items={subRegions}
+            selected={currentSubRegion}
+            onSelect={setCurrentSubRegion}
+        />
+    )
+}
+
+export default SubRegionDropdown

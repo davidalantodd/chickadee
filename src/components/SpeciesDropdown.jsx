@@ -1,106 +1,73 @@
-/* eslint-disable react/display-name */
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useContext, useEffect, useState, useMemo } from 'react'
+import { useContext, useMemo, useRef, useState } from 'react'
 import { Dropdown, Form } from 'react-bootstrap'
 import { FixedSizeList as List } from 'react-window'
 import { ObservationsContext } from '../contexts/ObservationsContext'
-import debounce from 'lodash/debounce'
 
+// One row of the virtualized species list; react-window passes the shown species and select handler as `data`
+const SpeciesRow = ({ index, style, data }) => {
+    const species = data.species[index]
+    return (
+        <div style={style}>
+            <Dropdown.Item onClick={() => data.onSelect(species)}>{species.comName}</Dropdown.Item>
+        </div>
+    )
+}
+
+// Same behavior as FilterableDropdown, but the taxonomy has ~11k species, so only the visible rows are rendered
 function SpeciesDropdown() {
-    const { currentSpecies, setCurrentSpecies, setNotable, taxonomy, filteredTaxonomy, setFilteredTaxonomy, setSpeciesFilter, speciesFilter } = useContext(ObservationsContext)
-    const [displayedSpecies, setDisplayedSpecies] = useState(filteredTaxonomy ? filteredTaxonomy.slice(0, 100) : [])
-    
-    useEffect(() => {
-      setDisplayedSpecies(filteredTaxonomy ? filteredTaxonomy : [])
-  }, [filteredTaxonomy])
+    const { currentSpecies, setCurrentSpecies, setNotable, taxonomy } = useContext(ObservationsContext)
+    const [filter, setFilter] = useState('')
+    const inputRef = useRef(null)
+
+    const shownSpecies = useMemo(
+        () => taxonomy.filter((species) => species.comName.toLowerCase().includes(filter.toLowerCase())),
+        [taxonomy, filter]
+    )
 
     const handleSpeciesSelect = (species) => {
         setCurrentSpecies(species)
         setNotable(false)
     }
 
-    const CustomSpeciesToggle = React.forwardRef(({ children, onClick }, ref) => (
-        <a
-          href=""
-          ref={ref}
-          onClick={(e) => {
-            e.preventDefault();
-            onClick(e);
-          }}
-          className="btn btn-primary dropdown-toggle"
-        >
-          {children}
-        </a>
-      ));
-
-    // Debounce the filter function to avoid excessive re-renders
-      const debouncedFilter = useMemo(() => 
-        debounce((value) => {
-            const regex = RegExp(value, "gi")
-            const filteredTaxTemp = taxonomy.filter((tax) => tax.comName.match(regex))
-            setFilteredTaxonomy(filteredTaxTemp)
-            setDisplayedSpecies(filteredTaxTemp)
-        }, 300), [taxonomy, setFilteredTaxonomy]
-    )
-      
-      const handleFilter = (e) => {
-        const value = e.target.value
-        setSpeciesFilter(value)
-        debouncedFilter(value)
-      }
-
-    // Row component for react-window, rendered for each item in the list
-      const Row = ({ index, style }) => (
-        <div style={style}>
-            <Dropdown.Item key={displayedSpecies[index].speciesCode} onClick={() => handleSpeciesSelect(displayedSpecies[index])}>
-                {displayedSpecies[index].comName}
-            </Dropdown.Item>
-        </div>
-    );
-
-    // Custom menu component for react-bootstrap dropdown
-    const CustomSpeciesMenu = React.forwardRef(
-      ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
-        
-        return (
-          <div
-            ref={ref}
-            style={style}
-            className={className}
-            aria-labelledby={labeledBy}
-          >
-            <Form.Control
-              autoFocus
-              className="mx-3 my-2 w-auto species-filter-input"
-              placeholder="Filter species..."
-              onChange={handleFilter}
-              value={speciesFilter}
-            />
-            <Dropdown.Item key={'default'} onClick={() => setCurrentSpecies('')} className='clear-species-selection'>Clear Selection</Dropdown.Item>
-            {/* Render the list of species using react-window */}
-            <List
-              height={280}
-              itemCount={displayedSpecies.length}
-              itemSize={35}
-              width={'100%'}
-            >
-              {Row}
-            </List>
-          </div>
-        );
-      },
-    );
+    // Focus the filter box when the menu opens, and start fresh the next time it opens
+    const handleToggle = (isOpen) => {
+        if (isOpen) setTimeout(() => inputRef.current?.focus())
+        else setFilter('')
+    }
 
     return (
-        <Dropdown className='species-dropdown'>
-            <Dropdown.Toggle variant="primary" id="dropdown-basic" as={CustomSpeciesToggle} className='dropdown-toggle'>
-                {!currentSpecies ? 'Select Species' : currentSpecies.comName}
+        <Dropdown className='species-dropdown' onToggle={handleToggle}>
+            <Dropdown.Toggle variant="primary" className='dropdown-toggle'>
+                {currentSpecies ? currentSpecies.comName : 'Select Species'}
             </Dropdown.Toggle>
-            <Dropdown.Menu className='species-dropdown-menu' as={CustomSpeciesMenu}></Dropdown.Menu>
+            <Dropdown.Menu className='species-dropdown-menu'>
+                <div className='region-filter'>
+                    <Form.Control
+                        ref={inputRef}
+                        className="species-filter-input"
+                        placeholder="Filter species..."
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                    />
+                </div>
+                <Dropdown.Item onClick={() => setCurrentSpecies('')} className='clear-species-selection'>Clear Selection</Dropdown.Item>
+                {shownSpecies.length > 0 ? (
+                    <List
+                        height={Math.min(280, shownSpecies.length * 35)}
+                        itemCount={shownSpecies.length}
+                        itemSize={35}
+                        itemData={{ species: shownSpecies, onSelect: handleSpeciesSelect }}
+                        width={'100%'}
+                    >
+                        {SpeciesRow}
+                    </List>
+                ) : (
+                    <Dropdown.ItemText className='clear-species-selection'>No matches</Dropdown.ItemText>
+                )}
+            </Dropdown.Menu>
         </Dropdown>
     )
-
 }
 
 export default SpeciesDropdown
