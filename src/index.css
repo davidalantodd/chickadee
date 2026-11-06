@@ -165,12 +165,6 @@ h5 {
   font-size: 1rem;
 }
 
-h5#filter-observations-label {
-  font-size: 1.2rem;
-}
-
-h5#observation-count
-
 h6 {
   font-weight: 300;
 }
@@ -183,57 +177,135 @@ main {
   width: 100%;
 }
 
+/* Filter bar: Location and Species groups side by side, search on the right, result count below */
 .filter-bar {
+  width: 95vw;
+  margin-bottom: .5rem;
+}
+
+.filter-row {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 94vw;
-  padding: 0 0 .5rem;
-}
-
-.filter-dropdowns {
-  display:flex;
-  flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  font-size: .9rem;
+  align-items: flex-end;
+  gap: .75rem 2rem;
 }
 
-#filter-observations-label {
-  margin-bottom: 0;
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  min-width: 0;
 }
 
-.filter-spacer{
-  width: 5em;
-}
-
-#observation-count{
-  margin: 1rem;
-}
-
-.filter-bar > :last-child{
+.filter-group-label {
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
   color: var(--light-brown);
-  margin:0;
-  align-self: center;
 }
 
-.region-dropdown {
-  text-align: center;
-  margin: 0 0 0 1rem
+.filter-group-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
 }
 
-.species-dropdown {
-  margin: 0 0 0 1rem
+.location-step {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
 }
 
-.sub-region-dropdown {
-  text-align: center;
-  margin: 0 0 0 1rem
+.location-separator {
+  color: var(--light-brown);
+  font-size: 1.1rem;
+  line-height: 1;
 }
 
-.notable-switch {
-  margin: 0 1rem 0 1rem
+/* Fills the rest of the row, or the whole line once it wraps below the dropdowns */
+.filter-search {
+  flex: 1 1 16rem;
+}
+
+.filter-search .form-control {
+  font-size: .9rem;
+  border-color: var(--very-light-brown);
+  border-radius: 999px;
+  padding: .35rem .9rem;
+}
+
+.filter-search .form-control:focus {
+  border-color: var(--light-brown);
+  box-shadow: 0 0 0 .2rem var(--light-brown-transparent);
+}
+
+.filter-bar .filter-pill,
+.notable-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  max-width: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: .3rem .8rem;
+  font-size: .9rem;
+  color: var(--dark-brown);
+  background-color: var(--light-brown-transparent);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+
+.filter-bar .filter-pill:hover,
+.filter-bar .filter-pill:focus-visible,
+.filter-bar .show > .filter-pill,
+.notable-toggle:hover {
+  color: var(--dark-brown);
+  background-color: var(--light-brown-hover);
+  border-color: var(--light-brown);
+}
+
+/* Unselected filters read as placeholders */
+.filter-bar .filter-pill.is-empty {
+  color: #7a6a58;
+  background-color: transparent;
+  border-color: var(--very-light-brown);
+}
+
+.notable-toggle {
+  cursor: pointer;
+  background-color: transparent;
+  border-color: var(--very-light-brown);
+}
+
+.notable-toggle svg {
+  width: .9rem;
+  height: .9rem;
+  color: var(--light-brown);
+}
+
+.notable-toggle.active {
+  color: white;
+  background-color: var(--light-brown);
+  border-color: var(--light-brown);
+}
+
+.notable-toggle.active svg {
+  color: white;
+}
+
+.notable-toggle.active:hover {
+  color: white;
+  background-color: #9d7a4a;
+}
+
+.observation-count {
+  margin: .6rem 0 0;
+  font-size: .85rem;
+  color: var(--light-brown);
 }
 
 .dropdown-toggle {
@@ -523,37 +595,13 @@ footer img:hover{
 
 @media (max-width: 1000px) {
 
-  .filter-dropdowns {
-    flex-direction: column;
-    width: 100%;
-    gap: .25rem;
-  }
-  
   .filter-bar {
-    flex-direction: column;
-    width: 94vw;
-    padding: 0.5rem;
-    gap: .25rem;
-    margin-bottom: 0;
-  }
-
-  h5#observation-count {
-    margin: .25rem;
-  }
-
-  .region-dropdown,
-  .species-dropdown,
-  .sub-region-dropdown,
-  .notable-switch {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
     width: 100%;
+    padding: 0 1rem;
   }
 
-  .region-dropdown button,
-  .species-dropdown button {
-    margin: 0.5em;
+  .filter-row {
+    gap: .75rem 1.5rem;
   }
 
   .landing-page {
@@ -642,7 +690,7 @@ footer img:hover{
   }
 
   .filter-bar {
-    padding: 0.3rem;
+    padding: 0 .5rem;
   }
 
   .single-page-card-title {
@@ -652,10 +700,6 @@ footer img:hover{
 
 /* Tablet and larger mobile devices */
 @media (min-width: 769px) and (max-width: 1024px) {
-
-  .filter-bar {
-    width: 90vw;
-  }
 
   .single-page-card-image {
     max-width: 70vw;

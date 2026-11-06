@@ -68,8 +68,8 @@ function SpeciesDropdown() {
 
     return (
         <Dropdown className='species-dropdown' onToggle={handleToggle}>
-            <Dropdown.Toggle variant="primary" className='dropdown-toggle'>
-                {currentSpecies ? currentSpecies.comName : 'Select Species'}
+            <Dropdown.Toggle variant="light" className={`dropdown-toggle filter-pill ${currentSpecies ? '' : 'is-empty'}`}>
+                {currentSpecies ? currentSpecies.comName : 'All species'}
             </Dropdown.Toggle>
             <Dropdown.Menu className='species-dropdown-menu'>
                 <div className='region-filter'>

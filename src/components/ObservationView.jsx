@@ -100,38 +100,64 @@ function ObservationView() {
             {/* Render the filter bar only if there are observations */}
             {(singleObsView === -1) ? (
                 <section className="filter-bar">
-                    <span className="filter-dropdowns">
-                        <h5 id='filter-observations-label'>Filter observations</h5>
-                        <CountryDropdown/>
-                        {(regions.length > 0) ? (
-                            <RegionDropdown/>
-                        ) : null}
-                        {(subRegions.length > 0) ? (
-                            <SubRegionDropdown/>
-                        ) : null}
-                        <SpeciesDropdown />
-                        <Form className='notable-switch' title="Show only notable observations">
-                            <Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                label="Notable"
-                                title="Show only notable observations"
-                                checked={notable}
-                                onChange={() => handleNotableSwitch(!notable)}
-                            />
-                        </Form>
-                        {/* Input box for filtering */}
-                        <Form>
+                    <div className="filter-row">
+                        <div className="filter-group">
+                            <span className="filter-group-label">Location</span>
+                            <div className="filter-group-controls location-path">
+                                <CountryDropdown/>
+                                {(regions.length > 0) ? (
+                                    <span className="location-step">
+                                        <span className="location-separator" aria-hidden="true">›</span>
+                                        <RegionDropdown/>
+                                    </span>
+                                ) : null}
+                                {(subRegions.length > 0) ? (
+                                    <span className="location-step">
+                                        <span className="location-separator" aria-hidden="true">›</span>
+                                        <SubRegionDropdown/>
+                                    </span>
+                                ) : null}
+                            </div>
+                        </div>
+                        <div className="filter-group">
+                            <span className="filter-group-label">Species</span>
+                            <div className="filter-group-controls">
+                                <SpeciesDropdown />
+                                <button
+                                    type="button"
+                                    className={`notable-toggle ${notable ? 'active' : ''}`}
+                                    aria-pressed={notable}
+                                    title="Show only rare or unusual sightings for this area"
+                                    onClick={handleNotableSwitch}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                        {notable ? (
+                                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                        ) : (
+                                            <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                                        )}
+                                    </svg>
+                                    Notable only
+                                </button>
+                            </div>
+                        </div>
+                        <div className="filter-group filter-search">
                             <Form.Control
                                 id="observation-filter-input"
-                                type="text"
-                                placeholder="Search observations..."
+                                type="search"
+                                placeholder="Search these results..."
+                                aria-label="Search these results by bird name"
                                 value={filterText}
                                 onChange={handleFilterChange}
                             />
-                        </Form>
-                    </span>
-                    {(singleObsView === -1) ? (<h5 id='observation-count'>{filteredObservations.obs.length} recent bird observations</h5>) : null}
+                        </div>
+                    </div>
+                    <p className="observation-count">
+                        {filterText
+                            ? `${filteredObservations.obs.length} of ${observations.obs.length}`
+                            : filteredObservations.obs.length}
+                        {notable ? ' notable' : ' recent'} bird observations
+                    </p>
                 </section>
             ) : null}
             {/* Render the observations */}

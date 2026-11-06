@@ -13,7 +13,7 @@ function CountryDropdown() {
 
     return (
         <FilterableDropdown
-            label='Select Country'
+            label='Select country'
             filterPlaceholder='Filter countries...'
             items={countries}
             selected={currentCountry}

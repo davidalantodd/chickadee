@@ -18,7 +18,7 @@ function FilterableDropdown({ label, filterPlaceholder, items, selected, onSelec
 
     return (
         <Dropdown className='region-dropdown' onToggle={handleToggle}>
-            <Dropdown.Toggle variant="primary" className='dropdown-toggle'>
+            <Dropdown.Toggle variant="light" className={`dropdown-toggle filter-pill ${selected.name ? '' : 'is-empty'}`}>
                 {selected.name || label}
             </Dropdown.Toggle>
             <Dropdown.Menu className='region-dropdown-menu'>

@@ -12,7 +12,7 @@ function RegionDropdown() {
 
     return (
         <FilterableDropdown
-            label='Select Region'
+            label='All regions'
             filterPlaceholder='Filter regions...'
             items={regions}
             selected={currentRegion}

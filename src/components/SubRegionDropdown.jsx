@@ -7,7 +7,7 @@ function SubRegionDropdown() {
 
     return (
         <FilterableDropdown
-            label='Select Sub-Region'
+            label='All sub-regions'
             filterPlaceholder='Filter sub-regions...'
             items={subRegions}
             selected={currentSubRegion}
