@@ -7,8 +7,8 @@ function Footer() {
         <>
             <footer>
             <p className="data-attribution">
-                Bird observation data from <a href="https://ebird.org" target="_blank" rel="noreferrer">eBird.org</a>, Cornell Lab of Ornithology.
-                Chickadee is not affiliated with or endorsed by the Cornell Lab of Ornithology.
+                Data from <a href="https://ebird.org" target="_blank" rel="noreferrer">eBird.org</a>, Cornell Lab of Ornithology.
+                Not affiliated with or endorsed by the Cornell Lab.
             </p>
             <div className="footer-links">
             <a href="https://www.linkedin.com/in/david-alan-todd" target="_blank" rel="noreferrer opener">

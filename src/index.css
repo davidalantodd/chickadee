@@ -43,6 +43,15 @@ body {
   padding: 0;
 }
 
+/* Full-height column: header, page content, then the footer pushed to the bottom on short pages */
+#root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
 nav {
   margin: 2rem;
   display: flex;
@@ -115,13 +124,14 @@ nav {
   margin-right: 2rem;
 }
 
+/* Loading and empty-result messages fill the space left in main, centred */
 .loading{
-  margin: auto;
+  flex: 1;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 70px);
+  min-height: 50vh;
 }
 
 @keyframes spin {
@@ -170,6 +180,7 @@ h6 {
 }
 
 main {
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -515,6 +526,7 @@ main {
 }
 
 footer {
+  margin-top: auto;
   display:flex;
   flex-direction: column;
   align-items: center;
@@ -528,7 +540,7 @@ footer {
 }
 
 footer .data-attribution {
-  max-width: 40rem;
+  max-width: 48rem;
   padding: 0 1rem;
   font-size: 0.85rem;
   text-align: center;
