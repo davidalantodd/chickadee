@@ -48,6 +48,13 @@ function SpeciesDropdown() {
         return () => { cancelled = true }
     }, [regionCode, allTime])
 
+    // Looked up by code, since a species read from the URL has no name. The code stands in until the taxonomy loads.
+    const selectedName = useMemo(
+        () => currentSpecies && (taxonomy.find((species) => species.speciesCode === currentSpecies.speciesCode)?.comName
+            || currentSpecies.speciesCode),
+        [taxonomy, currentSpecies]
+    )
+
     const shownSpecies = useMemo(
         () => taxonomy.filter((species) =>
             (!regionSpeciesCodes || regionSpeciesCodes.has(species.speciesCode)) &&
@@ -69,7 +76,7 @@ function SpeciesDropdown() {
     return (
         <Dropdown className='species-dropdown' onToggle={handleToggle}>
             <Dropdown.Toggle variant="light" className={`dropdown-toggle filter-pill ${currentSpecies ? '' : 'is-empty'}`}>
-                {currentSpecies ? currentSpecies.comName : 'All species'}
+                {selectedName || 'All species'}
             </Dropdown.Toggle>
             <Dropdown.Menu className='species-dropdown-menu'>
                 <div className='region-filter'>

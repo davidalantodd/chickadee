@@ -9,6 +9,8 @@ function FilterableDropdown({ label, filterPlaceholder, items, selected, onSelec
     const inputRef = useRef(null)
 
     const shownItems = items.filter((item) => item.name.toLowerCase().includes(filter.toLowerCase()))
+    // Looked up by code, since a selection read from the URL has no name. The code stands in until the list loads.
+    const selectedName = items.find((item) => item.code === selected.code)?.name || selected.code
 
     // Focus the filter box when the menu opens, and start fresh the next time it opens
     const handleToggle = (isOpen) => {
@@ -18,8 +20,8 @@ function FilterableDropdown({ label, filterPlaceholder, items, selected, onSelec
 
     return (
         <Dropdown className='region-dropdown' onToggle={handleToggle}>
-            <Dropdown.Toggle variant="light" className={`dropdown-toggle filter-pill ${selected.name ? '' : 'is-empty'}`}>
-                {selected.name || label}
+            <Dropdown.Toggle variant="light" className={`dropdown-toggle filter-pill ${selected.code ? '' : 'is-empty'}`}>
+                {selectedName || label}
             </Dropdown.Toggle>
             <Dropdown.Menu className='region-dropdown-menu'>
                 <div className='dropdown-sticky-header'>

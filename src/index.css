@@ -415,42 +415,73 @@ main {
   border-radius: 1rem;
 }
 
-#map-small {
-  width: auto;
-  height: 60vh;
-  width: 70%;
-  border-radius: 1rem;
-  margin-bottom: 1rem;
-}
-
-.observation-single-page-view {
-  margin: auto;
-  min-height: calc(100vh - 108.8px - 2em);
-  width: 85vw;
-}
-
-.observation-single-page-view:hover{
-  box-shadow: var(--very-light-brown) 0 0 10px;
-  transition: box-shadow 0.1s ease-in-out;
-}
-
-.single-page-card-title {
-  font-size: 3em;
+/* Observation modal: photo, details, small map and Wikipedia link */
+.observation-modal-title {
+  font-size: 2rem;
   font-weight: 200;
 }
 
-.single-page-card-body{
+.observation-modal-body {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  gap: 1rem;
 }
 
-.single-page-card-figure {
+.observation-modal-figure {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 0 1em;
+  gap: .25rem;
+  margin: 0;
+}
+
+.observation-modal-image {
+  max-width: 100%;
+  max-height: 45vh;
+  border-radius: .5rem;
+}
+
+.observation-modal-image-placeholder {
+  width: 100%;
+  min-width: 18rem;
+  height: 45vh;
+  border-radius: .5rem;
+  background-color: var(--light-brown-transparent);
+}
+
+.observation-modal-details {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .25rem 1rem;
+  width: 100%;
+  margin: 0;
+}
+
+.observation-modal-details dt {
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--light-brown);
+  align-self: center;
+}
+
+.observation-modal-details dd {
+  margin: 0;
+}
+
+.observation-modal-map {
+  width: 100%;
+  height: 16rem;
+  border-radius: .75rem;
+  overflow: hidden;
+  background-color: var(--light-brown-transparent);
+}
+
+.observation-modal-map .leaflet-container {
+  width: 100%;
+  height: 100%;
 }
 
 .image-credit {
@@ -460,10 +491,6 @@ main {
 
 .image-credit a {
   text-decoration: underline;
-}
-
-.single-page-card-figure .single-page-card-image {
-  margin-bottom: 0.25em;
 }
 
 .landing-page-credit {
@@ -483,19 +510,8 @@ main {
   text-decoration: underline;
 }
 
-.single-page-card-image{
-  width: auto;
-  max-height: 60vh;
-  max-width: 80vw;
-  margin-bottom: 1em;
-}
-
-.back-to-observations-button {
-  align-self: flex-start;
-}
-
 .wiki-link {
-  margin-bottom: 1em;
+  text-decoration: underline;
 }
 
 footer {
@@ -655,10 +671,6 @@ footer img:hover{
     text-align: left;
   }
 
-  #map-small {
-    width: 100%;
-  }
-
   h1 {
     font-size: 2em;
   }
@@ -693,16 +705,8 @@ footer img:hover{
     padding: 0 .5rem;
   }
 
-  .single-page-card-title {
-    font-size: 1.5em;
-  }
-}
-
-/* Tablet and larger mobile devices */
-@media (min-width: 769px) and (max-width: 1024px) {
-
-  .single-page-card-image {
-    max-width: 70vw;
+  .observation-modal-title {
+    font-size: 1.5rem;
   }
 }
 

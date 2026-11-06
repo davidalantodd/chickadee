@@ -14,12 +14,10 @@ export const formatDate = (originalDateString) => {
     return formatter.format(date);
 }
 
-// Function to format the location string for display
-export const formatLocation = (origLocationString, singleObsView) => {
-    const formattedLocation = origLocationString;
-
-    if (singleObsView === -1 && formattedLocation.length > 70){
+// Shorten long location names so they fit on a list card
+export const formatLocation = (origLocationString) => {
+    if (origLocationString.length > 70){
         return origLocationString.slice(0,70).concat("...")
     }
-    return formattedLocation
+    return origLocationString
 }

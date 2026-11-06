@@ -31,6 +31,7 @@ export function useObservations(onLoaded) {
                 if (onLoaded) onLoaded()
             })
         return () => { cancelled = true }
+    // Keyed on codes: the fetch reruns only when the query itself changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentCountry, currentRegion, currentSubRegion, notable, currentSpecies])
+    }, [currentCountry.code, currentRegion.code, currentSubRegion.code, notable, currentSpecies.speciesCode])
 }

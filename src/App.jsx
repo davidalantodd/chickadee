@@ -5,10 +5,13 @@ import Header from './components/Header';
 import Footer from './components/Footer'
 import { ObservationsContext } from './contexts/ObservationsContext';
 import { useState } from 'react'
-import SingleObservationView from './components/SingleObservationView';
+import ObservationModal from './components/ObservationModal';
+import { readUrlFilters } from './utils/url';
 import ScrollToTopButton from './components/ScrollToTopButton';
 
 function App() {
+  // Filters start from the URL. Only codes are known at this point; the dropdowns look up display names.
+  const [initialFilters] = useState(readUrlFilters)
 
   const [observations, setObservations] = useState({
     region: '',
@@ -16,29 +19,30 @@ function App() {
   });
   const [countries, setCountries] = useState([])
   const [currentCountry, setCurrentCountry] = useState({
-    code:'US',
-    name:'United States'
+    code: initialFilters.country,
+    name: ''
   })
   const [regions, setRegions] = useState([])
   const [currentRegion, setCurrentRegion] = useState({
-    code:'',
+    code: initialFilters.region,
     name:''
   })
   const [subRegions, setSubRegions] = useState([])
   const [currentSubRegion, setCurrentSubRegion] = useState({
-    code:'',
+    code: initialFilters.subregion,
     name:''
   })
-  const [notable, setNotable] = useState(false)
+  const [notable, setNotable] = useState(initialFilters.notable)
   const [taxonomy, setTaxonomy] = useState([])
-  const [currentSpecies, setCurrentSpecies] = useState('')
+  const [currentSpecies, setCurrentSpecies] = useState(
+    initialFilters.species ? { speciesCode: initialFilters.species, comName: '' } : ''
+  )
   const [loading, setLoading] = useState(true)
-  const [singleObsView, setSingleObsView] = useState(-1)
   const [filteredObservations, setFilteredObservations] = useState({
     region: '',
     obs: []
   })
-  const [viewType, setViewType] = useState('list')  // 'list' or 'map'
+  const [viewType, setViewType] = useState(initialFilters.view)  // 'list' or 'map'
   
   return (
     <>
@@ -53,19 +57,19 @@ function App() {
                                                   taxonomy, setTaxonomy,
                                                   currentSpecies, setCurrentSpecies,
                                                   loading, setLoading,
-                                                  singleObsView, setSingleObsView,
                                                   filteredObservations, setFilteredObservations,
                                                   viewType, setViewType}}>
         <Router>
         <Header/>
           <Routes>
             <Route path="/" element = {<LandingPage/>} />
-            <Route path = "/observations" element= {
+            {/* Optional :id opens the modal; a single route keeps the list mounted underneath it */}
+            <Route path="/observations/:id?" element={
                 <main>
                   <ObservationView />
+                  <ObservationModal />
                 </main>
             }/>
-            <Route path="/observations/:id" element={<SingleObservationView />} />
           </Routes>
           <Footer/>
           <ScrollToTopButton />

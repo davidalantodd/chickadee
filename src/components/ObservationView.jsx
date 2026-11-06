@@ -13,16 +13,34 @@ import SpeciesDropdown from './SpeciesDropdown'
 import SubRegionDropdown from './SubRegionDropdown'
 import ObservationMap from './ObservationMap'
 import debounce from 'lodash/debounce';
+import { useSearchParams } from 'react-router-dom'
+import { withFilters } from '../utils/url'
 
 function ObservationView() {
     const {setCountries, currentCountry, regions, setRegions,
         currentRegion, subRegions, setSubRegions,
-        observations, notable, setNotable, setTaxonomy, 
+        observations, notable, setNotable, setTaxonomy,
         setCurrentSpecies,
-        singleObsView, filteredObservations, setFilteredObservations, viewType,
-        setLoading, currentSubRegion, currentSpecies, setObservations} = useContext(ObservationsContext);
+        filteredObservations, setFilteredObservations, viewType,
+        currentSubRegion, currentSpecies} = useContext(ObservationsContext);
 
-    const [filterText, setFilterText] = useState("");
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [filterText, setFilterText] = useState(() => searchParams.get('q') ?? '');
+
+    // Write the filters to the URL. `replace` updates the current history entry, so filter changes
+    // don't add Back button steps.
+    useEffect(() => {
+        setSearchParams(prev => withFilters(prev, {
+            country: currentCountry.code,
+            region: currentRegion.code,
+            subregion: currentSubRegion.code,
+            species: currentSpecies?.speciesCode,
+            notable,
+            q: filterText,
+            view: viewType,
+        }), { replace: true })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentCountry.code, currentRegion.code, currentSubRegion.code, currentSpecies?.speciesCode, notable, filterText, viewType])
 
     const handleNotableSwitch = () => {
         setNotable(!notable)
@@ -49,7 +67,7 @@ function ObservationView() {
             .then(data => { if (!cancelled) setRegions(data) });
         return () => { cancelled = true }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentCountry])
+    }, [currentCountry.code])
 
     // Reset and refetch subregions when the region changes, ignoring responses for a stale region
     useEffect(() => {
@@ -60,7 +78,7 @@ function ObservationView() {
             .then(data => { if (!cancelled) setSubRegions(data) });
         return () => { cancelled = true }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentRegion])
+    }, [currentRegion.code])
 
     // Debounced filter function
     const debouncedFilter = useMemo(
@@ -97,8 +115,6 @@ function ObservationView() {
 
     return (
         <>
-            {/* Render the filter bar only if there are observations */}
-            {(singleObsView === -1) ? (
                 <section className="filter-bar">
                     <div className="filter-row">
                         <div className="filter-group">
@@ -159,7 +175,6 @@ function ObservationView() {
                         {notable ? ' notable' : ' recent'} bird observations
                     </p>
                 </section>
-            ) : null}
             {/* Render the observations */}
             {viewType === 'list' ? (<ObservationList className="observations-list-component"/>) : null}
             {viewType === 'map' ?  (<ObservationMap className="observations-map-component"/>) : null}

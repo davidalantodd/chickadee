@@ -7,8 +7,7 @@ import { useObservations } from '../hooks/useObservations'
 // eslint-disable-next-line react/prop-types
 function Observations() {
     const {observations, currentCountry,
-        loading,
-        singleObsView, filteredObservations
+        loading, filteredObservations
         } = useContext(ObservationsContext)
     
     const [visibleCount, setVisibleCount] = useState(100);
@@ -34,20 +33,10 @@ function Observations() {
     // Fetch observations whenever relevant filters or regions change, resetting pagination on each load
     useObservations(() => setVisibleCount(100))
 
-    // Restore scroll position after loading observations
+    // Scroll to the top whenever a new set of observations loads
     useEffect(() => {
         if (!loading && observations.obs.length > 0) {
-            const scrollPosition = localStorage.getItem('scrollPosition');
-            if (scrollPosition) {
-                // Use setTimeout to ensure the scroll happens after the component is mounted
-                setTimeout(() => {
-                    window.scrollTo(0, parseInt(scrollPosition, 10));
-                    localStorage.removeItem('scrollPosition');
-                }, 500);
-            } else {
-                // Ensure we're at the top when first loading the page
-                window.scrollTo(0, 0);
-            }
+            window.scrollTo(0, 0);
         }
     }, [loading, observations]);
 
@@ -60,15 +49,9 @@ function Observations() {
             (!loading && (observationsToDisplay.length > 0)) ? (
                 <>
                     <Container fluid className="observation-container">
-                        {(observationsToDisplay.map((observation, index) => (
-                            (singleObsView === -1 ? (
+                        {observationsToDisplay.map((observation, index) => (
                             <Observation observation={observation} index={index} key={observation.subId + observation.comName}/>
-                            ) : (
-                                (index === singleObsView) ? (
-                                    <Observation observation={observation} index={index} key={observation.subId + observation.comName}/>
-                                ) : null
-                            ))
-                        )))}
+                        ))}
                     </Container>
                     {visibleCount < filteredObservations.obs.length && (
                         <div className="loading-more">

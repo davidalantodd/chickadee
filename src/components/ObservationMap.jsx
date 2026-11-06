@@ -2,7 +2,7 @@
 import { useContext, useEffect, useMemo, useState, useRef } from "react";
 import { ObservationsContext } from "../contexts/ObservationsContext";
 import { useObservations } from "../hooks/useObservations";
-import { useNavigate } from "react-router-dom";
+import { useOpenObservation } from "../hooks/useOpenObservation";
 import { formatDate } from "../utils/format";
 
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
@@ -121,15 +121,11 @@ function MapBoundsUpdater({ observations }) {
 function ObservationMap() {
 	const { currentCountry, currentRegion, currentSubRegion, 
 		notable, currentSpecies, filteredObservations } = useContext(ObservationsContext);
-	const navigate = useNavigate();
+	// Stable identity: MarkerClusterGroup rebuilds every marker when its onMarkerClick prop changes
+	const handleSingleObsView = useOpenObservation();
 	const [isMapReady, setIsMapReady] = useState(false);
 	const [visibleObservations, setVisibleObservations] = useState([]);
 	
-	// Function to navigate to the SingleObservationView
-	const handleSingleObsView = (observation) => {
-		navigate(`/observations/${observation.subId}?code=${observation.speciesCode}&commonName=${observation.comName}&location=${observation.locName}&date=${observation.obsDt}&lat=${observation.lat}&lng=${observation.lng}`);
-	};
-
 	// Fetch observations whenever relevant filters or regions change
 	useObservations();
 
@@ -178,11 +174,6 @@ function ObservationMap() {
 		));
 	}, [visibleObservations, handleSingleObsView]);
 
-	// Callback for marker clicks in the cluster
-	const handleMarkerClick = (observation) => {
-		handleSingleObsView(observation);
-	};
-
 	return (
 		<>
 			{!isMapReady && visibleObservations.length > 0 && (
@@ -208,7 +199,7 @@ function ObservationMap() {
 					attribution="Tiles &copy; Esri &mdash; USGS Topo via ESRI &mdash; Source: USGS, National Geographic, DeLorme, NAVTEQ"
 					url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
 				/>
-				<MarkerClusterGroup markers={markers} onMarkerClick={handleMarkerClick} />
+				<MarkerClusterGroup markers={markers} onMarkerClick={handleSingleObsView} />
 				{/* This component handles map bounds updates */}
 				<MapBoundsUpdater observations={visibleObservations} />
 			</MapContainer>
