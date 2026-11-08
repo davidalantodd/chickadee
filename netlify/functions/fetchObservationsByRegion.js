@@ -1,3 +1,22 @@
+import { createHmac } from 'node:crypto'
+
+// Personal locations (yards, home addresses) are reduced before leaving the server: coordinates are rounded
+// to 2 decimal places (about 1 km) and the name is replaced. The location id is dropped and the checklist id
+// swapped for an opaque one, since both lead to eBird pages showing the exact spot. The opaque id is an HMAC
+// keyed with the API key, so it is stable across requests but can't be reversed by guessing checklist ids.
+const obscurePrivateLocation = (observation, secret) => {
+    if (!observation.locationPrivate) return observation
+    // eslint-disable-next-line no-unused-vars
+    const { locId, ...rest } = observation
+    return {
+        ...rest,
+        locName: 'Private location',
+        lat: Math.round(observation.lat * 100) / 100,
+        lng: Math.round(observation.lng * 100) / 100,
+        subId: 'P' + createHmac('sha256', secret).update(observation.subId).digest('hex').slice(0, 16),
+    }
+}
+
 export const handler = async (event) => {
     try {
         const eBirdBaseAPIURL = 'https://api.ebird.org/v2/'
@@ -31,6 +50,7 @@ export const handler = async (event) => {
              ) + '?back=30'
             , requestOptions)
         const data = await response.json()
+        const body = Array.isArray(data) ? data.map(obs => obscurePrivateLocation(obs, eBirdApiToken)) : data
         
         return {
             statusCode: response.status,
@@ -43,7 +63,7 @@ export const handler = async (event) => {
                 'Netlify-CDN-Cache-Control': 'public, durable, s-maxage=1800, stale-while-revalidate=3600',
                 'Netlify-Vary': 'query=regionToSearch|notable|currentSpecies'
             } : {},
-            body: JSON.stringify(data)
+            body: JSON.stringify(body)
         }
     } catch (err) {
         return {

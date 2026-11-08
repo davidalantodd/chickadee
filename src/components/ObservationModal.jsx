@@ -49,6 +49,9 @@ export default function ObservationModal() {
     }
 
     const hasPosition = Number.isFinite(observation?.lat) && Number.isFinite(observation?.lng)
+    // Private locations arrive with an opaque id and rounded coordinates (see fetchObservationsByRegion),
+    // so only real checklist ids (S followed by digits) get a link to eBird
+    const isChecklistId = /^S\d+$/.test(observation?.subId ?? '')
 
     return (
         <Modal
@@ -86,7 +89,10 @@ export default function ObservationModal() {
                             <dt>Seen</dt>
                             <dd>{observation.date ? formatDate(observation.date) : 'Unknown'}</dd>
                             <dt>Location</dt>
-                            <dd>{observation.location}</dd>
+                            <dd>
+                                {observation.location}
+                                {!isChecklistId && <span className="observation-modal-note"> · map shows the approximate area</span>}
+                            </dd>
                         </dl>
                         {hasPosition && (
                             <div className="observation-modal-map">
@@ -106,14 +112,24 @@ export default function ObservationModal() {
                                 )}
                             </div>
                         )}
-                        <a
-                            href={`https://en.wikipedia.org/wiki/${encodeURIComponent(observation.commonName)}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="wiki-link"
-                        >
-                            Learn more about the {observation.commonName} on Wikipedia
-                        </a>
+                        <div className="observation-modal-links">
+                            {isChecklistId && (
+                                <a
+                                    href={`https://ebird.org/checklist/${observation.subId}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    View checklist on eBird
+                                </a>
+                            )}
+                            <a
+                                href={`https://en.wikipedia.org/wiki/${encodeURIComponent(observation.commonName)}`}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                Learn more about the {observation.commonName} on Wikipedia
+                            </a>
+                        </div>
                     </Modal.Body>
                 </>
             )}
