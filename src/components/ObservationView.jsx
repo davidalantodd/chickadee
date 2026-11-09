@@ -18,11 +18,11 @@ import { withFilters } from '../utils/url'
 
 function ObservationView() {
     const {setCountries, currentCountry, regions, setRegions,
-        currentRegion, subRegions, setSubRegions,
+        currentRegion, setCurrentRegion, subRegions, setSubRegions,
         observations, notable, setNotable, setTaxonomy,
         setCurrentSpecies,
         filteredObservations, setFilteredObservations, viewType,
-        currentSubRegion, currentSpecies} = useContext(ObservationsContext);
+        currentSubRegion, setCurrentSubRegion, currentSpecies} = useContext(ObservationsContext);
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [filterText, setFilterText] = useState(() => searchParams.get('q') ?? '');
@@ -102,6 +102,21 @@ function ObservationView() {
         debouncedFilter(value); 
     };
 
+    // Everything "Clear filters" resets. The country and list/map view are kept: without a country
+    // there's nothing to show, and the view is a display choice rather than a filter.
+    const hasActiveFilters = Boolean(currentRegion.code || currentSubRegion.code || currentSpecies || notable || filterText)
+
+    const handleClearFilters = () => {
+        setCurrentRegion({ code: '', name: '' })
+        setCurrentSubRegion({ code: '', name: '' })
+        setCurrentSpecies('')
+        setNotable(false)
+        setFilterText('')
+        // Drop any pending search and show every loaded observation; a region or species change refetches anyway
+        debouncedFilter.cancel()
+        setFilteredObservations({ ...filteredObservations, obs: observations.obs })
+    }
+
     useEffect(() => {
         // Filter observations based on the filter text
         const filteredObs = observations.obs.filter((observation) =>
@@ -173,6 +188,14 @@ function ObservationView() {
                             ? `${filteredObservations.obs.length} of ${observations.obs.length}`
                             : filteredObservations.obs.length}
                         {notable ? ' notable' : ' recent'} bird observations
+                        {hasActiveFilters && (
+                            <>
+                                {' · '}
+                                <button type="button" className="clear-filters-button" onClick={handleClearFilters}>
+                                    Clear filters
+                                </button>
+                            </>
+                        )}
                     </p>
                 </section>
             {/* Render the observations */}
