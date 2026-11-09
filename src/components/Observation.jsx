@@ -17,6 +17,7 @@ export default function Observation({observation, index}) {
                 </Card.Text>
                 <Card.Text className="observation-card-location">
                     {formatLocation(observation.locName)}
+                    {observation.area && <span className="observation-card-area">near {observation.area}</span>}
                 </Card.Text>
             </Card.Body>
         </Card>

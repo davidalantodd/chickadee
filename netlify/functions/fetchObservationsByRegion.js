@@ -1,4 +1,5 @@
 import { createHmac } from 'node:crypto'
+import { nearestPlace } from '../lib/nearestPlace.js'
 
 // Personal locations (yards, home addresses) are reduced before leaving the server: coordinates are rounded
 // to 2 decimal places (about 1 km) and the name is replaced. The location id is dropped and the checklist id
@@ -16,6 +17,10 @@ const obscurePrivateLocation = (observation, secret) => {
         subId: 'P' + createHmac('sha256', secret).update(observation.subId).digest('hex').slice(0, 16),
     }
 }
+
+// Adds `area`, the nearest town and its state ("Blacksburg, Virginia"), looked up after any rounding
+// so a private location's area is derived only from its approximate position
+const withArea = (observation) => ({ ...observation, area: nearestPlace(observation.lat, observation.lng) })
 
 export const handler = async (event) => {
     try {
@@ -50,7 +55,7 @@ export const handler = async (event) => {
              ) + '?back=30'
             , requestOptions)
         const data = await response.json()
-        const body = Array.isArray(data) ? data.map(obs => obscurePrivateLocation(obs, eBirdApiToken)) : data
+        const body = Array.isArray(data) ? data.map(obs => withArea(obscurePrivateLocation(obs, eBirdApiToken))) : data
         
         return {
             statusCode: response.status,

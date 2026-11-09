@@ -25,6 +25,11 @@ L.Icon.Default.mergeOptions({
 	shadowUrl: markerShadow,
 });
 
+// Location names are free text from eBird users, so escape them before building popup HTML
+const escapeHtml = (text) => String(text ?? '').replace(/[&<>"']/g, (char) => (
+	{ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]
+));
+
 // Add marker clustering support
 // eslint-disable-next-line react/prop-types
 const MarkerClusterGroup = (props) => {
@@ -56,8 +61,9 @@ const MarkerClusterGroup = (props) => {
 				// Create popup content as HTML
 				const popupContent = `
 					<div class="map-popup" style="cursor:pointer" data-obs-id="${observation.subId}">
-						<strong>${observation.comName}</strong><br />
-						Location: ${observation.locName}<br />
+						<strong>${escapeHtml(observation.comName)}</strong><br />
+						Location: ${escapeHtml(observation.locName)}<br />
+						${observation.area ? `Area: near ${escapeHtml(observation.area)}<br />` : ''}
 						Date: ${formatDate(observation.obsDt)}<br />
 						<span class="popup-click-text">(Click for details)</span>
 					</div>

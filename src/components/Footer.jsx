@@ -8,6 +8,7 @@ function Footer() {
             <footer>
             <p className="data-attribution">
                 Data from <a href="https://ebird.org" target="_blank" rel="noreferrer">eBird.org</a>, Cornell Lab of Ornithology.
+                Place names from <a href="https://www.geonames.org" target="_blank" rel="noreferrer">GeoNames</a> (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>).
                 Not affiliated with or endorsed by the Cornell Lab.
             </p>
             <div className="footer-links">

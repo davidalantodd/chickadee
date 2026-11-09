@@ -379,7 +379,7 @@ main {
 .observation-card{
   margin: .25rem;
   width: 95vw;
-  height: 3.5em;
+  min-height: 3.5em;
   transition-property: transform;
   transition-duration: .4s;
 }
@@ -418,6 +418,12 @@ main {
   width: 18rem;
   text-align: end;
   font-size: .9em;
+}
+
+.observation-card-area {
+  display: block;
+  font-size: .9em;
+  color: #7a6a58;
 }
 
 #map {
@@ -552,7 +558,7 @@ footer {
 }
 
 footer .data-attribution {
-  max-width: 48rem;
+  max-width: 66rem;
   padding: 0 1rem;
   font-size: 0.85rem;
   text-align: center;

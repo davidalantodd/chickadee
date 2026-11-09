@@ -93,6 +93,12 @@ export default function ObservationModal() {
                                 {observation.location}
                                 {!isChecklistId && <span className="observation-modal-note"> · map shows the approximate area</span>}
                             </dd>
+                            {observation.area && (
+                                <>
+                                    <dt>Area</dt>
+                                    <dd>near {observation.area}</dd>
+                                </>
+                            )}
                         </dl>
                         {hasPosition && (
                             <div className="observation-modal-map">

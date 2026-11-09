@@ -4,9 +4,9 @@
 //   /observations?country=US&region=US-VA&subregion=US-VA-059&species=carchi&notable=1&q=wren&view=map
 // An open observation adds its id to the path and its details to the query, so the modal can render
 // from the URL alone:
-//   /observations/S123456?country=US&...&code=carchi&commonName=Carolina+Chickadee&location=...&date=...&lat=...&lng=...
+//   /observations/S123456?country=US&...&code=carchi&commonName=Carolina+Chickadee&location=...&area=...&date=...&lat=...&lng=...
 
-const OBSERVATION_PARAMS = ['code', 'commonName', 'location', 'date', 'lat', 'lng']
+const OBSERVATION_PARAMS = ['code', 'commonName', 'location', 'area', 'date', 'lat', 'lng']
 
 // Filters in the current URL. Country defaults to the US and view to the list.
 export const readUrlFilters = () => {
@@ -43,6 +43,8 @@ export const observationLink = (observation, search) => {
     params.set('code', observation.speciesCode)
     params.set('commonName', observation.comName)
     params.set('location', observation.locName)
+    if (observation.area) params.set('area', observation.area)
+    else params.delete('area')
     params.set('date', observation.obsDt)
     params.set('lat', observation.lat)
     params.set('lng', observation.lng)
@@ -65,6 +67,7 @@ export const readUrlObservation = (subId, params) => {
         speciesCode: params.get('code'),
         commonName,
         location: params.get('location') ?? '',
+        area: params.get('area'),
         date: params.get('date'),
         lat: parseFloat(params.get('lat')),
         lng: parseFloat(params.get('lng')),
