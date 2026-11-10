@@ -7,7 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.1.0] - 2024-04-16
+## [2.0.0] - 2026-11-09
+
+### Added
+- Worldwide regions: browse any country, then its regions and sub-regions
+- Type-to-filter in the country, region and species dropdowns
+- Species dropdown limited to species seen in the selected area, with a switch to include every species ever recorded there
+- Observation details open in a popup over the list or map instead of a separate page
+- Shareable URLs: filters, search, list/map view and open observations are kept in the URL
+- Species photos as thumbnails in the list and map popups, and larger in the details popup
+- Nearest town and state on every observation (e.g. "near Blacksburg, Virginia"), worldwide
+- "View checklist on eBird" link for observations at public hotspots
+- Clear filters button
+- Scripts to rebuild the bundled town data (GeoNames) and species photo data (Wikipedia)
+- CDN caching for all Netlify functions
+- Data attribution for eBird, GeoNames, Wikimedia Commons and OpenStreetMap
+
+### Changed
+- **Breaking:** the eBird API key environment variable is now `EBIRD_API_KEY` (was `VITE_EBIRD_API_KEY`) and is only read by Netlify functions
+- Filter bar reorganised into Location and Species groups with pill-style dropdowns and a "Notable only" toggle
+- Splash page redesigned: fills the screen between header and footer, with a headline, description and button beside the bird
+- Species photos come from a prebuilt list, so browsing makes no Wikipedia API calls; images use Wikimedia's standard thumbnail sizes instead of full-size originals
+- Splash photo reduced from 2.9 MB to 213–571 KB, served by screen size
+- Netlify functions use ESM exports
+- README rewritten with new features, setup for the bundled data, and new screenshots
+
+### Fixed
+- Footer stays at the bottom of short pages
+- Map markers use local icons in production
+- Location names containing "&" no longer break observation links
+- Location names in map popups are escaped
+- Wikipedia image requests send a User-Agent header and handle errors
+
+### Security
+- Private locations (yards, home addresses) are hidden before data reaches the browser: coordinates are rounded to about 1 km, names are shown as "Private location", and checklist and location IDs are removed
+
+## [1.1.0] - 2025-04-16
 
 ### Added
 - Add Leaflet map to single observation view with location marker
@@ -42,7 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix direct access to /observations endpoint
 - Fix loading component height spacing
 
-## [1.0.0] - 2024-02-28
+## [1.0.0] - 2025-02-28
 
 ### Added
 - Initial release of Chickadee
