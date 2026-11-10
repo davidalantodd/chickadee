@@ -61,6 +61,7 @@ const MarkerClusterGroup = (props) => {
 				// Create popup content as HTML
 				const popupContent = `
 					<div class="map-popup" style="cursor:pointer" data-obs-id="${observation.subId}">
+						${observation.photo ? `<img class="map-popup-photo" src="${escapeHtml(observation.photo.popup)}" alt="" title="${escapeHtml(observation.photo.credit)}" width="160" height="120" />` : ''}
 						<strong>${escapeHtml(observation.comName)}</strong><br />
 						Location: ${escapeHtml(observation.locName)}<br />
 						${observation.area ? `Area: near ${escapeHtml(observation.area)}<br />` : ''}

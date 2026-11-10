@@ -405,9 +405,38 @@ main {
 .observation-card-body{
   display: flex;
   flex-direction: row;
+  align-items: center;
+  gap: .75rem;
+  padding: .5rem;
+}
+
+/* Species thumbnail; the empty variant keeps the text aligned when a species has no photo */
+.observation-card-thumb {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: .4rem;
+  background-color: var(--light-brown-transparent);
+}
+
+.observation-card-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: .5rem;
+}
+
+.map-popup-photo {
+  display: block;
+  width: 160px;
+  height: 120px;
+  margin-bottom: .4rem;
+  object-fit: cover;
+  border-radius: .4rem;
+  background-color: var(--light-brown-transparent);
 }
 
 .observation-card:hover{
@@ -703,6 +732,16 @@ footer img:hover{
   }
 
   .observation-card-body {
+    align-items: flex-start;
+  }
+
+  /* Cards stack their text here, so the thumbnail grows to match the taller card */
+  .observation-card-thumb {
+    width: 96px;
+    height: 96px;
+  }
+
+  .observation-card-text {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;

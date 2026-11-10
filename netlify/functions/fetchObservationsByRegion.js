@@ -1,5 +1,6 @@
 import { createHmac } from 'node:crypto'
 import { nearestPlace } from '../lib/nearestPlace.js'
+import { speciesImage, photoCredit } from '../lib/speciesImages.js'
 
 // Personal locations (yards, home addresses) are reduced before leaving the server: coordinates are rounded
 // to 2 decimal places (about 1 km) and the name is replaced. The location id is dropped and the checklist id
@@ -21,6 +22,15 @@ const obscurePrivateLocation = (observation, secret) => {
 // Adds `area`, the nearest town and its state ("Blacksburg, Virginia"), looked up after any rounding
 // so a private location's area is derived only from its approximate position
 const withArea = (observation) => ({ ...observation, area: nearestPlace(observation.lat, observation.lng) })
+
+// Adds `photo`, the species' list and map-popup thumbnails with a one-line credit, or null without one
+const withPhoto = (observation) => {
+    const image = speciesImage(observation.speciesCode)
+    return {
+        ...observation,
+        photo: image && { list: image.urls.list, popup: image.urls.popup, credit: photoCredit(image) },
+    }
+}
 
 export const handler = async (event) => {
     try {
@@ -55,7 +65,7 @@ export const handler = async (event) => {
              ) + '?back=30'
             , requestOptions)
         const data = await response.json()
-        const body = Array.isArray(data) ? data.map(obs => withArea(obscurePrivateLocation(obs, eBirdApiToken))) : data
+        const body = Array.isArray(data) ? data.map(obs => withPhoto(withArea(obscurePrivateLocation(obs, eBirdApiToken)))) : data
         
         return {
             statusCode: response.status,

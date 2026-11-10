@@ -21,26 +21,26 @@ export default function ObservationModal() {
         setObservation(fromUrl)
     }
 
-    // null while loading or when Wikipedia has no image; otherwise { src, artist, license, licenseUrl, filePageUrl }
+    // null while loading or when the species has no photo; otherwise { urls, artist, license, licenseUrl, filePageUrl }
     const [wikipediaImage, setWikipediaImage] = useState(null)
     const [imageLoaded, setImageLoaded] = useState(false)
     // Leaflet sizes itself from its container when created, so the map mounts after the open animation
     const [showMap, setShowMap] = useState(false)
 
-    const commonName = observation?.commonName
-    // Fetch the species' Wikipedia image and its credit; fall back to the bundled chickadee on any failure
+    const speciesCode = observation?.speciesCode
+    // Fetch the species' photo and credit; fall back to the bundled chickadee on any failure
     useEffect(() => {
-        if (!commonName) return
+        if (!speciesCode) return
         let cancelled = false
         setImageLoaded(false)
         setWikipediaImage(null)
-        fetch(`/.netlify/functions/fetchWikipediaImage?speciesName=${encodeURIComponent(commonName)}`)
+        fetch(`/.netlify/functions/fetchSpeciesImage?speciesCode=${encodeURIComponent(speciesCode)}`)
             .then(response => response.ok ? response.json() : { image: null })
             .then(data => { if (!cancelled) setWikipediaImage(data.image) })
             .catch(() => { if (!cancelled) setWikipediaImage(null) })
             .finally(() => { if (!cancelled) setImageLoaded(true) })
         return () => { cancelled = true }
-    }, [commonName])
+    }, [speciesCode])
 
     // From the list: go back to that history entry. From a pasted link: replace the URL with the list's.
     const handleClose = () => {
@@ -71,7 +71,14 @@ export default function ObservationModal() {
                     <Modal.Body className="observation-modal-body">
                         <figure className="observation-modal-figure">
                             {imageLoaded ? (
-                                <img src={wikipediaImage?.src ?? chickadee} className="observation-modal-image" alt={observation.commonName}/>
+                                <img
+                                    src={wikipediaImage?.urls.modal ?? chickadee}
+                                    // Standard Wikimedia widths: phones take the 500px copy, larger screens the 960px one
+                                    srcSet={wikipediaImage ? `${wikipediaImage.urls.modalSmall} 500w, ${wikipediaImage.urls.modal} 960w` : undefined}
+                                    sizes="(max-width: 576px) 100vw, 766px"
+                                    className="observation-modal-image"
+                                    alt={observation.commonName}
+                                />
                             ) : (
                                 <div className="observation-modal-image-placeholder"/>
                             )}
