@@ -60,34 +60,107 @@ nav {
   align-items: center;
 }
 
+/* Splash page: the photo fills the space between header and footer, with the text over the empty
+   background to the bird's left. A soft dark fade behind the text keeps it readable. */
 .landing-page {
+  flex: 1;
   position: relative;
-  width: 100vw;
-  height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
+  width: 100%;
+  min-height: 420px;
+  overflow: hidden;
+  background-color: #8a9a6b;
 }
 
 .landing-page-image {
-  max-height: 100%;
-  width: 100vw;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  object-position: center 20%;
+  /* Keeps the bird's head in frame as the window's shape changes */
+  object-position: 65% 22%;
 }
 
-.landing-page-button { 
+.landing-page::before {
+  content: '';
   position: absolute;
-  padding: 1em 2em;
-  font-size: 1.5em;
-  background-color: transparent;
-  border: 3px solid white;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(20, 24, 12, 0.55) 0%, rgba(20, 24, 12, 0.25) 40%, rgba(20, 24, 12, 0) 60%);
+}
+
+.landing-page-content {
+  position: relative;
+  z-index: 2;
+  max-width: 25rem;
+  margin-left: clamp(1.5rem, 5vw, 6rem);
   color: white;
 }
 
-.landing-page-button:hover {
+.landing-page-kicker {
+  margin: 0 0 .75rem;
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--very-light-brown);
+}
+
+.landing-page-heading {
+  margin: 0 0 1rem;
+  font-size: clamp(2rem, 3.2vw, 3.25rem);
+  font-weight: 200;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.landing-page-text {
+  margin: 0 0 2rem;
+  max-width: 22rem;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.landing-page-button {
+  padding: .75rem 1.6rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--dark-brown);
+  background-color: white;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.landing-page-button:hover,
+.landing-page-button:focus-visible {
+  color: white;
   background-color: var(--light-brown);
-  border: 3px solid white;
+}
+
+/* Narrow screens: the photo is cropped tall, so the text sits at the bottom below the bird's head */
+@media (max-width: 640px) {
+  .landing-page {
+    align-items: flex-end;
+    min-height: 520px;
+  }
+
+  .landing-page::before {
+    background: linear-gradient(0deg, rgba(20, 24, 12, 0.75) 0%, rgba(20, 24, 12, 0.4) 45%, rgba(20, 24, 12, 0) 70%);
+  }
+
+  .landing-page-content {
+    margin: 0 1.25rem 3rem;
+  }
+
+  .landing-page-text {
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+  }
 }
 
 #header {
@@ -555,6 +628,7 @@ main {
 
 .landing-page-credit {
   position: absolute;
+  z-index: 2;
   right: 0.75rem;
   bottom: 0.5rem;
   margin: 0;
@@ -693,22 +767,6 @@ footer img:hover{
     gap: .75rem 1.5rem;
   }
 
-  .landing-page {
-    position: relative;
-    width: 100vw;
-    height: calc(100vh - 70px); /* Account for header and footer */
-  }
-
-  .landing-page-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-
   #header {
     margin: 0;
     padding: 1em;
@@ -758,11 +816,6 @@ footer img:hover{
     font-size: 2em;
   }
 
-  .landing-page-button {
-    font-size: 1.2em;
-    padding: 0.8em 1.6em;
-  }
-
   body {
     padding: 0;
     margin: 0;
@@ -773,11 +826,6 @@ footer img:hover{
 @media (max-width: 375px) {
   :root {
     font-size: 14px;
-  }
-
-  .landing-page-button {
-    font-size: 1em;
-    padding: 0.6em 1.2em;
   }
 
   .observation-card {
@@ -811,15 +859,6 @@ footer img:hover{
 
 /* Landscape mode adjustments */
 @media (max-height: 500px) and (orientation: landscape) {
-  .landing-page {
-    height: auto;
-    min-height: 100vh;
-  }
-
-  .landing-page-image {
-    height: 100vh;
-  }
-
   .observation-card {
     height: auto;
     min-height: 3em;
