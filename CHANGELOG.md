@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-11-11
+
+### Changed
+- Observation popup redesigned: a full-screen sheet with a pinned title and close button on phones, and photo beside the details on wide screens, so it fits without scrolling in most cases
+- The species photo is shown whole instead of cropped, with smaller copies loaded on smaller screens
+- Popup links are now labelled buttons ("View full checklist on eBird", "Read about this bird on Wikipedia") marked as opening in a new tab
+- The popup map keeps its zoom buttons but can no longer be dragged, so swiping over it scrolls the popup
+- Back-to-top button restyled in the site's brown and enlarged to an easier 44px target
+- Dropdowns, the search box and the splash button use slightly rounded corners instead of pill shapes; filter and popup labels are sentence case
+
+### Fixed
+- Map zoom buttons no longer draw over open filter dropdowns
+- The hidden back-to-top button no longer catches clicks at the bottom of the page
+- Removed leftover starter-template styles that gave buttons a gray background
+
 ## [2.0.0] - 2026-11-09
 
 ### Added
