@@ -1,27 +1,23 @@
 :root {
+  --light-brown: #B4905D;
+  --light-brown-dark: #9d7a4a; /* hover on brown buttons */
+  --very-light-brown: rgb(221, 199, 167);
+  --extremely-light-brown: rgb(248, 244, 237);
+  --dark-brown: #4b3621;
+  --muted-brown: #7a6a58; /* secondary text */
+  --light-brown-transparent: rgba(172, 125, 87, 0.15);
+  --light-brown-hover: rgba(172, 125, 87, 0.3);
+  --off-white: #F8F8F8;
+
+  /* Page text uses Bootstrap's system font stack (San Francisco, Segoe UI, Roboto...), which overrides this */
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  --light-brown: #B4905D; /*rgb(180,144,93)*/
-  --very-light-brown:rgb(221, 199, 167); /*rgb(180,144,93)*/
-  --extremely-light-brown:rgb(248, 244, 237);
-  background-color: #242424;
-
+  font-weight: 400;
+  color: var(--dark-brown);
+  background-color: var(--off-white);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  --dark-brown: #4b3621;
-  --light-brown-transparent: rgba(172, 125, 87, 0.15);
-  --light-brown-hover: rgba(172, 125, 87, 0.3);
-  --beige: #f5f5dc;
-  --off-white: #F8F8F8;
-  --observation-width: 100vw;
-  font-weight: 400;
-  color: var(--dark-brown);
-  background-color: var(--off-white);
 }
 
 a {
@@ -131,7 +127,7 @@ nav {
   color: var(--dark-brown);
   background-color: white;
   border: none;
-  border-radius: 999px;
+  border-radius: 6px;
   cursor: pointer;
   transition: background-color .15s ease, color .15s ease;
 }
@@ -282,10 +278,8 @@ main {
 }
 
 .filter-group-label {
-  font-size: .7rem;
-  font-weight: 600;
-  letter-spacing: .08em;
-  text-transform: uppercase;
+  font-size: .8rem;
+  font-weight: 500;
   color: var(--light-brown);
 }
 
@@ -316,7 +310,7 @@ main {
 .filter-search .form-control {
   font-size: .9rem;
   border-color: var(--very-light-brown);
-  border-radius: 999px;
+  border-radius: 6px;
   padding: .35rem .9rem;
 }
 
@@ -339,7 +333,7 @@ main {
   color: var(--dark-brown);
   background-color: var(--light-brown-transparent);
   border: 1px solid transparent;
-  border-radius: 999px;
+  border-radius: 6px;
   transition: background-color .15s ease, border-color .15s ease;
 }
 
@@ -354,13 +348,14 @@ main {
 
 /* Unselected filters read as placeholders */
 .filter-bar .filter-pill.is-empty {
-  color: #7a6a58;
+  color: var(--muted-brown);
   background-color: transparent;
   border-color: var(--very-light-brown);
 }
 
 .notable-toggle {
   cursor: pointer;
+  border-radius: 999px;
   background-color: transparent;
   border-color: var(--very-light-brown);
 }
@@ -383,7 +378,7 @@ main {
 
 .notable-toggle.active:hover {
   color: white;
-  background-color: #9d7a4a;
+  background-color: var(--light-brown-dark);
 }
 
 .observation-count {
@@ -539,7 +534,13 @@ main {
 .observation-card-area {
   display: block;
   font-size: .9em;
-  color: #7a6a58;
+  color: var(--muted-brown);
+}
+
+/* Leaflet layers its panes and controls with z-indexes up to 1000, the same as Bootstrap's dropdown menus.
+   Isolating each map keeps that layering inside the map, so page menus open over it. */
+.leaflet-container {
+  isolation: isolate;
 }
 
 #map {
@@ -548,56 +549,81 @@ main {
   border-radius: 1rem;
 }
 
-/* Observation modal: photo, details, small map and Wikipedia link */
+/* Observation modal: one column (a full-screen sheet on phones), photo beside the details from 992px */
+.observation-modal .modal-header {
+  align-items: flex-start;
+  padding: .9rem 1.25rem;
+}
+
 .observation-modal-title {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 200;
+  line-height: 1.15;
+}
+
+.observation-modal-date {
+  margin: .2rem 0 0;
+  font-size: .85rem;
+  color: var(--muted-brown);
 }
 
 .observation-modal-body {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 1rem;
+  padding: 1rem 1.25rem 1.25rem;
 }
 
 .observation-modal-figure {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: .25rem;
+  gap: .3rem;
+  min-width: 0;
   margin: 0;
 }
 
-.observation-modal-image {
-  max-width: 100%;
-  max-height: 45vh;
-  border-radius: .5rem;
-}
-
-.observation-modal-image-placeholder {
-  width: 100%;
-  min-width: 18rem;
-  height: 45vh;
+/* The whole photo, uncropped. Photos narrower than the column sit centred on a soft panel, and very tall
+   ones are capped so they don't push everything else off screen. */
+.observation-modal-photo-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
   border-radius: .5rem;
   background-color: var(--light-brown-transparent);
+}
+
+.observation-modal-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  max-height: 65vh;
+}
+
+/* Holds the space while the photo loads */
+.observation-modal-image-placeholder {
+  aspect-ratio: 4 / 3;
+}
+
+.observation-modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+  min-width: 0;
 }
 
 .observation-modal-details {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: .25rem 1rem;
-  width: 100%;
+  gap: .35rem .9rem;
   margin: 0;
+  font-size: .95rem;
 }
 
 .observation-modal-details dt {
-  font-size: .7rem;
-  font-weight: 600;
-  letter-spacing: .08em;
-  text-transform: uppercase;
+  font-size: .85rem;
+  font-weight: 500;
   color: var(--light-brown);
-  align-self: center;
 }
 
 .observation-modal-details dd {
@@ -606,8 +632,8 @@ main {
 
 .observation-modal-map {
   width: 100%;
-  height: 16rem;
-  border-radius: .75rem;
+  height: 150px;
+  border-radius: .5rem;
   overflow: hidden;
   background-color: var(--light-brown-transparent);
 }
@@ -615,11 +641,79 @@ main {
 .observation-modal-map .leaflet-container {
   width: 100%;
   height: 100%;
+  cursor: default;
+}
+
+.observation-modal-links {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+/* Full-width buttons with the "opens in a new tab" icon on the right */
+.observation-modal-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .75rem;
+  padding: .55rem .9rem;
+  font-size: .95rem;
+  color: var(--dark-brown);
+  border: 1px solid var(--very-light-brown);
+  border-radius: .5rem;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+
+.observation-modal-link:hover,
+.observation-modal-link:focus-visible {
+  color: var(--dark-brown);
+  background-color: var(--light-brown-transparent);
+  border-color: var(--light-brown);
+}
+
+.observation-modal-link-primary,
+.observation-modal-link-primary:hover,
+.observation-modal-link-primary:focus-visible {
+  color: white;
+  background-color: var(--light-brown);
+  border-color: var(--light-brown);
+}
+
+.observation-modal-link-primary:hover,
+.observation-modal-link-primary:focus-visible {
+  background-color: var(--light-brown-dark);
+  border-color: var(--light-brown-dark);
+}
+
+.observation-modal-link-icon {
+  flex: none;
+  width: .85rem;
+  height: .85rem;
+}
+
+.observation-modal-note {
+  display: block;
+  font-size: .8rem;
+  color: var(--muted-brown);
+}
+
+/* Bootstrap widens the large modal to 800px from 992px; narrower, it's 500px and one column fits better */
+@media (min-width: 992px) {
+  .observation-modal-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 1.25rem;
+  }
+
+  .observation-modal-map {
+    height: 160px;
+  }
 }
 
 .image-credit {
-  font-size: 0.8rem;
-  text-align: center;
+  font-size: .75rem;
+  color: var(--muted-brown);
 }
 
 .image-credit a {
@@ -644,21 +738,6 @@ main {
   text-decoration: underline;
 }
 
-.observation-modal-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: .5rem 1.5rem;
-}
-
-.observation-modal-links a {
-  text-decoration: underline;
-}
-
-.observation-modal-note {
-  font-size: .85rem;
-  color: #7a6a58;
-}
 
 footer {
   margin-top: auto;
@@ -703,28 +782,40 @@ footer img:hover{
 
 .back-to-top-arrow {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  padding: .5rem;
-  font-weight: 500;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 1020;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
   color: white;
-  border: 1px solid white;
-  background-color: #0d6efd;
-  border-radius: 20%;
+  background-color: var(--light-brown);
+  border: none;
+  border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(75, 54, 33, 0.25);
   opacity: 0;
-  transform: translateY(20px); /* Move the button slightly down */
-  transition: opacity 0.5s ease, transform 0.5s ease; /* Smooth transition */
+  pointer-events: none; /* Not clickable while hidden */
+  transform: translateY(20px);
+  transition: opacity .3s ease, transform .3s ease, background-color .15s ease;
 }
 
-.back-to-top-arrow:hover {
-  transform: scale(1.2);
-  box-shadow: #0d6efd 0 0 10px;
+.back-to-top-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+.back-to-top-arrow:hover,
+.back-to-top-arrow:focus-visible {
+  background-color: var(--light-brown-dark);
 }
 
 .visible-button {
   opacity: 1;
+  pointer-events: auto;
   transform: translateY(0); /* Move back to original position */
 }
 
@@ -742,19 +833,6 @@ footer img:hover{
   border-radius: 4px;
 }
 
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: var(--light-brown);
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
 
 @media (max-width: 1000px) {
 

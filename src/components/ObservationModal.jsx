@@ -6,6 +6,14 @@ import { formatDate } from '../utils/format'
 import { listLink, readUrlObservation } from '../utils/url'
 import chickadee from '../assets/chickadee.png'
 
+// Marks a link that opens another site in a new tab
+const ExternalLinkIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" className="observation-modal-link-icon">
+        <path fillRule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+        <path fillRule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+    </svg>
+)
+
 // Details for one observation, shown over the list/map while the URL is /observations/:id.
 // All content is read from the URL.
 export default function ObservationModal() {
@@ -61,26 +69,36 @@ export default function ObservationModal() {
             onExited={() => setShowMap(false)}
             size="lg"
             centered
+            // Full-screen sheet on phones; the header stays put while the body scrolls
+            fullscreen="sm-down"
+            scrollable
             className="observation-modal"
         >
             {observation && (
                 <>
                     <Modal.Header closeButton>
-                        <Modal.Title className="observation-modal-title">{observation.commonName}</Modal.Title>
+                        <div>
+                            <Modal.Title className="observation-modal-title">{observation.commonName}</Modal.Title>
+                            <p className="observation-modal-date">{observation.date ? formatDate(observation.date) : 'Date unknown'}</p>
+                        </div>
                     </Modal.Header>
                     <Modal.Body className="observation-modal-body">
                         <figure className="observation-modal-figure">
                             {imageLoaded ? (
-                                <img
-                                    src={wikipediaImage?.urls.modal ?? chickadee}
-                                    // Standard Wikimedia widths: phones take the 500px copy, larger screens the 960px one
-                                    srcSet={wikipediaImage ? `${wikipediaImage.urls.modalSmall} 500w, ${wikipediaImage.urls.modal} 960w` : undefined}
-                                    sizes="(max-width: 576px) 100vw, 766px"
-                                    className="observation-modal-image"
-                                    alt={observation.commonName}
-                                />
+                                // The whole photo at its own shape, centred on a soft panel when it's narrower than the column
+                                <div className="observation-modal-photo-frame">
+                                    <img
+                                        src={wikipediaImage?.urls.modal ?? chickadee}
+                                        // Standard Wikimedia widths; matches the photo's width: full screen on phones,
+                                        // the 500px modal on tablets, and one of two columns from 992px
+                                        srcSet={wikipediaImage ? `${wikipediaImage.urls.modalSmall} 500w, ${wikipediaImage.urls.modal} 960w` : undefined}
+                                        sizes="(max-width: 575px) 100vw, (max-width: 991px) 460px, 420px"
+                                        className="observation-modal-image"
+                                        alt={observation.commonName}
+                                    />
+                                </div>
                             ) : (
-                                <div className="observation-modal-image-placeholder"/>
+                                <div className="observation-modal-photo-frame observation-modal-image-placeholder"/>
                             )}
                             {imageLoaded && wikipediaImage && (
                                 <figcaption className="image-credit">
@@ -88,60 +106,72 @@ export default function ObservationModal() {
                                     {wikipediaImage.license && <>{' / '}{wikipediaImage.licenseUrl
                                         ? <a href={wikipediaImage.licenseUrl} target="_blank" rel="noreferrer">{wikipediaImage.license}</a>
                                         : wikipediaImage.license}</>}
-                                    {wikipediaImage.filePageUrl && <>{' / '}<a href={wikipediaImage.filePageUrl} target="_blank" rel="noreferrer">image source</a></>}
+                                    {wikipediaImage.filePageUrl && <>{' / '}<a href={wikipediaImage.filePageUrl} target="_blank" rel="noreferrer">source</a></>}
                                 </figcaption>
                             )}
                         </figure>
-                        <dl className="observation-modal-details">
-                            <dt>Seen</dt>
-                            <dd>{observation.date ? formatDate(observation.date) : 'Unknown'}</dd>
-                            <dt>Location</dt>
-                            <dd>
-                                {observation.location}
-                                {!isChecklistId && <span className="observation-modal-note"> · map shows the approximate area</span>}
-                            </dd>
-                            {observation.area && (
-                                <>
-                                    <dt>Area</dt>
-                                    <dd>near {observation.area}</dd>
-                                </>
-                            )}
-                        </dl>
-                        {hasPosition && (
-                            <div className="observation-modal-map">
-                                {showMap && (
-                                    <MapContainer
-                                        key={`${observation.subId}-${observation.speciesCode}`}
-                                        center={[observation.lat, observation.lng]}
-                                        zoom={10}
-                                        scrollWheelZoom={false}
-                                    >
-                                        <TileLayer
-                                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                        />
-                                        <Marker position={[observation.lat, observation.lng]}/>
-                                    </MapContainer>
+                        <div className="observation-modal-info">
+                            <dl className="observation-modal-details">
+                                <dt>Location</dt>
+                                <dd>
+                                    {observation.location}
+                                    {!isChecklistId && <span className="observation-modal-note">Map shows the approximate area</span>}
+                                </dd>
+                                {observation.area && (
+                                    <>
+                                        <dt>Area</dt>
+                                        <dd>near {observation.area}</dd>
+                                    </>
                                 )}
-                            </div>
-                        )}
-                        <div className="observation-modal-links">
-                            {isChecklistId && (
+                            </dl>
+                            {hasPosition && (
+                                <div className="observation-modal-map">
+                                    {showMap && (
+                                        // Dragging is off so swiping over the map scrolls the popup; the zoom buttons give more context
+                                        <MapContainer
+                                            key={`${observation.subId}-${observation.speciesCode}`}
+                                            center={[observation.lat, observation.lng]}
+                                            zoom={9}
+                                            dragging={false}
+                                            touchZoom={false}
+                                            doubleClickZoom={false}
+                                            scrollWheelZoom={false}
+                                            boxZoom={false}
+                                            keyboard={false}
+                                        >
+                                            <TileLayer
+                                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                                            />
+                                            <Marker position={[observation.lat, observation.lng]} interactive={false}/>
+                                        </MapContainer>
+                                    )}
+                                </div>
+                            )}
+                            <div className="observation-modal-links">
+                                {isChecklistId && (
+                                    <a
+                                        href={`https://ebird.org/checklist/${observation.subId}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="observation-modal-link observation-modal-link-primary"
+                                        title="Opens the full checklist on eBird.org in a new tab"
+                                    >
+                                        View full checklist on eBird
+                                        <ExternalLinkIcon/>
+                                    </a>
+                                )}
                                 <a
-                                    href={`https://ebird.org/checklist/${observation.subId}`}
+                                    href={`https://en.wikipedia.org/wiki/${encodeURIComponent(observation.commonName)}`}
                                     target="_blank"
                                     rel="noreferrer"
+                                    className="observation-modal-link"
+                                    title="Opens the species' Wikipedia article in a new tab"
                                 >
-                                    View checklist on eBird
+                                    Read about this bird on Wikipedia
+                                    <ExternalLinkIcon/>
                                 </a>
-                            )}
-                            <a
-                                href={`https://en.wikipedia.org/wiki/${encodeURIComponent(observation.commonName)}`}
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                Learn more about the {observation.commonName} on Wikipedia
-                            </a>
+                            </div>
                         </div>
                     </Modal.Body>
                 </>
