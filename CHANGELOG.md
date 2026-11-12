@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-11-11
+
+### Added
+- Near me tab: recent bird sightings within 5, 10, 25 or 50 km of you, with the same species, notable, search, list and map options as Explore
+- Each nearby sighting shows how far away it is, and the map shows your search radius
+- The species dropdown on Near me lists only species reported nearby
+- Explore / Near me tabs in the header, and a "Birds near me" button on the splash page
+
+### Changed
+- Location is requested only after a short explanation, rounded to about 1 km before it leaves your browser, and never saved or put in shared links; a shared Near me link shows birds near whoever opens it
+- Explore and Near me share the same filters, list, map and details popup, and both server functions share the same handling of private locations, town names, photos and caching
+
+### Fixed
+- Species whose common name matches an unrelated Wikipedia article now show the right photo and link, e.g. Redhead (was red hair), Mao (was Mao Zedong), Merlin, Rook and Wild Turkey; 65 species corrected in all
+- Species with no confirmed Wikipedia article link to a search for their scientific name instead of a wrong page
+
 ## [2.1.0] - 2026-11-11
 
 ### Changed
