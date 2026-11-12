@@ -32,6 +32,8 @@ export default function ObservationModal() {
     // null while loading or when the species has no photo; otherwise { urls, artist, license, licenseUrl, filePageUrl }
     const [wikipediaImage, setWikipediaImage] = useState(null)
     const [imageLoaded, setImageLoaded] = useState(false)
+    // The species' confirmed Wikipedia page, when it isn't simply titled with the common name
+    const [wikipediaUrl, setWikipediaUrl] = useState(null)
     // Leaflet sizes itself from its container when created, so the map mounts after the open animation
     const [showMap, setShowMap] = useState(false)
 
@@ -42,9 +44,14 @@ export default function ObservationModal() {
         let cancelled = false
         setImageLoaded(false)
         setWikipediaImage(null)
+        setWikipediaUrl(null)
         fetch(`/.netlify/functions/fetchSpeciesImage?speciesCode=${encodeURIComponent(speciesCode)}`)
             .then(response => response.ok ? response.json() : { image: null })
-            .then(data => { if (!cancelled) setWikipediaImage(data.image) })
+            .then(data => {
+                if (cancelled) return
+                setWikipediaImage(data.image)
+                setWikipediaUrl(data.wikipediaUrl ?? null)
+            })
             .catch(() => { if (!cancelled) setWikipediaImage(null) })
             .finally(() => { if (!cancelled) setImageLoaded(true) })
         return () => { cancelled = true }
@@ -53,7 +60,7 @@ export default function ObservationModal() {
     // From the list: go back to that history entry. From a pasted link: replace the URL with the list's.
     const handleClose = () => {
         if (location.state?.fromList) navigate(-1)
-        else navigate(listLink(location.search), { replace: true })
+        else navigate(listLink(location.search, location.pathname), { replace: true })
     }
 
     const hasPosition = Number.isFinite(observation?.lat) && Number.isFinite(observation?.lng)
@@ -162,7 +169,7 @@ export default function ObservationModal() {
                                     </a>
                                 )}
                                 <a
-                                    href={`https://en.wikipedia.org/wiki/${encodeURIComponent(observation.commonName)}`}
+                                    href={wikipediaUrl ?? `https://en.wikipedia.org/wiki/${encodeURIComponent(observation.commonName)}`}
                                     target="_blank"
                                     rel="noreferrer"
                                     className="observation-modal-link"

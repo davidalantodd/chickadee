@@ -187,3 +187,6 @@ dist-ssr
 
 # Claude Code local config
 .claude/
+
+# Report written by scripts/build-species-images.mjs
+scripts/species-images-report.txt

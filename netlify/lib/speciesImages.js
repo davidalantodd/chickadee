@@ -1,4 +1,4 @@
-import { licenses, images } from './species-images-data.js'
+import { licenses, images, articles, searches } from './species-images-data.js'
 import { commonsThumbUrl, commonsFilePageUrl, THUMB_WIDTHS } from './wikimediaThumb.js'
 
 // Photo of a species from the bundled Wikipedia lead images, at each standard width the app uses, with the
@@ -15,6 +15,14 @@ export const speciesImage = (speciesCode) => {
         licenseUrl,
         filePageUrl: commonsFilePageUrl(fileName),
     }
+}
+
+// Wikipedia page for a species: its confirmed article, a search for its scientific name when none could be
+// confirmed, or null when the article is simply titled with the common name (the caller links that directly)
+export const wikipediaUrl = (speciesCode) => {
+    if (articles[speciesCode]) return `https://en.wikipedia.org/wiki/${encodeURIComponent(articles[speciesCode].replace(/ /g, '_'))}`
+    if (searches[speciesCode]) return `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(searches[speciesCode])}`
+    return null
 }
 
 // One-line credit for places too small for the full one, e.g. "Photo: Jane Doe / CC BY-SA 4.0"

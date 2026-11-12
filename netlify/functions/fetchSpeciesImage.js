@@ -1,7 +1,8 @@
-import { speciesImage } from '../lib/speciesImages.js'
+import { speciesImage, wikipediaUrl } from '../lib/speciesImages.js'
 
-// A species' photo and credit for the observation modal, from the bundled image data (no Wikipedia calls).
-// Responds with { image: { urls, artist, license, licenseUrl, filePageUrl } } or { image: null }.
+// A species' photo, credit and Wikipedia link for the observation modal, from the bundled data (no Wikipedia calls).
+// Responds with { image: { urls, artist, license, licenseUrl, filePageUrl } | null, wikipediaUrl: string | null };
+// a null wikipediaUrl means the article is titled with the species' common name.
 export const handler = async (event) => {
     const speciesCode = event.queryStringParameters?.speciesCode
 
@@ -21,6 +22,6 @@ export const handler = async (event) => {
             'Netlify-CDN-Cache-Control': 'public, durable, s-maxage=2592000',
             'Netlify-Vary': 'query=speciesCode'
         },
-        body: JSON.stringify({ image: speciesImage(speciesCode) })
+        body: JSON.stringify({ image: speciesImage(speciesCode), wikipediaUrl: wikipediaUrl(speciesCode) })
     }
 }
