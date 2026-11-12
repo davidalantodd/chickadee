@@ -1,11 +1,10 @@
 /* eslint-disable react/prop-types */
 import { useContext, useEffect, useMemo, useState, useRef } from "react";
 import { ObservationsContext } from "../contexts/ObservationsContext";
-import { useObservations } from "../hooks/useObservations";
 import { useOpenObservation } from "../hooks/useOpenObservation";
 import { formatDate } from "../utils/format";
 
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Circle, CircleMarker, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/leaflet.markercluster.js";
@@ -96,12 +95,16 @@ const MarkerClusterGroup = (props) => {
 	return null;
 };
 
-// This component accesses the map instance and fits bounds when observations change
+// Fits the map to the search radius when there is one, otherwise to the observations as they load
 // eslint-disable-next-line react/prop-types
-function MapBoundsUpdater({ observations }) {
+function MapBoundsUpdater({ observations, searchArea }) {
 	const map = useMap();
 	
 	useEffect(() => {
+		if (searchArea) {
+			map.fitBounds(L.latLng(searchArea.lat, searchArea.lng).toBounds(searchArea.radiusKm * 2000), { padding: [20, 20] });
+			return;
+		}
 		if (observations.length > 0) {
 			// Filter out observations without lat/lng
 			const validObservations = observations.filter(obs => obs.lat && obs.lng);
@@ -119,23 +122,21 @@ function MapBoundsUpdater({ observations }) {
 				});
 			}
 		}
-	}, [observations, map]);
+	}, [observations, searchArea, map]);
 	
 	return null;
 }
 
+// The loaded (and searched) observations as clustered markers. `searchArea` ({ lat, lng, radiusKm }) draws the
+// Near me search radius and the visitor's approximate position.
 // eslint-disable-next-line react/prop-types
-function ObservationMap() {
-	const { currentCountry, currentRegion, currentSubRegion, 
-		notable, currentSpecies, filteredObservations } = useContext(ObservationsContext);
+function ObservationMap({ searchArea }) {
+	const { observations, filteredObservations } = useContext(ObservationsContext);
 	// Stable identity: MarkerClusterGroup rebuilds every marker when its onMarkerClick prop changes
 	const handleSingleObsView = useOpenObservation();
 	const [isMapReady, setIsMapReady] = useState(false);
 	const [visibleObservations, setVisibleObservations] = useState([]);
 	
-	// Fetch observations whenever relevant filters or regions change
-	useObservations();
-
 	// Progressive loading of observations
 	useEffect(() => {
 		if (filteredObservations.obs.length > 0) {
@@ -194,9 +195,9 @@ function ObservationMap() {
 				</div>
 			)}
 			<MapContainer
-				key={`map-${currentCountry.code}-${currentRegion.code}-${currentSubRegion.code}-${notable}-${currentSpecies.speciesCode}`}
-				center={[39.8283, -98.5795]} // Default center (US)
-				zoom={4}
+				key={`map-${observations.key}`}
+				center={searchArea ? [searchArea.lat, searchArea.lng] : [39.8283, -98.5795]} // Default center (US)
+				zoom={searchArea ? 10 : 4}
 				scrollWheelZoom={true}
 				id="map"
 				whenReady={() => setIsMapReady(true)}
@@ -206,9 +207,24 @@ function ObservationMap() {
 					attribution="Tiles &copy; Esri &mdash; USGS Topo via ESRI &mdash; Source: USGS, National Geographic, DeLorme, NAVTEQ"
 					url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
 				/>
+				{searchArea && (
+					<>
+						<Circle
+							center={[searchArea.lat, searchArea.lng]}
+							radius={searchArea.radiusKm * 1000}
+							pathOptions={{ color: '#B4905D', weight: 2, fillOpacity: 0.06 }}
+							interactive={false}
+						/>
+						<CircleMarker
+							center={[searchArea.lat, searchArea.lng]}
+							radius={7}
+							pathOptions={{ color: 'white', weight: 2, fillColor: '#4b3621', fillOpacity: 1 }}
+							interactive={false}
+						/>
+					</>
+				)}
 				<MarkerClusterGroup markers={markers} onMarkerClick={handleSingleObsView} />
-				{/* This component handles map bounds updates */}
-				<MapBoundsUpdater observations={visibleObservations} />
+				<MapBoundsUpdater observations={visibleObservations} searchArea={searchArea} />
 			</MapContainer>
 			{visibleObservations.length < filteredObservations.obs.length && isMapReady && (
 				<div className="map-loading-more">

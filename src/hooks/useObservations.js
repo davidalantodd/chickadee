@@ -1,37 +1,29 @@
 import { useContext, useEffect } from 'react'
 import { ObservationsContext } from '../contexts/ObservationsContext'
-import { fetchObservationsByRegion } from '../utils/api'
 
 // The most specific region selected: subregion > region > country, or undefined if none is selected
 export const mostSpecificRegion = (country, region, subRegion) => [subRegion, region, country].find(r => r.code)
 
-// Fetch observations for the most specific selected region whenever the filters change.
-// onLoaded runs after each successful load (e.g. to reset pagination).
-export function useObservations(onLoaded) {
-    const { currentCountry, currentRegion, currentSubRegion,
-        notable, currentSpecies,
-        setObservations, setLoading } = useContext(ObservationsContext)
+// Loads observations into the shared state whenever `key` changes. `key` names the query (e.g. "US-VA|notable"),
+// so the list and map can tell when the loaded observations belong to the current page; an empty key clears them.
+// `load` returns a promise of observations. Responses for a key that has since changed are ignored.
+export function useObservationLoader(key, load) {
+    const { setObservations, setLoading } = useContext(ObservationsContext)
 
     useEffect(() => {
-        const regionToSearch = mostSpecificRegion(currentCountry, currentRegion, currentSubRegion)
-        if (!regionToSearch) {
-            setObservations({ region: '', obs: [] })
+        if (!key) {
+            setObservations({ key: '', obs: [] })
             setLoading(false)
             return
         }
-
-        // Ignore responses for filters that have since changed
         let cancelled = false
         setLoading(true)
-        fetchObservationsByRegion(regionToSearch.code, notable, currentSpecies.speciesCode)
-            .then(obs => {
-                if (cancelled) return
-                setObservations({ region: regionToSearch.code, obs })
-                setLoading(false)
-                if (onLoaded) onLoaded()
-            })
+        load().then(obs => {
+            if (cancelled) return
+            setObservations({ key, obs })
+            setLoading(false)
+        })
         return () => { cancelled = true }
-    // Keyed on codes: the fetch reruns only when the query itself changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentCountry.code, currentRegion.code, currentSubRegion.code, notable, currentSpecies.speciesCode])
+    }, [key])
 }

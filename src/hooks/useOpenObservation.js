@@ -7,7 +7,7 @@ import { observationLink } from '../utils/url'
 export function useOpenObservation() {
     const navigate = useNavigate()
     return useCallback(
-        (observation) => navigate(observationLink(observation, window.location.search), { state: { fromList: true } }),
+        (observation) => navigate(observationLink(observation, window.location.search, window.location.pathname), { state: { fromList: true } }),
         [navigate]
     )
 }

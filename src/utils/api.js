@@ -42,6 +42,14 @@ export const fetchSpeciesList = (regionCode) => {
     return fetchList(`/.netlify/functions/fetchSpeciesList?regionCode=${encodeURIComponent(regionCode)}`, 'species list');
 }
 
+// Recent observations within distKm of a point; the point is rounded by the caller before it's sent
+export const fetchObservationsNearby = ({ lat, lng }, distKm, notable, speciesCode) => {
+    const params = new URLSearchParams({ lat, lng, dist: distKm })
+    if (notable) params.set('notable', 'true')
+    else if (speciesCode) params.set('species', speciesCode)
+    return fetchList(`/.netlify/functions/fetchObservationsNearby?${params}`, 'nearby observations');
+}
+
 export const fetchObservationsByRegion =(regionCode, notable, speciesCode) => {
     return fetchList(`/.netlify/functions/fetchObservationsByRegion?regionToSearch=${encodeURIComponent(regionCode)}&notable=${notable}&currentSpecies=${speciesCode}`, 'observations');
 }

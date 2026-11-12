@@ -132,6 +132,19 @@ nav {
   transition: background-color .15s ease, color .15s ease;
 }
 
+.landing-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+/* Outlined white, so "Browse sightings" stays the main action */
+.landing-page-button-secondary {
+  color: white;
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.85);
+}
+
 .landing-page-button:hover,
 .landing-page-button:focus-visible {
   color: white;
@@ -854,6 +867,28 @@ footer img:hover{
     gap: 1rem;
   }
 
+  /* The page tabs take their own full-width row under the logo */
+  #header {
+    flex-wrap: wrap;
+    row-gap: .75rem;
+  }
+
+  #header .spacer {
+    width: auto;
+    flex: 1;
+  }
+
+  .page-tabs {
+    order: 3;
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .page-tab {
+    flex: 1;
+    text-align: center;
+  }
+
   .chickadee-icon {
     margin-right: 0;
     height: 2em;
@@ -949,6 +984,104 @@ footer img:hover{
   .menu-icon {
     image-rendering: -webkit-optimize-contrast;
   }
+}
+
+/* Explore / Near me page tabs in the header, styled like the list/map toggle */
+.page-tabs {
+  display: flex;
+  flex: none;
+  gap: .25rem;
+  padding: .3rem;
+  margin-right: 1rem;
+  background-color: var(--light-brown-transparent);
+  border-radius: 20px;
+}
+
+.page-tab {
+  padding: .45rem 1rem;
+  font-size: .95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--dark-brown);
+  border-radius: 16px;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.page-tab:hover {
+  color: var(--dark-brown);
+  background-color: var(--light-brown-hover);
+}
+
+.page-tab.active,
+.page-tab.active:hover {
+  color: white;
+  background-color: var(--light-brown);
+}
+
+/* Near me distance choice: a row of segments in the dropdowns' style */
+.distance-picker {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid var(--very-light-brown);
+  border-radius: 6px;
+}
+
+.distance-option {
+  padding: .3rem .75rem;
+  font-size: .9rem;
+  color: var(--dark-brown);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.distance-option + .distance-option {
+  border-left: 1px solid var(--very-light-brown);
+}
+
+.distance-option:hover {
+  background-color: var(--light-brown-transparent);
+}
+
+.distance-option.active {
+  color: white;
+  background-color: var(--light-brown);
+}
+
+/* Near me location request and its fallbacks, in place of the results */
+.location-prompt {
+  flex-direction: column;
+  gap: .75rem;
+  max-width: 30rem;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+
+.location-prompt h4 {
+  margin: 0;
+}
+
+.location-prompt p {
+  margin: 0;
+  color: var(--muted-brown);
+}
+
+.location-prompt a {
+  text-decoration: underline;
+}
+
+.location-button {
+  padding: .6rem 1.4rem;
+  font-weight: 500;
+  color: white;
+  background-color: var(--light-brown);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.location-button:hover {
+  background-color: var(--light-brown-dark);
 }
 
 /* View toggle styles */

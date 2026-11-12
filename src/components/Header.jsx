@@ -1,14 +1,14 @@
 import chickadee from '../assets/chickadee.png'
 import { useContext } from 'react'
 import { ObservationsContext } from '../contexts/ObservationsContext'
-import { useLocation } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 
 function Header() {
-    const { viewType, setViewType } = useContext(ObservationsContext)
+    const { viewType, setViewType, lastSearch } = useContext(ObservationsContext)
     const location = useLocation()
     
-    // Only show toggle on observation routes, not on homepage
-    const showViewToggle = location.pathname !== '/'
+    // The page tabs and list/map toggle belong to the observation pages, not the homepage
+    const showPageControls = location.pathname !== '/'
 
     return (
         <nav id="header">
@@ -17,8 +17,16 @@ function Header() {
                 <h1 className="title">chickadee</h1>
             </a>
             <div className="spacer"></div>
-            
-            {showViewToggle && (
+
+            {showPageControls && (
+                // Each tab returns to that page's last filters
+                <div className="page-tabs" role="navigation" aria-label="Pages">
+                    <NavLink to={`/observations${lastSearch.current.observations}`} className="page-tab">Explore</NavLink>
+                    <NavLink to={`/nearby${lastSearch.current.nearby}`} className="page-tab">Near me</NavLink>
+                </div>
+            )}
+
+            {showPageControls && (
                 <div className="view-toggle-container">
                     <button 
                         className={`view-toggle-btn ${viewType === 'list' ? 'active' : ''}`} 

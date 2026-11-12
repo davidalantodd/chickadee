@@ -20,9 +20,14 @@ function LandingPage() {
                 <p className="landing-page-text">
                     Browse the last 30 days of reports by place or species, in a list or on a map.
                 </p>
-                <button type="button" className="landing-page-button" onClick={() => navigate('/observations')}>
-                    Browse sightings
-                </button>
+                <div className="landing-page-actions">
+                    <button type="button" className="landing-page-button" onClick={() => navigate('/observations')}>
+                        Browse sightings
+                    </button>
+                    <button type="button" className="landing-page-button landing-page-button-secondary" onClick={() => navigate('/nearby')}>
+                        Birds near me
+                    </button>
+                </div>
             </div>
             <p className="landing-page-credit">
                 Photo: Dan Pancamo / <a href="https://creativecommons.org/licenses/by-sa/2.0" target="_blank" rel="noreferrer">CC BY-SA 2.0</a> / <a href="https://commons.wikimedia.org/wiki/File:Carolina_Chickadee1_by_Dan_Pancamo.jpg" target="_blank" rel="noreferrer">image source</a>

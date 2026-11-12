@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Card } from 'react-bootstrap'
 import { formatDate, formatLocation } from '../utils/format'
+import { formatDistance } from '../utils/geo'
 import { useOpenObservation } from '../hooks/useOpenObservation'
 
 export default function Observation({observation, index}) {
@@ -36,7 +37,12 @@ export default function Observation({observation, index}) {
                     </Card.Text>
                     <Card.Text className="observation-card-location">
                         {formatLocation(observation.locName)}
-                        {observation.area && <span className="observation-card-area">near {observation.area}</span>}
+                        {(observation.area || observation.distanceKm !== undefined) && (
+                            <span className="observation-card-area">
+                                {[observation.distanceKm !== undefined && formatDistance(observation.distanceKm),
+                                  observation.area && `near ${observation.area}`].filter(Boolean).join(' · ')}
+                            </span>
+                        )}
                     </Card.Text>
                 </div>
             </Card.Body>

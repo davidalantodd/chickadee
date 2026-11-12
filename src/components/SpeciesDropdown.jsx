@@ -1,16 +1,8 @@
 /* eslint-disable react/prop-types */
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useMemo, useRef, useState } from 'react'
 import { Dropdown, Form } from 'react-bootstrap'
 import { FixedSizeList as List } from 'react-window'
 import { ObservationsContext } from '../contexts/ObservationsContext'
-import { mostSpecificRegion } from '../hooks/useObservations'
-import { fetchObservationsByRegion, fetchSpeciesList } from '../utils/api'
-
-// Codes of the species seen in a region in the last 30 days (eBird returns each species' latest sighting),
-// or of every species ever recorded there
-const fetchRegionSpeciesCodes = (regionCode, allTime) => allTime
-    ? fetchSpeciesList(regionCode)
-    : fetchObservationsByRegion(regionCode, false, undefined).then(obs => obs.map(o => o.speciesCode))
 
 // One row of the virtualized species list; react-window passes the shown species and select handler as `data`
 const SpeciesRow = ({ index, style, data }) => {
@@ -22,50 +14,28 @@ const SpeciesRow = ({ index, style, data }) => {
     )
 }
 
-// Same behavior as FilterableDropdown, but the taxonomy has ~11k species, so only the visible rows are rendered
-function SpeciesDropdown() {
-    const { currentSpecies, setCurrentSpecies, setNotable, taxonomy,
-        currentCountry, currentRegion, currentSubRegion } = useContext(ObservationsContext)
+// Same behavior as FilterableDropdown, but the taxonomy has ~11k species, so only the visible rows are rendered.
+// `selected` is a species ({ speciesCode, comName? }) or ''; `onSelect` receives a species, or '' to clear.
+// `speciesCodes` limits the choices (null offers every species). Passing `onAllTimeChange` adds the switch for
+// including species not seen recently, with `allTime` as its state.
+function SpeciesDropdown({ selected, onSelect, speciesCodes, allTime, onAllTimeChange }) {
+    const { taxonomy } = useContext(ObservationsContext)
     const [filter, setFilter] = useState('')
-    // Whether to offer every species ever recorded in the region, rather than just those seen recently
-    const [allTime, setAllTime] = useState(false)
-    // Codes of the species offered for the selected region, or null to offer the whole taxonomy
-    const [regionSpeciesCodes, setRegionSpeciesCodes] = useState(null)
     const inputRef = useRef(null)
-
-    const regionCode = mostSpecificRegion(currentCountry, currentRegion, currentSubRegion)?.code
-
-    // Refetch the region's species when the region or all-time switch changes, ignoring stale responses.
-    // The previous list stays up until the new one arrives; a failed fetch (empty list) falls back to every species.
-    useEffect(() => {
-        if (!regionCode) {
-            setRegionSpeciesCodes(null)
-            return
-        }
-        let cancelled = false
-        fetchRegionSpeciesCodes(regionCode, allTime)
-            .then(codes => { if (!cancelled) setRegionSpeciesCodes(codes.length ? new Set(codes) : null) })
-        return () => { cancelled = true }
-    }, [regionCode, allTime])
 
     // Looked up by code, since a species read from the URL has no name. The code stands in until the taxonomy loads.
     const selectedName = useMemo(
-        () => currentSpecies && (taxonomy.find((species) => species.speciesCode === currentSpecies.speciesCode)?.comName
-            || currentSpecies.speciesCode),
-        [taxonomy, currentSpecies]
+        () => selected && (taxonomy.find((species) => species.speciesCode === selected.speciesCode)?.comName
+            || selected.speciesCode),
+        [taxonomy, selected]
     )
 
     const shownSpecies = useMemo(
         () => taxonomy.filter((species) =>
-            (!regionSpeciesCodes || regionSpeciesCodes.has(species.speciesCode)) &&
+            (!speciesCodes || speciesCodes.has(species.speciesCode)) &&
             species.comName.toLowerCase().includes(filter.toLowerCase())),
-        [taxonomy, regionSpeciesCodes, filter]
+        [taxonomy, speciesCodes, filter]
     )
-
-    const handleSpeciesSelect = (species) => {
-        setCurrentSpecies(species)
-        setNotable(false)
-    }
 
     // Focus the filter box when the menu opens, and start fresh the next time it opens
     const handleToggle = (isOpen) => {
@@ -75,7 +45,7 @@ function SpeciesDropdown() {
 
     return (
         <Dropdown className='species-dropdown' onToggle={handleToggle}>
-            <Dropdown.Toggle variant="light" className={`dropdown-toggle filter-pill ${currentSpecies ? '' : 'is-empty'}`}>
+            <Dropdown.Toggle variant="light" className={`dropdown-toggle filter-pill ${selected ? '' : 'is-empty'}`}>
                 {selectedName || 'All species'}
             </Dropdown.Toggle>
             <Dropdown.Menu className='species-dropdown-menu'>
@@ -87,7 +57,7 @@ function SpeciesDropdown() {
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
                     />
-                    {regionCode ? (
+                    {onAllTimeChange ? (
                         <Form.Check
                             type="switch"
                             id="all-time-species-switch"
@@ -95,17 +65,17 @@ function SpeciesDropdown() {
                             label="Include species not seen recently"
                             title="Off: species seen in the last 30 days. On: every species ever recorded in this region."
                             checked={allTime}
-                            onChange={() => setAllTime(!allTime)}
+                            onChange={() => onAllTimeChange(!allTime)}
                         />
                     ) : null}
                 </div>
-                <Dropdown.Item onClick={() => setCurrentSpecies('')} className='clear-species-selection'>Clear Selection</Dropdown.Item>
+                <Dropdown.Item onClick={() => onSelect('')} className='clear-species-selection'>Clear Selection</Dropdown.Item>
                 {shownSpecies.length > 0 ? (
                     <List
                         height={Math.min(280, shownSpecies.length * 35)}
                         itemCount={shownSpecies.length}
                         itemSize={35}
-                        itemData={{ species: shownSpecies, onSelect: handleSpeciesSelect }}
+                        itemData={{ species: shownSpecies, onSelect }}
                         width={'100%'}
                     >
                         {SpeciesRow}
