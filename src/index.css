@@ -395,7 +395,7 @@ main {
 }
 
 .observation-count {
-  margin: .6rem 0 0;
+  margin: 0;
   font-size: .85rem;
   color: var(--light-brown);
 }
@@ -510,14 +510,25 @@ main {
   align-items: center;
 }
 
-.map-popup-photo {
-  display: block;
-  width: 160px;
-  height: 120px;
+/* Map popup photo: the whole photo, uncropped, centred on a soft panel like the details popup's. The frame has a
+   fixed size so the popup doesn't change size when the photo loads. */
+.map-popup-photo-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 150px;
   margin-bottom: .4rem;
-  object-fit: cover;
+  overflow: hidden;
   border-radius: .4rem;
   background-color: var(--light-brown-transparent);
+}
+
+.map-popup-photo {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .observation-card:hover{
@@ -556,10 +567,74 @@ main {
   isolation: isolate;
 }
 
-#map {
-  height: 80vh;
+/* The map view fills the rest of the screen between the filter bar and the footer, never below 360px.
+   main and this area are flex items in the full-height #root column, so the map takes the leftover height. */
+.observation-map-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   width: 95vw;
+  min-height: 360px;
+  margin-bottom: 1rem;
+}
+
+#map {
+  flex: 1;
+  width: 100%;
+  min-height: 360px;
   border-radius: 1rem;
+}
+
+/* Full screen: the map area covers the page, below the details popup (Bootstrap modals sit at 1055) */
+.observation-map-area {
+  position: relative;
+}
+
+.observation-map-area.is-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1045;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 0;
+  margin: 0;
+  background-color: white;
+}
+
+.observation-map-area.is-fullscreen #map {
+  border-radius: 0;
+}
+
+/* The page behind a full-screen map doesn't scroll */
+body.map-fullscreen-open {
+  overflow: hidden;
+}
+
+.map-fullscreen-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 34px;
+  height: 34px;
+  color: var(--dark-brown);
+  background-color: white;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  background-clip: padding-box;
+  cursor: pointer;
+}
+
+.map-fullscreen-button:hover {
+  background-color: #f4f4f4;
+}
+
+.map-fullscreen-button svg {
+  width: 15px;
+  height: 15px;
 }
 
 /* Observation modal: one column (a full-screen sheet on phones), photo beside the details from 992px */
@@ -654,6 +729,10 @@ main {
 .observation-modal-map .leaflet-container {
   width: 100%;
   height: 100%;
+}
+
+/* A plain arrow where the map can't be dragged (touch screens); Leaflet shows a grab hand where it can */
+.observation-modal-map .leaflet-container:not(.leaflet-grab) {
   cursor: default;
 }
 
@@ -986,6 +1065,86 @@ footer img:hover{
   }
 }
 
+/* The result count line, below the filter controls */
+.filter-bar-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem .75rem;
+  margin-top: .6rem;
+}
+
+/* Filters button: phones only (see the max-width: 767px rules). Opens and closes the filter controls,
+   summarising what's active while closed. */
+.filter-toggle {
+  display: none;
+  align-items: center;
+  gap: .5rem;
+  max-width: 100%;
+  padding: .35rem .75rem;
+  font-size: .95rem;
+  font-weight: 500;
+  color: var(--dark-brown);
+  background-color: var(--light-brown-transparent);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.filter-toggle:hover,
+.filter-toggle:focus-visible {
+  background-color: var(--light-brown-hover);
+  border-color: var(--light-brown);
+}
+
+.filter-toggle-icon,
+.filter-toggle-chevron {
+  flex: none;
+  width: .85rem;
+  height: .85rem;
+}
+
+.filter-toggle-icon {
+  color: var(--light-brown);
+}
+
+.filter-toggle-chevron {
+  transition: transform .15s ease;
+}
+
+.filter-toggle-chevron.open {
+  transform: rotate(180deg);
+}
+
+/* What's active, shown while the controls are closed; trimmed with an ellipsis when long */
+.filter-toggle-summary {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 400;
+  color: var(--muted-brown);
+}
+
+.filter-toggle-summary::before {
+  content: '· ';
+}
+
+/* Phones: the Filters button sits above the controls, which can be collapsed under it */
+@media (max-width: 767px) {
+  .filter-toggle {
+    display: flex;
+  }
+
+  .filter-row {
+    margin-top: .75rem;
+  }
+
+  .filter-row.is-collapsed {
+    display: none;
+  }
+}
+
 /* Explore / Near me page tabs in the header, styled like the list/map toggle */
 .page-tabs {
   display: flex;
@@ -1018,32 +1177,40 @@ footer img:hover{
   background-color: var(--light-brown);
 }
 
-/* Near me distance choice: a row of segments in the dropdowns' style */
-.distance-picker {
+/* The chosen time in the days dropdown, in the site's brown rather than Bootstrap's blue */
+.days-dropdown .dropdown-item.active,
+.days-dropdown .dropdown-item:active {
+  color: white;
+  background-color: var(--light-brown);
+}
+
+/* Distance choice: a row of segments in the dropdowns' style */
+.segmented-picker {
   display: inline-flex;
   overflow: hidden;
   border: 1px solid var(--very-light-brown);
   border-radius: 6px;
 }
 
-.distance-option {
-  padding: .3rem .75rem;
+.segmented-option {
+  padding: .3rem .7rem;
   font-size: .9rem;
+  white-space: nowrap;
   color: var(--dark-brown);
   background: transparent;
   border: none;
   cursor: pointer;
 }
 
-.distance-option + .distance-option {
+.segmented-option + .segmented-option {
   border-left: 1px solid var(--very-light-brown);
 }
 
-.distance-option:hover {
+.segmented-option:hover {
   background-color: var(--light-brown-transparent);
 }
 
-.distance-option.active {
+.segmented-option.active {
   color: white;
   background-color: var(--light-brown);
 }

@@ -3,6 +3,7 @@ import { useContext, useMemo, useRef, useState } from 'react'
 import { Dropdown, Form } from 'react-bootstrap'
 import { FixedSizeList as List } from 'react-window'
 import { ObservationsContext } from '../contexts/ObservationsContext'
+import { useSpeciesName } from '../hooks/useSpeciesName'
 
 // One row of the virtualized species list; react-window passes the shown species and select handler as `data`
 const SpeciesRow = ({ index, style, data }) => {
@@ -23,12 +24,7 @@ function SpeciesDropdown({ selected, onSelect, speciesCodes, allTime, onAllTimeC
     const [filter, setFilter] = useState('')
     const inputRef = useRef(null)
 
-    // Looked up by code, since a species read from the URL has no name. The code stands in until the taxonomy loads.
-    const selectedName = useMemo(
-        () => selected && (taxonomy.find((species) => species.speciesCode === selected.speciesCode)?.comName
-            || selected.speciesCode),
-        [taxonomy, selected]
-    )
+    const selectedName = useSpeciesName(selected)
 
     const shownSpecies = useMemo(
         () => taxonomy.filter((species) =>

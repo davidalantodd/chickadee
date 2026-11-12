@@ -36,6 +36,7 @@ function App() {
     name:''
   })
   const [notable, setNotable] = useState(initialFilters.notable)
+  const [daysBack, setDaysBack] = useState(initialFilters.days)
   const [taxonomy, setTaxonomy] = useState([])
   const [currentSpecies, setCurrentSpecies] = useState(
     initialFilters.species ? { speciesCode: initialFilters.species, comName: '' } : ''
@@ -46,6 +47,9 @@ function App() {
     obs: []
   })
   const [viewType, setViewType] = useState(initialFilters.view)  // 'list' or 'map'
+  // Whether the filter bar is open on phones, where it can be collapsed; it starts closed there to leave room
+  // for results. Wider screens always show the filters.
+  const [filtersOpen, setFiltersOpen] = useState(false)
   // Each page's last filters as a query string ({ observations, nearby }), so the header tabs return to them
   const lastSearch = useRef({ observations: '', nearby: '' })
 
@@ -64,11 +68,13 @@ function App() {
                                                   subRegions, setSubRegions,
                                                   currentSubRegion, setCurrentSubRegion,
                                                   notable, setNotable,
+                                                  daysBack, setDaysBack,
                                                   taxonomy, setTaxonomy,
                                                   currentSpecies, setCurrentSpecies,
                                                   loading, setLoading,
                                                   filteredObservations, setFilteredObservations,
                                                   viewType, setViewType,
+                                                  filtersOpen, setFiltersOpen,
                                                   lastSearch}}>
         <Router>
         <Header/>

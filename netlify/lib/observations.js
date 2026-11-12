@@ -40,6 +40,14 @@ const withPhoto = (observation) => {
 
 export const prepareObservation = (observation, secret) => withPhoto(withArea(obscurePrivateLocation(observation, secret)))
 
+// Days back to look: eBird accepts 1-30; only these values are accepted so cached responses get reused.
+// Missing means 30; anything else is invalid (null).
+const DAYS_BACK = [1, 3, 7, 14, 30]
+export const parseDaysBack = (value) => {
+    if (value === undefined || value === '') return 30
+    return DAYS_BACK.includes(Number(value)) ? Number(value) : null
+}
+
 export const badRequest = (message) => ({ statusCode: 400, body: JSON.stringify({ error: message }) })
 
 // Function response for an eBird data/obs request. `cacheKeyParams` are the query parameters that make

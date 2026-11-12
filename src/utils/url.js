@@ -1,10 +1,11 @@
 import { DEFAULT_DISTANCE_KM, DISTANCES_KM } from './geo'
+import { DEFAULT_DAYS_BACK, parseDaysBack } from './daysBack'
 
 // Shareable URLs for the two observation pages.
 //
 // Filters are kept in the query string:
-//   /observations?country=US&region=US-VA&subregion=US-VA-059&species=carchi&notable=1&q=wren&view=map
-//   /nearby?dist=10&species=carchi&notable=1&q=wren&view=map
+//   /observations?country=US&region=US-VA&subregion=US-VA-059&days=7&species=carchi&notable=1&q=wren&view=map
+//   /nearby?dist=10&days=7&species=carchi&notable=1&q=wren&view=map
 // The Near me page never puts the visitor's location in the URL: a shared link means "near whoever opens it".
 // An open observation adds its id to the path and its details to the query, so the modal can render
 // from the URL alone:
@@ -36,24 +37,27 @@ export const readUrlFilters = () => {
         subregion: params.get('subregion') ?? '',
         species: params.get('species') ?? '',
         notable: params.get('notable') === '1',
+        days: parseDaysBack(params.get('days')),
         view: current.get('view') === 'map' ? 'map' : 'list',
     }
 }
 
 // Copy of `search` with the region page's filters written in. Empty and default values are left out of the URL;
 // observation params already in `search` are kept.
-export const withFilters = (search, { country, region, subregion, species, notable, q, view }) => withParams(search, {
+export const withFilters = (search, { country, region, subregion, species, notable, days, q, view }) => withParams(search, {
     country, region, subregion, species, q,
+    days: days === DEFAULT_DAYS_BACK ? '' : String(days),
     notable: notable ? '1' : '',
     view: view === 'map' ? 'map' : '',
 })
 
-// Near me page filters in the current URL. Distance defaults to 25 km.
+// Near me page filters in the current URL. Distance defaults to 25 km and days back to 30.
 export const readNearbyFilters = () => {
     const params = new URLSearchParams(window.location.search)
     const dist = Number(params.get('dist'))
     return {
         dist: DISTANCES_KM.includes(dist) ? dist : DEFAULT_DISTANCE_KM,
+        days: parseDaysBack(params.get('days')),
         species: params.get('species') ?? '',
         notable: params.get('notable') === '1',
         q: params.get('q') ?? '',
@@ -61,8 +65,9 @@ export const readNearbyFilters = () => {
 }
 
 // Copy of `search` with the Near me page's filters written in, leaving out defaults
-export const withNearbyFilters = (search, { dist, species, notable, q, view }) => withParams(search, {
+export const withNearbyFilters = (search, { dist, days, species, notable, q, view }) => withParams(search, {
     dist: dist === DEFAULT_DISTANCE_KM ? '' : String(dist),
+    days: days === DEFAULT_DAYS_BACK ? '' : String(days),
     species, q,
     notable: notable ? '1' : '',
     view: view === 'map' ? 'map' : '',

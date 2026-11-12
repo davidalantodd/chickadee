@@ -43,13 +43,13 @@ export const fetchSpeciesList = (regionCode) => {
 }
 
 // Recent observations within distKm of a point; the point is rounded by the caller before it's sent
-export const fetchObservationsNearby = ({ lat, lng }, distKm, notable, speciesCode) => {
-    const params = new URLSearchParams({ lat, lng, dist: distKm })
+export const fetchObservationsNearby = ({ lat, lng }, distKm, notable, speciesCode, daysBack = 30) => {
+    const params = new URLSearchParams({ lat, lng, dist: distKm, back: daysBack })
     if (notable) params.set('notable', 'true')
     else if (speciesCode) params.set('species', speciesCode)
     return fetchList(`/.netlify/functions/fetchObservationsNearby?${params}`, 'nearby observations');
 }
 
-export const fetchObservationsByRegion =(regionCode, notable, speciesCode) => {
-    return fetchList(`/.netlify/functions/fetchObservationsByRegion?regionToSearch=${encodeURIComponent(regionCode)}&notable=${notable}&currentSpecies=${speciesCode}`, 'observations');
+export const fetchObservationsByRegion =(regionCode, notable, speciesCode, daysBack = 30) => {
+    return fetchList(`/.netlify/functions/fetchObservationsByRegion?regionToSearch=${encodeURIComponent(regionCode)}&notable=${notable}&currentSpecies=${speciesCode}&back=${daysBack}`, 'observations');
 }

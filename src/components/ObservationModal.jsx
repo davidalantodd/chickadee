@@ -6,6 +6,10 @@ import { formatDate } from '../utils/format'
 import { listLink, readUrlObservation } from '../utils/url'
 import chickadee from '../assets/chickadee.png'
 
+// Whether the main pointer is a mouse or trackpad. The popup map can be dragged with one, but not with touch,
+// where a one-finger drag is also how the popup scrolls.
+const canDragMap = () => window.matchMedia('(pointer: fine)').matches
+
 // Marks a link that opens another site in a new tab
 const ExternalLinkIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" className="observation-modal-link-icon">
@@ -134,12 +138,14 @@ export default function ObservationModal() {
                             {hasPosition && (
                                 <div className="observation-modal-map">
                                     {showMap && (
-                                        // Dragging is off so swiping over the map scrolls the popup; the zoom buttons give more context
+                                        // Move it by dragging with a mouse or trackpad, and zoom with the buttons. Scroll-wheel
+                                        // zoom is off so scrolling the popup never zooms the map, and touch dragging is off so a
+                                        // swipe over the map scrolls the popup.
                                         <MapContainer
                                             key={`${observation.subId}-${observation.speciesCode}`}
                                             center={[observation.lat, observation.lng]}
                                             zoom={9}
-                                            dragging={false}
+                                            dragging={canDragMap()}
                                             touchZoom={false}
                                             doubleClickZoom={false}
                                             scrollWheelZoom={false}

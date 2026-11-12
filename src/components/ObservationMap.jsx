@@ -60,7 +60,7 @@ const MarkerClusterGroup = (props) => {
 				// Create popup content as HTML
 				const popupContent = `
 					<div class="map-popup" style="cursor:pointer" data-obs-id="${observation.subId}">
-						${observation.photo ? `<img class="map-popup-photo" src="${escapeHtml(observation.photo.popup)}" alt="" title="${escapeHtml(observation.photo.credit)}" width="160" height="120" />` : ''}
+						${observation.photo ? `<div class="map-popup-photo-frame"><img class="map-popup-photo" src="${escapeHtml(observation.photo.popup)}" alt="" title="${escapeHtml(observation.photo.credit)}" /></div>` : ''}
 						<strong>${escapeHtml(observation.comName)}</strong><br />
 						Location: ${escapeHtml(observation.locName)}<br />
 						${observation.area ? `Area: near ${escapeHtml(observation.area)}<br />` : ''}
@@ -95,9 +95,11 @@ const MarkerClusterGroup = (props) => {
 	return null;
 };
 
-// Fits the map to the search radius when there is one, otherwise to the observations as they load
+// Fits the map to the search radius when there is one, otherwise to the observations as they load. It fits only
+// when `fitKey` changes (new results, or the second batch of markers arriving), so re-renders such as opening a
+// bird's details keep wherever the visitor has zoomed and panned to.
 // eslint-disable-next-line react/prop-types
-function MapBoundsUpdater({ observations, searchArea }) {
+function MapBoundsUpdater({ observations, searchArea, fitKey }) {
 	const map = useMap();
 	
 	useEffect(() => {
@@ -122,8 +124,58 @@ function MapBoundsUpdater({ observations, searchArea }) {
 				});
 			}
 		}
-	}, [observations, searchArea, map]);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [fitKey, map]);
 	
+	return null;
+}
+
+// Fullscreen map: the map area covers the whole page (CSS), and the page itself goes browser-fullscreen where
+// allowed, hiding the browser's own bars. The whole page rather than just the map goes fullscreen, so the details
+// popup, which opens over the page, still shows. Where browser fullscreen isn't available (iPhone Safari), the
+// map still covers the page. Esc or the button exits.
+function useMapFullscreen() {
+	const [fullscreen, setFullscreen] = useState(false);
+
+	const exit = () => {
+		if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+		setFullscreen(false);
+	};
+	const enter = () => {
+		setFullscreen(true);
+		document.documentElement.requestFullscreen?.().catch(() => {});
+	};
+
+	useEffect(() => {
+		if (!fullscreen) return;
+		// Leaving browser fullscreen another way (Esc, browser controls) also leaves the map's fullscreen
+		const onFullscreenChange = () => { if (!document.fullscreenElement) setFullscreen(false); };
+		// Esc when there was no browser fullscreen (e.g. iPhone), unless it's closing the details popup
+		const onKeyDown = (e) => { if (e.key === 'Escape' && !document.querySelector('.modal.show')) exit(); };
+		document.addEventListener('fullscreenchange', onFullscreenChange);
+		document.addEventListener('keydown', onKeyDown);
+		document.body.classList.add('map-fullscreen-open');
+		return () => {
+			document.removeEventListener('fullscreenchange', onFullscreenChange);
+			document.removeEventListener('keydown', onKeyDown);
+			document.body.classList.remove('map-fullscreen-open');
+		};
+	}, [fullscreen]);
+
+	// Leave fullscreen when the map goes away (e.g. switching to the list)
+	useEffect(() => () => { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); }, []);
+
+	return { fullscreen, toggle: () => (fullscreen ? exit() : enter()) };
+}
+
+// Leaflet measures its container once, so tell it when the space it fills changes (e.g. filters collapsing)
+function MapResizeWatcher() {
+	const map = useMap();
+	useEffect(() => {
+		const observer = new ResizeObserver(() => map.invalidateSize());
+		observer.observe(map.getContainer());
+		return () => observer.disconnect();
+	}, [map]);
 	return null;
 }
 
@@ -135,6 +187,7 @@ function ObservationMap({ searchArea }) {
 	// Stable identity: MarkerClusterGroup rebuilds every marker when its onMarkerClick prop changes
 	const handleSingleObsView = useOpenObservation();
 	const [isMapReady, setIsMapReady] = useState(false);
+	const { fullscreen, toggle: toggleFullscreen } = useMapFullscreen();
 	const [visibleObservations, setVisibleObservations] = useState([]);
 	
 	// Progressive loading of observations
@@ -183,7 +236,26 @@ function ObservationMap({ searchArea }) {
 	}, [visibleObservations, handleSingleObsView]);
 
 	return (
-		<>
+		// Fills the space between the filter bar and the footer, or the whole page in fullscreen (see .observation-map-area)
+		<div className={`observation-map-area ${fullscreen ? 'is-fullscreen' : ''}`}>
+			<button
+				type="button"
+				className="map-fullscreen-button"
+				onClick={toggleFullscreen}
+				aria-pressed={fullscreen}
+				title={fullscreen ? 'Exit full screen (Esc)' : 'Full screen'}
+				aria-label={fullscreen ? 'Exit full screen' : 'Full screen map'}
+			>
+				{fullscreen ? (
+					<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+						<path d="M5.5 0a.5.5 0 0 1 .5.5v4A1.5 1.5 0 0 1 4.5 6h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5m5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 10 4.5v-4a.5.5 0 0 1 .5-.5M0 10.5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 6 11.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5m10 1a1.5 1.5 0 0 1 1.5-1.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0z"/>
+					</svg>
+				) : (
+					<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+						<path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5M.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5"/>
+					</svg>
+				)}
+			</button>
 			{!isMapReady && visibleObservations.length > 0 && (
 				<div className="map-loading">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
@@ -224,14 +296,19 @@ function ObservationMap({ searchArea }) {
 					</>
 				)}
 				<MarkerClusterGroup markers={markers} onMarkerClick={handleSingleObsView} />
-				<MapBoundsUpdater observations={visibleObservations} searchArea={searchArea} />
+				<MapBoundsUpdater
+					observations={visibleObservations}
+					searchArea={searchArea}
+					fitKey={searchArea ? observations.key : `${observations.key}|${visibleObservations.length}`}
+				/>
+				<MapResizeWatcher />
 			</MapContainer>
 			{visibleObservations.length < filteredObservations.obs.length && isMapReady && (
 				<div className="map-loading-more">
 					<span>{visibleObservations.length} of {filteredObservations.obs.filter(obs => obs.lat && obs.lng).length} birds shown</span>
 				</div>
 			)}
-		</>
+		</div>
 	);
 }
 
