@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-11-12
+
+### Added
+- Time filter on Explore and Near me: show sightings from the last day, 3, 7, 14 or 30 days (default 30), kept in shared links
+- Full-screen button on the map; bird details still open over it, and Esc or the button exits
+- The details popup's map can be moved by dragging with a mouse or trackpad (scroll-wheel zoom stays off, and touch screens still scroll the popup)
+
+### Changed
+- The map fills the screen between the filters and the footer instead of a fixed height
+- On phones the filters fold behind a Filters button that summarises what's active, e.g. "Virginia · Last 7 days"; wider screens always show them
+- Map popups show the whole bird photo instead of a cropped one
+- The species dropdown only offers species seen in the chosen time window
+- The result count shows "Loading…" while new results load
+
+### Fixed
+- The map no longer runs past the bottom of the window
+- Opening a bird's details no longer resets the map's zoom on Near me, and the marker popup stays open when the details close
+- Opening and closing details no longer rebuilds every marker on the map
+
 ## [2.2.0] - 2026-11-11
 
 ### Added
