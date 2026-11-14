@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-11-14
+
+### Changed
+- Explore and Near me now show the last 3 days by default (was 30), so pages load faster; up to 30 days is still one choice away
+- Near me now searches within 5 km by default (was 25 km)
+- Shared links without a time or distance setting open with these new defaults
+
 ## [2.3.0] - 2026-11-12
 
 ### Added
