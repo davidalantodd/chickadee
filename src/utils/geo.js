@@ -2,7 +2,7 @@
 
 // eBird allows up to 50 km; the server accepts only these distances so cached responses get reused
 export const DISTANCES_KM = [5, 10, 25, 50]
-export const DEFAULT_DISTANCE_KM = 25
+export const DEFAULT_DISTANCE_KM = 5
 
 // About 1 km of precision: enough to find nearby birds, and the most that ever leaves the browser
 export const roundCoordinate = (value) => Math.round(value * 100) / 100

@@ -51,7 +51,7 @@ export const withFilters = (search, { country, region, subregion, species, notab
     view: view === 'map' ? 'map' : '',
 })
 
-// Near me page filters in the current URL. Distance defaults to 25 km and days back to 30.
+// Near me page filters in the current URL. Distance defaults to 5 km and days back to 3.
 export const readNearbyFilters = () => {
     const params = new URLSearchParams(window.location.search)
     const dist = Number(params.get('dist'))

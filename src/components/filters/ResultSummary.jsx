@@ -2,7 +2,7 @@
 import { useContext } from 'react'
 import { ObservationsContext } from '../../contexts/ObservationsContext'
 
-// "193 recent bird observations within 25 km · Clear filters", or "12 of 193 ..." while searching.
+// "115 recent bird observations within 5 km · Clear filters", or "12 of 193 ..." while searching.
 // `dataKey` is the page's current query; until its observations arrive, the count reads "Loading…".
 export default function ResultSummary({ dataKey, searching, notable, suffix, onClear }) {
     const { observations, filteredObservations, loading } = useContext(ObservationsContext)

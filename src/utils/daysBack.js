@@ -1,7 +1,8 @@
 // How far back to look for observations. eBird accepts 1-30 days; the server accepts only these values so cached
 // responses get reused.
 export const DAYS_BACK = [1, 3, 7, 14, 30]
-export const DEFAULT_DAYS_BACK = 30
+// Short by default so pages load quickly; up to 30 days is one choice away
+export const DEFAULT_DAYS_BACK = 3
 
 export const daysLabel = (days) => (days === 1 ? '1 day' : `${days} days`)
 

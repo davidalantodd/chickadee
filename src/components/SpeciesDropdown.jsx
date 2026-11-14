@@ -59,7 +59,7 @@ function SpeciesDropdown({ selected, onSelect, speciesCodes, allTime, onAllTimeC
                             id="all-time-species-switch"
                             className="all-time-species-switch"
                             label="Include species not seen recently"
-                            title="Off: species seen in the last 30 days. On: every species ever recorded in this region."
+                            title="Off: species seen in the chosen time. On: every species ever recorded in this region."
                             checked={allTime}
                             onChange={() => onAllTimeChange(!allTime)}
                         />

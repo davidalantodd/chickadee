@@ -95,7 +95,7 @@ function NearbyView() {
         if (selected) setNotable(false)
     }
 
-    // What the collapsed filter bar shows, e.g. "25 km · Notable · Last 3 days"
+    // What the collapsed filter bar shows, e.g. "5 km · Notable · Last 7 days"
     const speciesName = useSpeciesName(species)
     const summary = [`${dist} km`, speciesName, notable && 'Notable', daysBack !== DEFAULT_DAYS_BACK && daysSummary(daysBack),
         filterText && `"${filterText}"`].filter(Boolean).join(' · ')

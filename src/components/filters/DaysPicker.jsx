@@ -2,7 +2,7 @@
 import { Dropdown } from 'react-bootstrap'
 import { DAYS_BACK, DEFAULT_DAYS_BACK, daysSummary } from '../../utils/daysBack'
 
-// How many days back to show observations from, for both pages' filter bars: a "Last 30 days" dropdown in the
+// How many days back to show observations from, for both pages' filter bars: a "Last 3 days" dropdown in the
 // same style as the region and species dropdowns. The default reads as unset, like those do.
 export default function DaysPicker({ value, onChange }) {
     return (
