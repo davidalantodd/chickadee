@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.1] - 2026-11-18
+
+### Fixed
+- The site deploys again: the 2.5.0 deploy failed because Netlify tried to deploy a test file as a server function. The function tests now live in `netlify/tests/`
+
 ## [2.5.0] - 2026-11-18
 
 ### Added
