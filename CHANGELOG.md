@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-11-18
+
+### Added
+- Light and dark themes, with a button in the header to switch. The site follows your browser's setting until you pick one, then remembers your choice; picking your browser's own setting goes back to following it
+- Unit tests (`npm test`) covering both pages, the list, map and details popup, and the server functions; `npm run coverage` checks that at least 80% of the code is tested
+
+### Fixed
+- Sightings in the far north and south (above about 70° latitude) now show a nearby town up to 150 km away, instead of none when the town was more than about 90 km east or west
+- The species photo function no longer crashes on species codes that match built-in JavaScript names, such as "constructor"
+
 ## [2.4.0] - 2026-11-14
 
 ### Changed
