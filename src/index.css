@@ -592,6 +592,12 @@ main {
   isolation: isolate;
 }
 
+/* Cluster counts sit on light green, yellow and orange circles in both themes, so keep them dark rather than taking
+   the page's text color (cream in the dark theme). #212529 is Bootstrap's light-theme text color. */
+.marker-cluster {
+  color: #212529;
+}
+
 /* The map view fills the rest of the screen between the filter bar and the footer, never below 360px.
    main and this area are flex items in the full-height #root column, so the map takes the leftover height. */
 .observation-map-area {
