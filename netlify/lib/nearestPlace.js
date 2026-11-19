@@ -6,10 +6,8 @@ import { regions, countries, places } from './places-data.js'
 // and stops once the next ring can't hold anything closer than the best match so far.
 
 const KM_PER_DEGREE = 111.2
-// Towns further than this aren't a useful label (e.g. offshore). The ring limit covers this distance
-// up to about 70° latitude, where cells are narrowest.
+// Towns further than this aren't a useful label (e.g. offshore)
 const MAX_DISTANCE_KM = 150
-const MAX_RINGS = 5
 
 const cellKey = (latCell, lngCell) => `${latCell},${lngCell}`
 
@@ -44,10 +42,13 @@ export const nearestPlace = (lat, lng) => {
     const lngCell = Math.floor(lng)
     // Narrowest cell width near this latitude; a cell `ring` rings out is at least (ring - 1) widths away
     const cellWidthKm = KM_PER_DEGREE * Math.max(Math.cos((Math.abs(lat) + 1) * Math.PI / 180), 0.05)
+    // Enough rings to reach MAX_DISTANCE_KM east and west: 3 up to about 45° latitude, 5 by about 65°, and up to 28
+    // near the poles, where cells are narrowest
+    const maxRings = Math.ceil(MAX_DISTANCE_KM / cellWidthKm) + 1
 
     let best = null
     let bestKm = Infinity
-    for (let ring = 0; ring <= MAX_RINGS; ring++) {
+    for (let ring = 0; ring <= maxRings; ring++) {
         if (best && (ring - 1) * cellWidthKm > bestKm) break
         for (const key of ringCells(latCell, lngCell, ring)) {
             for (const place of grid.get(key) ?? []) {

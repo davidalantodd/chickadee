@@ -88,7 +88,6 @@ describe('nearestPlace', () => {
     it('agrees with checking every town for points near towns, where the answer matters most', () => {
         for (let i = 0; i < 200; i++) {
             const place = places[Math.floor(random() * places.length)]
-            if (Math.abs(place[1]) > 65) continue
             const lat = place[1] + (random() - 0.5) * 0.6
             const lng = place[2] + (random() - 0.5) * 0.6
             expect(nearestPlace(lat, lng)?.split(',')[0], `near ${place[0]}`).toBe(bruteForceTown(lat, lng))
@@ -100,9 +99,33 @@ describe('nearestPlace', () => {
         expect(nearestPlace(78.2233 - 1.4, 15.6469)).toBeNull()
     })
 
-    // Known limit: lookups search 5 grid rings, which covers 150 km up to about 70° latitude. Further north, cells
-    // are narrower and a town 120-150 km east or west is missed. Remove `.fails` once that's fixed.
-    it.fails('finds a town 136 km east or west at 78° latitude', () => {
+    // Grid cells narrow toward the poles, so the search must go out more rings there to cover 150 km east and west
+    it('finds a town 136 km east or west at 78° latitude', () => {
         expect(nearestPlace(78.2233, 15.6469 + 6)).toBe('Longyearbyen, Svalbard')
+        expect(nearestPlace(78.2233, 15.6469 - 6)).toBe('Longyearbyen, Svalbard')
+    })
+
+    it('agrees with checking every town for 150 random points between 65° and 85° latitude, north and south', () => {
+        for (let i = 0; i < 150; i++) {
+            const lat = (65 + random() * 20) * (random() < 0.7 ? 1 : -1)
+            const lng = -180 + random() * 360
+            expect(nearestPlace(lat, lng)?.split(',')[0] ?? null, `at ${lat}, ${lng}`).toBe(bruteForceTown(lat, lng))
+        }
+    })
+
+    it('agrees with checking every town near Arctic towns, where cells are narrowest', () => {
+        const arctic = places.filter(p => p[1] > 66)
+        for (let i = 0; i < 100; i++) {
+            const place = arctic[Math.floor(random() * arctic.length)]
+            const lat = place[1] + (random() - 0.5) * 2
+            const lng = place[2] + (random() - 0.5) * 12
+            expect(nearestPlace(lat, lng)?.split(',')[0] ?? null, `near ${place[0]}`).toBe(bruteForceTown(lat, lng))
+        }
+    })
+
+    it('stays fast near the poles, where it searches the most cells', () => {
+        const start = performance.now()
+        for (let i = 0; i < 1000; i++) nearestPlace(89 - random(), -180 + random() * 360)
+        expect(performance.now() - start).toBeLessThan(1000)
     })
 })
