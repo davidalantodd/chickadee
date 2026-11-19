@@ -8,6 +8,8 @@
   --light-brown-transparent: rgba(172, 125, 87, 0.15);
   --light-brown-hover: rgba(172, 125, 87, 0.3);
   --off-white: #F8F8F8;
+  --link-color: black;
+  --on-white-text: #4b3621; /* text on things that stay white in both themes */
 
   /* Page text uses Bootstrap's system font stack (San Francisco, Segoe UI, Roboto...), which overrides this */
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -20,9 +22,32 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Dark theme: the same browns, lightened for text and darkened for surfaces. The data-bs-theme attribute is set by
+   index.html and src/hooks/useTheme.js; Bootstrap themes its dropdowns, modals and inputs from it, and the
+   --bs-* values below swap its cool gray for a warm brown-black. Maps and photos stay as they are. */
+[data-bs-theme="dark"] {
+  /* --light-brown stays the same: it reads on both backgrounds and keeps white text on brown buttons legible */
+  --very-light-brown: #5c4c3a; /* borders */
+  --extremely-light-brown: #29231d; /* shaded list rows */
+  --dark-brown: #ece2d4; /* main text */
+  --muted-brown: #b0a08c;
+  --light-brown-transparent: rgba(180, 144, 93, 0.18);
+  --light-brown-hover: rgba(180, 144, 93, 0.32);
+  --off-white: #1d1a16;
+  --link-color: #ece2d4;
+
+  --bs-body-bg: #1d1a16;
+  --bs-body-color: #ece2d4;
+  --bs-emphasis-color: #fff;
+  --bs-secondary-color: rgba(236, 226, 212, 0.7);
+  --bs-secondary-bg: #2b251f;
+  --bs-tertiary-bg: #241f1a;
+  --bs-border-color: #4a3e31;
+}
+
 a {
   font-weight: 300;
-  color: black;
+  color: var(--link-color);
   text-decoration: inherit;
 }
 
@@ -124,7 +149,7 @@ nav {
   padding: .75rem 1.6rem;
   font-size: 1rem;
   font-weight: 500;
-  color: var(--dark-brown);
+  color: var(--on-white-text);
   background-color: white;
   border: none;
   border-radius: 6px;
@@ -598,7 +623,7 @@ main {
   height: 100dvh;
   min-height: 0;
   margin: 0;
-  background-color: white;
+  background-color: var(--bs-body-bg);
 }
 
 .observation-map-area.is-fullscreen #map {
@@ -620,7 +645,7 @@ body.map-fullscreen-open {
   align-items: center;
   width: 34px;
   height: 34px;
-  color: var(--dark-brown);
+  color: var(--on-white-text);
   background-color: white;
   border: 2px solid rgba(0, 0, 0, 0.2);
   border-radius: 4px;
@@ -1033,20 +1058,9 @@ footer img:hover{
   }
 }
 
-/* Dark mode adjustments for mobile */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #ffffff;
-    background-color: #242424;
-  }
-
-  .observation-card {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-
-  .observation-card-shaded {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
+/* The black GitHub logo turns white on the dark theme */
+[data-bs-theme="dark"] footer img[alt="Github Logo"] {
+  filter: invert(1);
 }
 
 /* Landscape mode adjustments */
@@ -1297,4 +1311,31 @@ footer img:hover{
   opacity: 0.3;
   margin: 0 0.3rem;
   font-weight: 200;
+}
+
+/* Light/dark theme button, at the right end of the header on every page */
+.theme-toggle-btn {
+  flex: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  padding: 0;
+  color: var(--dark-brown);
+  background-color: var(--light-brown-transparent);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.theme-toggle-btn:hover,
+.theme-toggle-btn:focus-visible {
+  background-color: var(--light-brown-hover);
+}
+
+.theme-toggle-btn svg {
+  width: 1.1rem;
+  height: 1.1rem;
 }
