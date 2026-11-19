@@ -1,11 +1,12 @@
 // @vitest-environment node
+// Lives outside netlify/functions/, where Netlify deploys every file as a function
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { handler as byRegion } from './fetchObservationsByRegion.js'
-import { handler as nearby } from './fetchObservationsNearby.js'
-import { handler as regionsHandler } from './fetchRegions.js'
-import { handler as speciesList } from './fetchSpeciesList.js'
-import { handler as taxonomy } from './fetchTaxonomy.js'
-import { handler as speciesImage } from './fetchSpeciesImage.js'
+import { handler as byRegion } from '../functions/fetchObservationsByRegion.js'
+import { handler as nearby } from '../functions/fetchObservationsNearby.js'
+import { handler as regionsHandler } from '../functions/fetchRegions.js'
+import { handler as speciesList } from '../functions/fetchSpeciesList.js'
+import { handler as taxonomy } from '../functions/fetchTaxonomy.js'
+import { handler as speciesImage } from '../functions/fetchSpeciesImage.js'
 
 let fetchMock
 beforeEach(() => {
