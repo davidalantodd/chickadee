@@ -50,6 +50,14 @@ town names and species photos are looked up from data files committed to the rep
 
 the photo script follows the [Wikimedia Robot policy](https://wikitech.wikimedia.org/wiki/Robot_policy): one request at a time, about one per second, 50 species per request. a full run makes about 460 requests and takes around 15 minutes.
 
+### running the tests
+
+- `npm test` runs the unit tests once ([Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com))
+- `npm run test:watch` reruns them as files change
+- `npm run coverage` adds a coverage report (in the terminal, and `coverage/index.html`); it fails if coverage drops below 80%
+
+the tests need no API key or network: eBird, the browser's location and Leaflet's canvas are all faked. component tests run in a simulated browser (jsdom), and the Netlify function tests run in Node.
+
 ## ⚡️ caching
 like its namesake, chickadee caches things so it doesn't have to go looking for them again. responses from the Netlify functions are cached on Netlify's CDN and shared by every visitor, so repeat requests never reach the eBird API:
 
@@ -77,6 +85,7 @@ photos themselves load straight from Wikimedia's image servers at [standard thum
 - React / React Router
 - Netlify/Netlify Functions (with CDN caching)
 - Leaflet / React Leaflet
+- Vitest / Testing Library
 - [eBird API](https://documenter.getpostman.com/view/664302/S1ENwy59)
 - [MediaWiki API](https://www.mediawiki.org/wiki/API:Main_page) (build script only)
 - [GeoNames](https://www.geonames.org) data (bundled)
